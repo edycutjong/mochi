@@ -24,13 +24,22 @@
  * visitor who uses the native wheel out of habit is still credited.
  */
 
-import { engine, AvatarEmoteCommand, AvatarBase, PlayerIdentityData, Entity } from '@dcl/sdk/ecs'
+import {
+  engine,
+  AvatarEmoteCommand,
+  AvatarBase,
+  AvatarEquippedData,
+  PlayerIdentityData,
+  Entity
+} from '@dcl/sdk/ecs'
 
 /** A move taught by a named person. `wearables` dresses their memory dancer. */
 export type TaughtMove = {
   emoteId: string
   teacherId: string
   teacherName: string
+  /** What the teacher was wearing, so their memory dancer is dressed as them. */
+  wearables: string[]
   source: 'picker' | 'observed'
 }
 
@@ -60,14 +69,18 @@ function emit(move: TaughtMove) {
  * claim is that every move carries a name that means a person. The server
  * enforces this too; this is the client half of the same rule.
  */
-export function localIdentity(): { id: string; name: string } | null {
+export function localIdentity(): { id: string; name: string; wearables: string[] } | null {
   const identity = PlayerIdentityData.getOrNull(engine.PlayerEntity)
   if (!identity || identity.isGuest) return null
 
   const name = AvatarBase.getOrNull(engine.PlayerEntity)?.name
   if (!name) return null
 
-  return { id: identity.address, name }
+  // Captured at the moment of teaching, not at replay: the dancer should wear
+  // what that person wore when they were here, even if they change later.
+  const wearables = AvatarEquippedData.getOrNull(engine.PlayerEntity)?.wearableUrns ?? []
+
+  return { id: identity.address, name, wearables: [...wearables] }
 }
 
 /** Whether the client has ever reported an emote to this scene. */
@@ -107,7 +120,13 @@ export function emoteObserverSystem() {
     const who = localIdentity()
     if (!who) continue
 
-    emit({ emoteId: emote.emoteUrn, teacherId: who.id, teacherName: who.name, source: 'observed' })
+    emit({
+      emoteId: emote.emoteUrn,
+      teacherId: who.id,
+      teacherName: who.name,
+      wearables: who.wearables,
+      source: 'observed'
+    })
   }
 
   seenUpTo.set(player, highest)
@@ -132,7 +151,7 @@ export async function teachFromPicker(emoteId: string) {
   if (!who) return
 
   pickerExpecting = emoteId
-  emit({ emoteId, teacherId: who.id, teacherName: who.name, source: 'picker' })
+  emit({ emoteId, teacherId: who.id, teacherName: who.name, wearables: who.wearables, source: 'picker' })
 
   try {
     const { triggerEmote } = await import('~system/RestrictedActions')

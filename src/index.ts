@@ -5,6 +5,7 @@ import { createMeadow } from './mochi/meadow'
 import { setupAliveness, alivenessSystem, playEat, playPetDown, playPetUp } from './mochi/aliveness'
 import { createPlaque, renderPlaque, ago } from './mochi/plaque'
 import { emoteObserverSystem, onTaught, teachFromPicker, localIdentity, TaughtMove } from './mochi/teach'
+import { setDancers, danceLoopSystem } from './mochi/dancers'
 import { setupHud, hudSystem, say } from './ui/hud'
 import { setupTouchControls } from './ui/controls'
 
@@ -92,6 +93,13 @@ function scene() {
     // stranger, attached to the move, said out loud.
     say(`${move.teacherName} taught move #${localChain.length}`)
     refreshPlaque()
+    setDancers(
+      localChain.map((m) => ({
+        emoteId: m.emoteId,
+        teacherName: m.teacherName,
+        wearables: m.wearables
+      }))
+    )
   })
 
   setupHud({
@@ -117,6 +125,7 @@ function scene() {
   engine.addSystem(petSystem)
   engine.addSystem(hudSystem)
   engine.addSystem(emoteObserverSystem)
+  engine.addSystem(danceLoopSystem)
 }
 
 let lastFedAt = 0

@@ -1,0 +1,22 @@
+name: submission-readiness
+
+# Run by hand before the repository goes public.
+#
+# Deliberately NOT on push: this gate is expected to fail for most of the
+# project's life — it fails while the README is unwritten, while the scene
+# still runs on local scaffolding, and while any test data remains. That is
+# useful as a checklist and useless as a commit gate, so it stays manual
+# rather than turning the build badge permanently red.
+on:
+  workflow_dispatch:
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: check submission readiness
+        run: node --experimental-strip-types scripts/check_submission_readiness.ts

@@ -67,3 +67,33 @@ and no third-party accounts — every setting is a tunable with a safe default
 (see [`server/.env.example`](../server/.env.example)). If a scan ever reports a
 credential in this repository, that is itself the bug, and we would like to hear
 about it.
+
+## Known dependency advisories
+
+Disclosed rather than left for you to discover in the alerts tab.
+
+At the time of writing, Dependabot reports **15 open advisories, all in the
+scene's dependency tree and none in the server's.** Every one arrives
+transitively through `@dcl/sdk`, which is the mandatory Decentraland scene SDK
+and cannot be substituted.
+
+| | |
+|---|---|
+| Server runtime dependencies | **1** (`ws`) — zero open advisories |
+| Scene advisories | 15, all transitive via `@dcl/sdk@7.26.0` |
+| Largest cluster | `protobufjs` — the SDK's own wire-format encoder |
+
+`npm audit fix` has been applied and resolved what it could without breaking
+changes. The remainder need `npm audit fix --force`, which would downgrade or
+replace packages the SDK pins, breaking the scene build. **`@dcl/sdk@7.26.0` is
+the latest published version**, so there is no upgrade available that clears
+them.
+
+Being precise about one thing, because "development dependency" is misleading
+here: `@dcl/sdk` is declared as a dev dependency, but its runtime code is
+**bundled into the deployed scene**. So this is not purely a build-time
+exposure. What limits it is that a Decentraland scene executes inside the
+client's own sandbox with no filesystem, no process access and no ambient
+credentials — the scene cannot reach anything worth reaching.
+
+We would rather state this plainly than present a clean-looking dashboard.

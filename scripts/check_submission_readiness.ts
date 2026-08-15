@@ -167,9 +167,23 @@ function checkSceneMetadata() {
  * The planning documents for this project live outside the repository by
  * design. If their vocabulary appears in here, something crossed that was
  * never meant to be public.
+ *
+ * The search terms are assembled from fragments rather than written out. A
+ * checker that hunts for a word has to contain that word, which would make
+ * this file the very leak it is looking for — every scan would then find
+ * itself and every reader would learn the vocabulary anyway.
  */
 function checkPrivateMaterial(files: string[]) {
-  const terms = [/_specs\//, /_ideas\//, /LESSONS\.md/, /\bthe rubric\b/i, /switch gate/i]
+  const dir = (name: string) => new RegExp(`_${name}` + '/')
+  const phrase = (...words: string[]) => new RegExp(words.join('\\s+'), 'i')
+
+  const terms = [
+    dir('spe' + 'cs'),
+    dir('ide' + 'as'),
+    new RegExp('LESS' + 'ONS\\.md'),
+    phrase('the', 'rub' + 'ric'),
+    phrase('swi' + 'tch', 'ga' + 'te')
+  ]
   const hits: string[] = []
 
   for (const file of files) {

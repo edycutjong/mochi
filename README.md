@@ -1,26 +1,42 @@
 <div align="center">
+  <img src="docs/assets/icon.svg" alt="Mochi Icon" width="144">
+  <h1>Mochi 🫧</h1>
+  <p><em>A giant pastel blob co-parented by every stranger who visits.</em></p>
+  <img src="docs/assets/readme-hero.png" alt="Mochi — its size is the sum of every feeding; its dance is a chain taught by named strangers" width="100%">
 
-<img src="docs/assets/icon.svg" width="120" alt="Mochi">
+  <p>
+    Its size is the <strong>literal sum of every feeding</strong>, and its dance is a chain
+    where each move was taught by a named stranger. Verify it yourself in 30 seconds —
+    see <a href="JUDGE.md">JUDGE.md</a>.
+  </p>
 
-# Mochi
+  <br/>
 
-**A giant pastel blob co-parented by every stranger who visits.**
+  [![Built for Friendzone](https://img.shields.io/badge/DoraHacks-Friendzone_Buildathon-8b5cf6?style=for-the-badge)](https://dorahacks.io/hackathon/friendzone)
+  [![For Judges](https://img.shields.io/badge/📋_For-Judges-06b6d4?style=for-the-badge)](JUDGE.md)
 
-<img src="docs/assets/readme-hero.png" width="820" alt="Mochi — its size is the sum of every feeding; its dance is a chain taught by named strangers">
+  <br/>
 
-**[Visit Mochi →](«PENDING:world-url»)**
-
-`SDK7` · `TypeScript` · `react-ecs` · `Tween` · `WebSocket` · `SQLite` · `MIT`
+  ![Decentraland SDK7](https://img.shields.io/badge/Decentraland-SDK7-FF2D55?style=flat)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+  ![Node.js](https://img.shields.io/badge/Node.js_22.5+-339933?style=flat&logo=node.js&logoColor=white)
+  ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
+  [![License](https://img.shields.io/badge/License-MIT-yellow)](https://opensource.org/licenses/MIT)
+  [![CI](https://github.com/edycutjong/mochi/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/mochi/actions/workflows/ci.yml)
 
 </div>
 
 ---
 
-## 🫧 What it is
+## 💡 The Problem & Solution
+
+### The Problem
 
 Decentraland Mobile has no reason to be opened twice. Its worlds are venues —
 wonderful when full, dead when empty, which is almost always. You arrive alone,
 find an empty room, and nothing tells you anyone was ever there or cared.
+
+### The Solution
 
 Mochi is the opposite of a venue. It is one creature whose entire body is the
 record of everyone who has ever tended it.
@@ -38,7 +54,7 @@ So a visitor alone at 2am both **receives** evidence of other people and
 **leaves** state that every future visitor inherits. No co-presence, no host,
 no schedule.
 
-## 📱 How it was designed and optimised for mobile
+## 📱 Designed and Optimised for Mobile
 
 Portrait, one-handed, **zero typing anywhere**.
 
@@ -63,7 +79,7 @@ The only elastic cost is the ring of memory dancers, and it is built as a
 ladder — six avatars, three, or floating name-tags — so a slow device gets a
 plainer clearing rather than a broken one.
 
-## 🤝 How it encourages social interaction
+## 🤝 How It Encourages Social Interaction
 
 Every visible property of the creature was produced by somebody else.
 
@@ -81,7 +97,7 @@ Underneath, `chain_move.teacher_name` is `NOT NULL` at the schema level and
 there is no delete verb anywhere in the server. An anonymous chain would be a
 leaderboard; a leaderboard is not what this is.
 
-## 🔁 Why people come back
+## 🔁 Why People Come Back
 
 Because it is hungry, and because someone else has been.
 
@@ -95,41 +111,99 @@ the plaque will tell you who. Teach it a move and five seconds later you are
 watching a performance authored by named strangers that ends with **you** —
 and that performance stays there for everyone who comes after.
 
-## 🧪 Try it
-
-Full steps in **[DEMO.md](DEMO.md)** — including how to see the away-line,
-which needs two people.
-
-```bash
-cd server && npm install && npm start   # Node 22.5+
-npm install && npm run start:mobile     # prints a QR for your phone
-```
-
-Nothing is mocked. The local run uses the same server, schema and protocol as
-the deployed one.
-
-## 🏗 How it works
+## 🏗️ Architecture & Tech Stack
 
 The scene owns **no state**. It sends intents and renders what the server says,
 so the creature is the same creature for everybody.
 
-See **[ARCHITECTURE.md](ARCHITECTURE.md)** for the diagram and the three
+| Layer | Technology |
+|---|---|
+| **Scene** | Decentraland SDK7, TypeScript |
+| **UI** | react-ecs |
+| **Animation** | Tween / TweenSequence — no rig, no animation data |
+| **Server** | Node 22.5+, `ws` |
+| **Persistence** | SQLite via Node's built-in `node:sqlite` |
+| **Runtime dependencies** | **1** (`ws`) |
+
+```mermaid
+flowchart LR
+    Scene["Decentraland scene<br/>renders · sends intents"]
+    WS["WebSocket"]
+    Game["Rules · rate limits · guests"]
+    DB[("SQLite<br/>pet · chain_move · carer_event")]
+
+    Scene -->|"feed · teach · pet · stamp"| WS --> Game --> DB
+    Game -->|"authoritative state"| Scene
+```
+
+See **[ARCHITECTURE.md](ARCHITECTURE.md)** for the full diagram and the three
 decisions that shaped the code — including why growth and breathing live on
 different entities, and why hunger is derived rather than ticked.
 
+## 📊 Engineering Rigor
+
+| Metric | Value |
+|---|---|
+| Tests | **82** across 16 suites |
+| Exhaustive verification | **78,482 combinations** |
+| Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
+| Provider cost | **$0.00** — no external API, no model, nothing on-chain |
+| Deployable payload | **6.6 MB** against a 25 MB budget |
+| Scene performance | **«PENDING:perf-score»%**, Galaxy A54, High profile |
+
+The exhaustive test sweeps every stored hunger value against every elapsed time
+against every configuration — including NaN, ±Infinity, negative values, values
+above 1, and time running backwards from a clock correction. **None of them
+produces a creature that starves.** That property is the emotional premise of
+the whole design, so it is verified across its input space rather than at a
+handful of points.
+
+Full measured receipt in **[DEMO.md](DEMO.md)**.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js 22.5+** — the server uses the SQLite driver built into the runtime,
+  so there is nothing to compile
+- The Decentraland mobile app, on the same Wi-Fi as your machine
+
+### Installation
+
 ```bash
-cd server && npm test    # 82 tests, 16 suites
+cd server && npm install && npm start   # authoritative server on :8080
+npm install && npm run start:mobile     # prints a QR code for your phone
 ```
 
-## ⚡ Performance
+Nothing is mocked. The local run uses the same server, schema and protocol as
+the deployed World.
 
-**«PENDING:perf-score»%** on the in-client Scene Limits panel — Samsung Galaxy
-A54, High graphics profile, Dynamic Graphics off.
+Full walkthrough — including how to see the away-line, which needs two
+people — in **[DEMO.md](DEMO.md)**.
 
-You do not have to take our word for it. In-Game Menu → Settings → Graphics →
-Dynamic Graphics off → High, then the monitor icon at the top right.
+## 🧪 Testing & CI
 
-## 🙏 Honest limitations
+```bash
+cd server && npm test    # 82 tests, 16 suites
+npm run build            # scene bundle + typecheck
+```
+
+| Layer | Tool |
+|---|---|
+| Scene build + typecheck | `sdk-commands build` |
+| Server tests | `node:test` |
+| Static analysis | CodeQL |
+| Secret scanning | TruffleHog (CI) + gitleaks over full history |
+| Dependency audit | Dependabot + `npm audit` |
+| Submission gate | `scripts/check_submission_readiness.ts` |
+
+## ⛓️ Live Deployment
+
+**World:** «PENDING:world-url»
+
+Deployed to a Decentraland World and publicly accessible throughout judging.
+
+## 🙏 Honest Limitations
 
 - **Emote observation is unverified on mobile.** Catching a move a visitor
   performs with the client's own emote wheel depends on behaviour the platform

@@ -72,16 +72,21 @@ about it.
 
 Disclosed rather than left for you to discover in the alerts tab.
 
-At the time of writing, Dependabot reports **15 open advisories, all in the
-scene's dependency tree and none in the server's.** Every one arrives
-transitively through `@dcl/sdk`, which is the mandatory Decentraland scene SDK
-and cannot be substituted.
+At the time of writing there are open advisories **entirely in the scene's
+dependency tree and none in the server's.** Every one arrives transitively
+through `@dcl/sdk`, which is the mandatory Decentraland scene SDK and cannot be
+substituted.
 
 | | |
 |---|---|
 | Server runtime dependencies | **1** (`ws`) — zero open advisories |
-| Scene advisories | 15, all transitive via `@dcl/sdk@7.26.0` |
+| Scene advisories | all transitive via `@dcl/sdk@7.26.0` |
 | Largest cluster | `protobufjs` — the SDK's own wire-format encoder |
+
+Two counts exist and they disagree, so neither is quoted as *the* number here:
+GitHub's Dependabot tab reports one alert per advisory-and-path, while
+`npm audit` groups them differently — currently 16 and 15 respectively. Both
+describe the same set.
 
 `npm audit fix` has been applied and resolved what it could without breaking
 changes. The remainder need `npm audit fix --force`, which would downgrade or

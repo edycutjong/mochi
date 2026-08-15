@@ -27,13 +27,17 @@ import ReactEcs, { Label, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 import { isMobile } from '@dcl/sdk/platform'
 import { PALETTE } from '../config'
+import { EmotePicker } from './emote-picker'
 
 export type HudActions = {
   onFeed: () => void
-  onTeach: () => void
+  onTeach: (emoteId: string) => void
 }
 
 let actions: HudActions = { onFeed: () => {}, onTeach: () => {} }
+
+/** The TEACH picker is the only modal in the scene. */
+let pickerOpen = false
 
 /** Top-centre ambient line. Empty string hides it entirely. */
 let bubble = ''
@@ -124,8 +128,18 @@ const hud = () => (
       }}
     >
       <ThumbButton label="FEED" accent onClick={() => actions.onFeed()} />
-      <ThumbButton label="TEACH" onClick={() => actions.onTeach()} />
+      <ThumbButton label="TEACH" onClick={() => (pickerOpen = true)} />
     </UiEntity>
+
+    {pickerOpen && (
+      <EmotePicker
+        onPick={(emoteId) => {
+          pickerOpen = false
+          actions.onTeach(emoteId)
+        }}
+        onDismiss={() => (pickerOpen = false)}
+      />
+    )}
   </UiEntity>
 )
 

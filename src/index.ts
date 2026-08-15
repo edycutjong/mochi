@@ -3,6 +3,8 @@ import { engine, inputSystem, InputAction, PointerEventType } from '@dcl/sdk/ecs
 import { createMochi, applyGrowth, Mochi } from './mochi/creature'
 import { createMeadow } from './mochi/meadow'
 import { setupAliveness, alivenessSystem, playEat, playPetDown, playPetUp } from './mochi/aliveness'
+import { createPlaque, renderPlaque, ago } from './mochi/plaque'
+import { emoteObserverSystem, onTaught, teachFromPicker, localIdentity, TaughtMove } from './mochi/teach'
 import { setupHud, hudSystem, say } from './ui/hud'
 import { setupTouchControls } from './ui/controls'
 
@@ -67,30 +69,70 @@ function petSystem() {
  */
 let localFeedCount = 0
 
+/**
+ * The chain, held locally until the server owns it.
+ *
+ * Same status as the feed counter: scaffolding, replaced wholesale. It exists
+ * so the TEACH → credit → replay loop can be walked end to end on a phone
+ * before the persistence layer lands.
+ */
+const localChain: TaughtMove[] = []
+const localCarers: string[] = []
+
 function scene() {
-  createMeadow()
+  const meadow = createMeadow()
   mochi = createMochi()
   setupAliveness(mochi)
   setupTouchControls()
+  createPlaque(meadow.plaque)
+
+  onTaught((move) => {
+    localChain.push(move)
+    // The credit is the payload of the whole mechanic — the name of the
+    // stranger, attached to the move, said out loud.
+    say(`${move.teacherName} taught move #${localChain.length}`)
+    refreshPlaque()
+  })
 
   setupHud({
     onFeed: () => {
       if (!mochi) return
+      const who = localIdentity()
       localFeedCount++
       applyGrowth(mochi, localFeedCount)
       playEat()
+      if (who && !localCarers.includes(who.name)) localCarers.unshift(who.name)
+      lastFedAt = Date.now()
+      lastFedBy = who?.name ?? ''
+      refreshPlaque()
     },
-    onTeach: () => {
-      // TEACH depends on whether the mobile client reports avatar emotes to
-      // the scene, which probe check 2 exists to answer. Until it does, this
-      // says so rather than pretending to work.
-      say('teach is not wired yet')
+    onTeach: (emoteId) => {
+      void teachFromPicker(emoteId)
     }
   })
+
+  refreshPlaque()
 
   engine.addSystem(alivenessSystem)
   engine.addSystem(petSystem)
   engine.addSystem(hudSystem)
+  engine.addSystem(emoteObserverSystem)
+}
+
+let lastFedAt = 0
+let lastFedBy = ''
+
+function refreshPlaque() {
+  renderPlaque({
+    lastFedBy,
+    lastFedAgo: lastFedAt ? ago(Date.now() - lastFedAt) : '',
+    todaysCarers: localCarers,
+    // The away-line names the person whose act followed yours. It is a server
+    // query over other people's history, so there is nothing honest to show
+    // until the server exists — an invented name here would be a lie about a
+    // human being, which is the one thing this scene must never render.
+    awayLine: ''
+  })
 }
 
 function probe() {

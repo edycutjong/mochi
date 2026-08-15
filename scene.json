@@ -14,7 +14,7 @@
   },
   "main": "bin/index.js",
   "tags": ["social", "pet", "mobile", "friendzone"],
-  "requiredPermissions": ["USE_WEBSOCKET", "USE_FETCH"],
+  "requiredPermissions": ["USE_WEBSOCKET", "USE_FETCH", "ALLOW_TO_TRIGGER_AVATAR_EMOTE"],
   "scene": {
     "parcels": ["0,0"],
     "base": "0,0"

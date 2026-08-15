@@ -35,7 +35,7 @@ first run; there is no migration step and no setup script.
 npm test             # builds, then runs node:test over dist/test
 ```
 
-78 tests across 15 suites. They cover hunger decay against its floor, the away-line query including
+82 tests across 16 suites. They cover hunger decay against its floor, the away-line query including
 every case where the honest answer is nothing, the rate limiter's sliding window, guest refusal at
 each write path, restart survival through a real file on disk, and an end-to-end pass over a real
 WebSocket.

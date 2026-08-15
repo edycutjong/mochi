@@ -1,0 +1,37 @@
+# Secret scanning over the FULL history, not just the tip.
+#
+# This project has no credentials of its own, and the intent is to keep it that
+# way: a secret committed once and removed in the next commit is still in the
+# history forever, so `fetch-depth: 0` is the whole point of this workflow.
+name: gitleaks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: scan history for secrets
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: checkout full history
+        uses: actions/checkout@v4
+        with:
+          # Every commit, every branch, every tag — a shallow clone would only
+          # ever see the tip and miss a secret that was added and then removed.
+          fetch-depth: 0
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

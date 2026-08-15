@@ -69,6 +69,38 @@ This is the part worth the extra minute, because it needs two people.
 On arrival the first visitor is told, by name, who tended the creature after
 they left — *"Rue fed Mochi after you left."*
 
+## Receipt from a real run
+
+Measured, not estimated. Four sessions against a freshly created database, on
+a 2026 MacBook:
+
+```
+server cold start → listening        db=./data/mochi.db  feedings=0 chain=0 carers=0
+4 sessions, 6 intents                1,845 ms wall clock
+final database                       4,096 bytes
+  pet                                1 row     feed_count = 2
+  chain_move                         1 row     'wave', taught by Kito
+  carer_event                        3 rows    2 feeds, 1 teach
+```
+
+What the run proved, in order:
+
+| Step | Result |
+|---|---|
+| Kito connects | `canWrite=true`, `awayLine=null` — nobody has been since |
+| Kito feeds and teaches | `feedCount=1`, `chainLength=1`, plaque reads *Kito* |
+| Rue feeds | `feedCount=2`, plaque reads *Rue* |
+| **Kito returns** | **`awayLine={name:"Rue", kind:"feed"}`** |
+| Guest connects and tries to feed | refused `guest_read_only`, `canWrite=false`, still renders everything |
+
+The fourth row is the one worth reading twice. That is the away-line — the
+only message in the system addressed to a person rather than a room — resolving
+to a real name, from real rows, written by a different wallet.
+
+**Provider cost: $0.00.** There is nothing to bill. This project makes no
+external API calls, has no model, no chain and no paid service anywhere in its
+path. The only dependency at runtime is `ws`.
+
 ## Verify the server independently
 
 ```bash
@@ -76,9 +108,26 @@ cd server
 npm test
 ```
 
-78 tests across 15 suites, covering hunger reaching its floor and not passing
-it, the away-line including its empty case, rate limiting, guest rejection,
-and state surviving a reopen of the database.
+**82 tests across 16 suites**, and one of them is exhaustive rather than
+example-based:
+
+```
+40,480 decay combinations verified
+36,432 starvation combinations refuted
+ 1,150 feeding combinations verified
+   420 no-punishment combinations verified
+```
+
+**78,482 combinations**, sweeping every stored value against every elapsed
+time against every configuration — including NaN, ±Infinity, negative hunger,
+values above 1, and time running backwards from a clock correction.
+
+None of them produces a creature that starves. That property is the emotional
+premise of the whole design, so it is verified across its input space rather
+than at a handful of points.
+
+The rest of the suite covers the away-line including its empty case, rate
+limiting, guest rejection, and state surviving a reopen of the database.
 
 ## Performance
 

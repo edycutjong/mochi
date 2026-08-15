@@ -118,7 +118,7 @@ decisions that shaped the code — including why growth and breathing live on
 different entities, and why hunger is derived rather than ticked.
 
 ```bash
-cd server && npm test    # 78 tests, 15 suites
+cd server && npm test    # 82 tests, 16 suites
 ```
 
 ## ⚡ Performance

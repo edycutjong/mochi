@@ -19,6 +19,9 @@ dclcontext/
 .env
 .env.*
 
+# ...except the documented example, which contains only defaults and no secrets
+!.env.example
+
 # OS / editor noise
 .DS_Store
 **/.DS_Store

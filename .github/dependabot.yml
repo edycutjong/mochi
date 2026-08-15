@@ -1,0 +1,86 @@
+# Dependabot configuration.
+#
+# The scene and the server are two separate npm projects with two separate
+# lockfiles, and Dependabot only looks at directories it is told about, so each
+# one needs its own block.
+#
+# Deliberately conservative: monthly, minor and patch grouped into one pull
+# request per project, and every semver-major update ignored. Majors are how a
+# green pipeline turns red overnight, and they are never urgent enough to be
+# worth that here. Security advisories still come through regardless of these
+# rules.
+version: 2
+
+updates:
+  # The Decentraland SDK7 scene, at the repository root.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - scene
+    commit-message:
+      prefix: chore(deps)
+      prefix-development: chore(deps-dev)
+      include: scope
+    groups:
+      scene-minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+
+  # The authoritative game server.
+  - package-ecosystem: npm
+    directory: /server
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - server
+    commit-message:
+      prefix: chore(deps)
+      prefix-development: chore(deps-dev)
+      include: scope
+    groups:
+      server-minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+
+  # The workflows themselves.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - ci
+    commit-message:
+      prefix: chore(ci)
+    groups:
+      actions-minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major

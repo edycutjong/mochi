@@ -24,3 +24,4 @@ cursorignore
 .github
 dclcontext
 docs
+server

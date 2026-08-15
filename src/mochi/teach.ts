@@ -89,6 +89,24 @@ export function isObservationWorking(): boolean {
 }
 
 /**
+ * Identity for opening a connection, guests included.
+ *
+ * Distinct from `localIdentity` on purpose. That one gates *crediting* and so
+ * refuses guests; this one gates *connecting*, which guests are entitled to do
+ * — almost everything the server sends is other people's history, and none of
+ * it requires a wallet to look at.
+ */
+export function sessionIdentity(): { wallet: string; name: string; isGuest: boolean } | null {
+  const identity = PlayerIdentityData.getOrNull(engine.PlayerEntity)
+  if (!identity) return null
+
+  const name = AvatarBase.getOrNull(engine.PlayerEntity)?.name
+  if (!name) return null
+
+  return { wallet: identity.address, name, isGuest: identity.isGuest }
+}
+
+/**
  * Watches for emotes the visitor performs themselves.
  *
  * `AvatarEmoteCommand` is a grow-only value set: the client APPENDS an entry

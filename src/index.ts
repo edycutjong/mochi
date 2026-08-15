@@ -1,13 +1,15 @@
-import { engine, inputSystem, InputAction, PointerEventType } from '@dcl/sdk/ecs'
+import { engine, inputSystem, InputAction, PointerEventType, PointerEvents } from '@dcl/sdk/ecs'
 
+import { SERVER_URL } from './config'
 import { createMochi, applyGrowth, Mochi } from './mochi/creature'
-import { createMeadow } from './mochi/meadow'
+import { createMeadow, Meadow } from './mochi/meadow'
 import { setupAliveness, alivenessSystem, playEat, playPetDown, playPetUp } from './mochi/aliveness'
 import { createPlaque, renderPlaque, ago } from './mochi/plaque'
-import { emoteObserverSystem, onTaught, teachFromPicker, localIdentity, TaughtMove } from './mochi/teach'
+import { emoteObserverSystem, onTaught, teachFromPicker, sessionIdentity } from './mochi/teach'
 import { setDancers, danceLoopSystem } from './mochi/dancers'
 import { setupHud, hudSystem, say } from './ui/hud'
 import { setupTouchControls } from './ui/controls'
+import { connect, send, canWrite, currentState } from './net/client'
 
 import { setupProbeWorld, avatarEmoteLoopSystem } from './probe/world'
 import { emoteProbeSystem } from './probe/emote-probe'
@@ -22,12 +24,13 @@ import { setupProbeHud } from './probe/hud'
  *             actually does on the mobile client; see docs/PROBE.md.
  *
  * The probe is still unanswered. Flip this one word, scan the QR, read the
- * five answers off the phone, and fill in the table in docs/PROBE.md. Both the
+ * answers off the phone, and fill in the table in docs/PROBE.md. Both the
  * probe and this switch are deleted once those answers are recorded.
  */
 const MODE: 'scene' | 'probe' = 'scene'
 
 let mochi: Mochi | null = null
+let meadow: Meadow | null = null
 
 /**
  * PET — latch on press, survive the slide.
@@ -45,7 +48,7 @@ let mochi: Mochi | null = null
 let petLatched = false
 
 function petSystem() {
-  if (!mochi) return
+  if (!mochi || !meadow) return
 
   if (inputSystem.isTriggered(InputAction.IA_POINTER, PointerEventType.PET_DOWN, mochi.body)) {
     petLatched = true
@@ -56,92 +59,116 @@ function petSystem() {
   if (petLatched && inputSystem.isTriggered(InputAction.IA_POINTER, PointerEventType.PET_UP)) {
     petLatched = false
     playPetUp()
+    if (canWrite()) send({ t: 'pet' })
+  }
+
+  // The guestbook stamp closes a visit. One tap, no confirmation.
+  if (inputSystem.isTriggered(InputAction.IA_POINTER, PointerEventType.PET_DOWN, meadow.totem)) {
+    if (canWrite()) {
+      send({ t: 'stamp' })
+      say('your visit is in the guestbook')
+    }
   }
 }
 
 /**
- * Local feed count — scaffolding, not the real thing.
+ * Renders whatever the server last said.
  *
- * Size is meant to be the sum of every visitor's feedings, held by an
- * authoritative server that does not exist yet (day 6-7). This counter is
- * local, resets on reload, and is here only so the growth curve can be judged
- * by eye while tuning the aliveness. It is replaced wholesale by the server's
- * count and must never ship as the source of size.
+ * Everything visible about the creature is derived here and nowhere else. The
+ * client holds no counter of its own, so there is no second version of the
+ * truth that could drift from the one every other visitor sees.
  */
-let localFeedCount = 0
+function renderFromServer() {
+  const state = currentState()
+  if (!state || !mochi) return
 
-/**
- * The chain, held locally until the server owns it.
- *
- * Same status as the feed counter: scaffolding, replaced wholesale. It exists
- * so the TEACH → credit → replay loop can be walked end to end on a phone
- * before the persistence layer lands.
- */
-const localChain: TaughtMove[] = []
-const localCarers: string[] = []
+  applyGrowth(mochi, state.pet.feedCount)
+
+  renderPlaque({
+    // The server's genesis row carries a stand-in rather than a name. Treating
+    // it as one would put a person on the plaque who does not exist.
+    lastFedBy: state.pet.feedCount > 0 ? state.pet.lastFedBy : '',
+    lastFedAgo: state.pet.feedCount > 0 ? ago(state.now - state.pet.lastFedAt) : '',
+    todaysCarers: state.carers.map((c) => c.name),
+    awayLine: ''
+  })
+
+  setDancers(
+    state.chain.map((m) => ({
+      emoteId: m.emoteId,
+      teacherName: m.teacherName,
+      wearables: m.wearables
+    }))
+  )
+}
 
 function scene() {
-  const meadow = createMeadow()
+  meadow = createMeadow()
   mochi = createMochi()
   setupAliveness(mochi)
   setupTouchControls()
   createPlaque(meadow.plaque)
 
+  // The totem is tappable; the plaque is not. Reading needs no permission.
+  PointerEvents.createOrReplace(meadow.totem, {
+    pointerEvents: [
+      {
+        eventType: PointerEventType.PET_DOWN,
+        eventInfo: { button: InputAction.IA_POINTER, hoverText: 'sign the guestbook', maxDistance: 6 }
+      }
+    ]
+  })
+
+  const who = sessionIdentity()
+  if (who) {
+    connect(SERVER_URL, who, {
+      onState: renderFromServer,
+      onAwayLine: (line) => {
+        // The one sentence addressed to this person rather than to the room.
+        say(`${line.name} ${line.kind === 'feed' ? 'fed' : 'tended'} Mochi after you left`, 7)
+      },
+      onRefused: (code) => {
+        if (code === 'rate_limited') say('Mochi has had plenty for now')
+        else if (code === 'guest_read_only') say('sign in with a wallet to leave your mark')
+      },
+      onLink: (up) => {
+        // Going down says nothing: the last state stays on screen and a
+        // notice would only draw attention to a gap the visitor cannot act on.
+        if (up) renderFromServer()
+      }
+    })
+  }
+
+  // A move taught here plays locally at once and is sent for the server to
+  // make permanent. The animation is optimistic; the record is not.
   onTaught((move) => {
-    localChain.push(move)
-    // The credit is the payload of the whole mechanic — the name of the
-    // stranger, attached to the move, said out loud.
-    say(`${move.teacherName} taught move #${localChain.length}`)
-    refreshPlaque()
-    setDancers(
-      localChain.map((m) => ({
-        emoteId: m.emoteId,
-        teacherName: m.teacherName,
-        wearables: m.wearables
-      }))
-    )
+    if (!canWrite()) {
+      say('sign in with a wallet to teach a move')
+      return
+    }
+    send({ t: 'teach', emoteId: move.emoteId, wearables: move.wearables })
   })
 
   setupHud({
     onFeed: () => {
-      if (!mochi) return
-      const who = localIdentity()
-      localFeedCount++
-      applyGrowth(mochi, localFeedCount)
+      if (!canWrite()) {
+        say('sign in with a wallet to feed Mochi')
+        return
+      }
+      // Plays immediately, counts when the server says so.
       playEat()
-      if (who && !localCarers.includes(who.name)) localCarers.unshift(who.name)
-      lastFedAt = Date.now()
-      lastFedBy = who?.name ?? ''
-      refreshPlaque()
+      send({ t: 'feed' })
     },
     onTeach: (emoteId) => {
       void teachFromPicker(emoteId)
     }
   })
 
-  refreshPlaque()
-
   engine.addSystem(alivenessSystem)
   engine.addSystem(petSystem)
   engine.addSystem(hudSystem)
   engine.addSystem(emoteObserverSystem)
   engine.addSystem(danceLoopSystem)
-}
-
-let lastFedAt = 0
-let lastFedBy = ''
-
-function refreshPlaque() {
-  renderPlaque({
-    lastFedBy,
-    lastFedAgo: lastFedAt ? ago(Date.now() - lastFedAt) : '',
-    todaysCarers: localCarers,
-    // The away-line names the person whose act followed yours. It is a server
-    // query over other people's history, so there is nothing honest to show
-    // until the server exists — an invented name here would be a lie about a
-    // human being, which is the one thing this scene must never render.
-    awayLine: ''
-  })
 }
 
 function probe() {

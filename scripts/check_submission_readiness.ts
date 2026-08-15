@@ -56,7 +56,10 @@ function sourceFiles(): string[] {
  * Excludes this file, which necessarily contains the words it hunts for.
  */
 function checkPlaceholders(files: string[]) {
-  const patterns = [/\bTODO\b/, /\bFIXME\b/, /\bXXX\b/, /lorem ipsum/i, /PLACEHOLDER/i, /not wired yet/i]
+  // Case-sensitive on the shouty ones: prose legitimately discusses a
+  // "placeholder", and flagging a comment that explains a design decision
+  // trains people to ignore this script.
+  const patterns = [/\bTODO\b/, /\bFIXME\b/, /\bXXX\b/, /lorem ipsum/i, /\bPLACEHOLDER\b/, /not wired yet/i]
   const hits: string[] = []
 
   for (const file of files) {

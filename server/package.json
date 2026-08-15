@@ -1,0 +1,28 @@
+{
+  "name": "mochi-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Authoritative game server for Mochi. Owns pet state, the dance chain and the carer log.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/src/index.js",
+    "dev": "npm run build && node dist/src/index.js",
+    "test": "npm run build && node --test \"dist/test/*.test.js\"",
+    "seed:dev": "npm run build && node dist/scripts/seed-dev.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/ws": "^8.5.13",
+    "typescript": "^5.7.2"
+  }
+}

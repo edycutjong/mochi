@@ -28,6 +28,20 @@ export const PALETTE = {
 export const MOCHI_HOME = { x: 8, y: 0, z: 8 }
 
 /**
+ * The authoritative server.
+ *
+ * A scene has no environment variables — it is downloaded and run by the
+ * client, so this is baked in at deploy time and there is nowhere else to put
+ * it. It must be `wss://` in production: the mobile client will refuse a
+ * plaintext socket from a secure page, and the failure looks like the server
+ * being down rather than like a protocol mistake.
+ *
+ * `ws://127.0.0.1:8080` is the local default so `npm run start:mobile` works
+ * against a server running on the same machine.
+ */
+export const SERVER_URL = 'ws://127.0.0.1:8080'
+
+/**
  * Motion timings, in seconds unless noted.
  *
  * Every one of these is a number to be argued with on a real phone at day 4-5.

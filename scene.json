@@ -1,0 +1,41 @@
+{
+  "ecs7": true,
+  "runtimeVersion": "7",
+  "display": {
+    "title": "Mochi",
+    "description": "A giant pastel blob co-parented by everyone who visits. Feed it, teach it a move, watch a dance authored by strangers.",
+    "navmapThumbnail": "images/scene-thumbnail.png",
+    "favicon": "favicon_asset"
+  },
+  "owner": "",
+  "contact": {
+    "name": "",
+    "email": ""
+  },
+  "main": "bin/index.js",
+  "tags": ["social", "pet", "mobile", "friendzone"],
+  "scene": {
+    "parcels": ["0,0"],
+    "base": "0,0"
+  },
+  "spawnPoints": [
+    {
+      "name": "meadow-entry",
+      "default": true,
+      "position": {
+        "x": [7, 9],
+        "y": [0, 0],
+        "z": [2, 3]
+      },
+      "cameraTarget": {
+        "x": 8,
+        "y": 1.6,
+        "z": 8
+      }
+    }
+  ],
+  "featureToggles": {
+    "voiceChat": "disabled",
+    "portableExperiences": "disabled"
+  }
+}

@@ -14,6 +14,7 @@
   },
   "main": "bin/index.js",
   "tags": ["social", "pet", "mobile", "friendzone"],
+  "requiredPermissions": ["USE_WEBSOCKET", "USE_FETCH"],
   "scene": {
     "parcels": ["0,0"],
     "base": "0,0"

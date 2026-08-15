@@ -40,6 +40,7 @@ call.
 | 3 | Do particles render? | Look **right**. Sparks should fall by the pink post. |
 | 4 | Does `TextShape` sit where it does on desktop? | The floating text is pinned at exactly y=2.0, level with the **top face** of the yellow cube. If it floats above or below that line on the phone, the offset is real. |
 | 5 | Is there a photo capture button? | Look at the client's own HUD, not the scene. Note whether a camera/reel control exists. |
+| 6 | Do the declared permissions prompt the user? | `scene.json` declares `USE_WEBSOCKET` and `USE_FETCH`, which the persistence layer will need. Watch the **first few seconds after the scene loads** for any permission dialog, banner or consent step. |
 
 ### Why check 2 is instrumented twice
 
@@ -84,6 +85,18 @@ Recorded so a result can be told apart from a surprise:
   serif regardless of the `Font` value.
 - **Avatars** — a nearby issue reports Unity-client avatars not visible on the
   mobile app. `AvatarShape` itself carries no documented mobile limitation.
+- **Permissions** — `requiredPermissions` is absent from the documentation
+  entirely; the enum is only discoverable in the `@dcl/schemas` package. So
+  whether declaring `USE_WEBSOCKET` costs a user-facing consent step is
+  unknown, and on a mobile-first experience an extra dialog between a visitor
+  and the creature is a real cost. Declared early precisely so check 6 can
+  measure it now instead of on the day the server lands.
+
+  Note that `ALLOW_TO_TRIGGER_AVATAR_EMOTE` is **not** declared. Triggering an
+  emote on a scene-owned `AvatarShape` (via `expressionTriggerTimestamp`, as
+  check 1 does) is believed to be a different thing from making the *player's*
+  avatar emote, which is what that permission appears to govern. If check 1's
+  emote loop does not animate, this assumption is the first thing to revisit.
 
 ## Results
 
@@ -99,6 +112,7 @@ record.
 | 3 | Particles render | _pending_ | |
 | 4 | `TextShape` vertical position | _pending_ | |
 | 5 | Photo capture control exists | _pending_ | |
+| 6 | Permission prompt shown on load | _pending_ | |
 
 Also worth writing down while the phone is in hand: the reported platform,
 canvas size, FPS, and whether the account is a guest or a wallet — all four are

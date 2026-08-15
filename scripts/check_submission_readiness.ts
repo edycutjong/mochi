@@ -59,7 +59,23 @@ function checkPlaceholders(files: string[]) {
   // Case-sensitive on the shouty ones: prose legitimately discusses a
   // "placeholder", and flagging a comment that explains a design decision
   // trains people to ignore this script.
-  const patterns = [/\bTODO\b/, /\bFIXME\b/, /\bXXX\b/, /lorem ipsum/i, /\bPLACEHOLDER\b/, /not wired yet/i]
+  // Case-sensitive on the shouty ones: prose legitimately discusses a
+  // "placeholder", and flagging a comment that explains a design decision
+  // trains people to ignore this script.
+  //
+  // «PENDING:…» is the marker used for values that cannot be known until the
+  // scene is deployed and measured — the World URL, the performance score. A
+  // judge reading one of those is reading a promise, so they must all be
+  // resolved before this passes.
+  const patterns = [
+    /\bTODO\b/,
+    /\bFIXME\b/,
+    /\bXXX\b/,
+    /lorem ipsum/i,
+    /\bPLACEHOLDER\b/,
+    /not wired yet/i,
+    /«PENDING:[^»]*»/
+  ]
   const hits: string[] = []
 
   for (const file of files) {

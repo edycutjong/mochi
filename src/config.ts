@@ -36,10 +36,10 @@ export const MOCHI_HOME = { x: 8, y: 0, z: 8 }
  * plaintext socket from a secure page, and the failure looks like the server
  * being down rather than like a protocol mistake.
  *
- * `ws://127.0.0.1:8080` is the local default so `npm run start:mobile` works
- * against a server running on the same machine.
+ * To run against a server on this machine instead, swap in
+ * `ws://127.0.0.1:8080` — but never deploy with that value.
  */
-export const SERVER_URL = 'ws://127.0.0.1:8080'
+export const SERVER_URL = 'wss://mochi-friendzone.fly.dev'
 
 /**
  * Motion timings, in seconds unless noted.

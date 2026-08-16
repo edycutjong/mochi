@@ -263,9 +263,9 @@ The server is expected to run unattended for weeks.
 
 ```bash
 fly auth login
-fly launch --no-deploy --copy-config   # keeps this fly.toml; do not let it regenerate one
-fly volumes create mochi_data --size 1 --region sin
-fly deploy
+fly apps create <app-name> --org personal          # `launch` would regenerate fly.toml
+fly volumes create mochi_data --size 1 --region sin --app <app-name> --yes
+fly deploy --app <app-name>
 ```
 
 Then confirm it is actually alive before pointing anything at it:
@@ -305,13 +305,21 @@ fly scale count 1
 ### Backups
 
 The database is the entire accumulated history and the one thing here that
-cannot be rebuilt. Fly volumes are not backups.
+cannot be rebuilt.
+
+Fly creates the volume with **scheduled daily snapshots, five retained**, which
+is a real safety net and better than nothing — but it lives on the same
+platform as the thing it protects. Keep a copy elsewhere too:
 
 ```bash
 fly ssh console -C "cat /data/mochi.db" > "mochi-$(date +%F).db"
 ```
 
-Run it on a schedule and keep the copies off the host.
+To list what Fly is holding:
+
+```bash
+fly volumes snapshots list <volume-id>
+```
 
 ### Restarting is safe
 

@@ -6,7 +6,7 @@
 # Deploy from THIS directory (`server/`), not the repository root — the root is
 # the Decentraland scene.
 
-app = 'mochi-server'
+app = 'mochi-friendzone'
 
 # Pick the region nearest you. It matters less than it looks: every
 # interaction animates locally the instant it is tapped and the server only

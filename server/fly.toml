@@ -1,0 +1,69 @@
+# Fly.io configuration for the Mochi server.
+#
+# This app is one process holding one SQLite file, and it has to stay reachable
+# continuously. Everything unusual below follows from that.
+#
+# Deploy from THIS directory (`server/`), not the repository root — the root is
+# the Decentraland scene.
+
+app = 'mochi-server'
+
+# Pick the region nearest you. It matters less than it looks: every
+# interaction animates locally the instant it is tapped and the server only
+# confirms afterwards, so a couple of hundred milliseconds is invisible. What
+# does matter is that the volume lives in this region and cannot move.
+primary_region = 'sin'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  MOCHI_HOST = '0.0.0.0'
+  MOCHI_PORT = '8080'
+  # Must point inside the mount below, or every redeploy silently starts the
+  # creature over at zero feedings.
+  MOCHI_DB_PATH = '/data/mochi.db'
+
+# The database is the product. Without this mount the filesystem is ephemeral
+# and the entire history — every feeding, every credited move, every name —
+# disappears on the next deploy.
+[[mounts]]
+  source = 'mochi_data'
+  destination = '/data'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+
+  # Never stop the machine.
+  #
+  # `fly launch` scaffolds 'stop' with min_machines_running = 0, which parks the
+  # app when idle and cold-starts it on the next request. For a visitor opening
+  # this at 2am on a phone, that cold start lands on a WebSocket handshake — the
+  # worst possible moment. An idle machine here is not waste, it is the product
+  # being available.
+  auto_stop_machines = 'off'
+  auto_start_machines = true
+  min_machines_running = 1
+
+  # ONE machine, always.
+  #
+  # Fly volumes attach to a single machine. Scaling to two would give the second
+  # its own empty volume, and visitors would land on one of two different
+  # creatures at random depending on which machine answered. Do not run
+  # `fly scale count 2`.
+  processes = ['app']
+
+  [[http_service.checks]]
+    grace_period = '10s'
+    interval = '30s'
+    method = 'GET'
+    timeout = '5s'
+    path = '/health'
+
+[[vm]]
+  size = 'shared-cpu-1x'
+  # One creature, a few hundred carers, a SQLite file measured in kilobytes.
+  # This is not a memory-bound workload.
+  memory = '256mb'
+  cpus = 1

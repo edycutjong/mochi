@@ -255,3 +255,68 @@ The server is expected to run unattended for weeks.
   before it reaches the game logic.
 - **Back it up.** The database file is the entire accumulated history and the one thing here that
   cannot be rebuilt. Copy it off the host on a schedule.
+
+## Deploying to Fly.io
+
+`fly.toml` in this directory is the configuration. Run everything from **here**
+(`server/`), not the repository root — the root is the Decentraland scene.
+
+```bash
+fly auth login
+fly launch --no-deploy --copy-config   # keeps this fly.toml; do not let it regenerate one
+fly volumes create mochi_data --size 1 --region sin
+fly deploy
+```
+
+Then confirm it is actually alive before pointing anything at it:
+
+```bash
+curl https://<app>.fly.dev/health
+```
+
+The scene connects over `wss://<app>.fly.dev`. Put that in the scene's
+`src/config.ts`. It must be `wss://` — the mobile client refuses a plaintext
+socket, and the failure looks exactly like the server being down.
+
+### Three ways to lose the creature
+
+Every one of these has the same symptom: the history is gone and nobody can
+tell you why.
+
+**Deploying without the volume.** `MOCHI_DB_PATH` points at `/data`, and
+without `mochi_data` mounted there the filesystem is ephemeral. Every deploy
+starts the creature over at zero feedings. Create the volume *before* the
+first deploy.
+
+**Letting `fly launch` rewrite `fly.toml`.** The generated config sets
+`auto_stop_machines = 'stop'` with `min_machines_running = 0`, which parks the
+machine when idle. The next visitor's WebSocket handshake then lands on a cold
+start. `--copy-config` keeps the config in this repo instead.
+
+**Running more than one machine.** A Fly volume attaches to a single machine.
+`fly scale count 2` gives the second machine its own empty volume, and visitors
+land on one of two different creatures depending on which one answers. Keep it
+at one:
+
+```bash
+fly scale count 1
+```
+
+### Backups
+
+The database is the entire accumulated history and the one thing here that
+cannot be rebuilt. Fly volumes are not backups.
+
+```bash
+fly ssh console -C "cat /data/mochi.db" > "mochi-$(date +%F).db"
+```
+
+Run it on a schedule and keep the copies off the host.
+
+### Restarting is safe
+
+Hunger is derived from a stored value and a timestamp rather than ticked by a
+timer, so a restart resumes at exactly the right level with no drift. Clients
+reconnect on their own with backoff, and they keep rendering the last state
+they were given throughout — a restart is visible to nobody unless it happens
+to land mid-interaction.

@@ -26,7 +26,7 @@ import { Vector3 } from '@dcl/sdk/math'
 import { MOTION, MOCHI_HOME } from '../config'
 import { Mochi } from './creature'
 
-type Beat = 'idle' | 'greeting' | 'eating' | 'petting'
+type Beat = 'idle' | 'greeting' | 'eating' | 'petting' | 'replaying'
 
 let mochi: Mochi | null = null
 let beat: Beat = 'idle'
@@ -166,6 +166,41 @@ export function setupAliveness(m: Mochi) {
   mochi = m
   rest = Transform.get(m.body).scale
   breathe(m.body)
+}
+
+/** Resting proportions, so a set-piece can compute its own squashes. */
+export function restingScale(): Vector3 {
+  return rest
+}
+
+/** Volume-preserving squash relative to rest — shared with the chain replay. */
+export function squashTo(y: number): Vector3 {
+  return squash(y)
+}
+
+/**
+ * Hands the body to a longer set-piece.
+ *
+ * The chain replay runs for many seconds and drives its own tweens move by
+ * move. Rather than fight the idle loop for the same Transform, it claims the
+ * body for a stated duration and this state machine keeps out of the way until
+ * the claim lapses, then resumes breathing.
+ */
+export function claimBody(seconds: number) {
+  beat = 'replaying'
+  beatRemaining = seconds
+}
+
+/** True while a set-piece owns the body. */
+export function bodyIsClaimed(): boolean {
+  return beat === 'replaying'
+}
+
+/** Ends a claim early — used when a replay is cut short. */
+export function releaseBody() {
+  if (beat !== 'replaying' || !mochi) return
+  beat = 'idle'
+  breathe(mochi.body)
 }
 
 export function alivenessSystem(dt: number) {

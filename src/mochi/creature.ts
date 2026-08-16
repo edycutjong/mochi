@@ -33,7 +33,7 @@ import {
   InputAction,
   Entity
 } from '@dcl/sdk/ecs'
-import { Vector3, Quaternion } from '@dcl/sdk/math'
+import { Vector3, Quaternion, Color4 } from '@dcl/sdk/math'
 import { PALETTE, MOCHI_HOME, GROWTH } from '../config'
 
 export type Mochi = {
@@ -126,4 +126,41 @@ export function applyGrowth(mochi: Mochi, feedCount: number) {
   const s = Math.min(GROWTH.baseScale + feedCount * GROWTH.perFeed, GROWTH.maxScale)
   const t = Transform.getMutable(mochi.root)
   t.scale = Vector3.create(s, s, s)
+}
+
+/**
+ * Makes hunger visible on the creature itself.
+ *
+ * Hunger is the return hook — you come back partly because it needs feeding —
+ * so it has to be legible without a bar, a number or a label. A well-fed Mochi
+ * glows warm and saturated; a hungry one goes pale and dim, like something that
+ * has been waiting.
+ *
+ * Deliberately not a HUD element. This scene has two buttons and no instruction
+ * text, and a status bar would be the third thing on screen competing with the
+ * creature it describes. Putting the state *in the body* means a visitor reads
+ * it in the same glance they read everything else.
+ *
+ * Never reaches zero, because the server's hunger never does — the floor is
+ * what keeps the creature reading as needy rather than dying.
+ */
+export function applyHunger(mochi: Mochi, hunger: number) {
+  const fed = Math.max(0, Math.min(1, hunger))
+
+  // Pale toward the light body tone when hungry, deepen when fed.
+  const albedo = Color4.create(
+    PALETTE.bodyLight.r + (PALETTE.bodyDeep.r - PALETTE.bodyLight.r) * fed,
+    PALETTE.bodyLight.g + (PALETTE.bodyDeep.g - PALETTE.bodyLight.g) * fed,
+    PALETTE.bodyLight.b + (PALETTE.bodyDeep.b - PALETTE.bodyLight.b) * fed,
+    1
+  )
+
+  Material.setPbrMaterial(mochi.body, {
+    albedoColor: albedo,
+    emissiveColor: { r: PALETTE.bodyLight.r, g: PALETTE.bodyLight.g, b: PALETTE.bodyLight.b },
+    // The glow carries most of the signal: 0.12 when hungry, 0.45 when full.
+    emissiveIntensity: 0.12 + fed * 0.33,
+    roughness: 0.85,
+    metallic: 0
+  })
 }

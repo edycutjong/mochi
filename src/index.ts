@@ -1,12 +1,13 @@
 import { engine, inputSystem, InputAction, PointerEventType, PointerEvents } from '@dcl/sdk/ecs'
 
 import { SERVER_URL } from './config'
-import { createMochi, applyGrowth, Mochi } from './mochi/creature'
+import { createMochi, applyGrowth, applyHunger, Mochi } from './mochi/creature'
 import { createMeadow, Meadow } from './mochi/meadow'
 import { setupAliveness, alivenessSystem, playEat, playPetDown, playPetUp } from './mochi/aliveness'
 import { createPlaque, renderPlaque, ago } from './mochi/plaque'
 import { emoteObserverSystem, onTaught, teachFromPicker, sessionIdentity } from './mochi/teach'
 import { setDancers, danceLoopSystem } from './mochi/dancers'
+import { setupReplay, startReplay, replaySystem, isReplaying } from './mochi/replay'
 import { setupHud, hudSystem, say } from './ui/hud'
 import { setupTouchControls } from './ui/controls'
 import { connect, send, canWrite, currentState } from './net/client'
@@ -78,11 +79,22 @@ function petSystem() {
  * client holds no counter of its own, so there is no second version of the
  * truth that could drift from the one every other visitor sees.
  */
+/**
+ * True while we are waiting for our own teach to come back from the server.
+ *
+ * The replay fires on the state that contains the visitor's own move, not on
+ * the local animation — so what they watch is the chain the server actually
+ * stored, ending with their contribution as everyone else will see it.
+ */
+let awaitingOwnTeach = false
+let lastChainLength = -1
+
 function renderFromServer() {
   const state = currentState()
   if (!state || !mochi) return
 
   applyGrowth(mochi, state.pet.feedCount)
+  applyHunger(mochi, state.pet.hunger)
 
   renderPlaque({
     // The server's genesis row carries a stand-in rather than a name. Treating
@@ -100,12 +112,36 @@ function renderFromServer() {
       wearables: m.wearables
     }))
   )
+
+  // The payoff: the visitor's move landed, so play back the whole chain and let
+  // them watch a dance authored by named strangers that ends with them.
+  const grew = state.chainLength > lastChainLength && lastChainLength >= 0
+  lastChainLength = state.chainLength
+
+  if (awaitingOwnTeach && grew && !isReplaying()) {
+    awaitingOwnTeach = false
+    startReplay(
+      state.chain.map((m) => ({ emoteId: m.emoteId, teacherName: m.teacherName, seq: m.seq })),
+      {
+        onStart: (playing, skipped, total) => {
+          say(
+            skipped > 0
+              ? `replaying the last ${playing} of ${total} moves`
+              : `replaying all ${total} moves`,
+            4
+          )
+        },
+        onEnd: () => say('the chain is yours now', 4)
+      }
+    )
+  }
 }
 
 function scene() {
   meadow = createMeadow()
   mochi = createMochi()
   setupAliveness(mochi)
+  setupReplay(mochi)
   setupTouchControls()
   createPlaque(meadow.plaque)
 
@@ -146,6 +182,7 @@ function scene() {
       say('sign in with a wallet to teach a move')
       return
     }
+    awaitingOwnTeach = true
     send({ t: 'teach', emoteId: move.emoteId, wearables: move.wearables })
   })
 
@@ -169,6 +206,7 @@ function scene() {
   engine.addSystem(hudSystem)
   engine.addSystem(emoteObserverSystem)
   engine.addSystem(danceLoopSystem)
+  engine.addSystem(replaySystem)
 }
 
 function probe() {

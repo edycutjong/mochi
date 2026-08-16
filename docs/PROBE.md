@@ -105,14 +105,14 @@ record.
 
 | # | Check | Result | Device / notes |
 |---|---|---|---|
-| 1 | `AvatarShape` renders | _pending_ | |
-| 1b | Emote loop via timestamp bump | _pending_ | |
+| 1 | `AvatarShape` renders | **PASS** | Avatar visible beside the marker post, correct height |
+| 1b | Emote loop via timestamp bump | **PASS** | Dancing continuously; re-triggering `expressionTriggerTimestamp` works |
 | 2 | Emote data reaches scene (poll) | _pending_ | |
 | 2b | `onChange` fires | _pending_ | |
-| 3 | Particles render | _pending_ | |
-| 4 | `TextShape` vertical position | _pending_ | |
-| 5 | Photo capture control exists | _pending_ | |
-| 6 | Permission prompt shown on load | _pending_ | |
+| 3 | Particles render | **PASS** | Visible as smoke near the marker post. The missing-features page listed these as unsupported with a July-Aug 2026 ETA — the fix has shipped. Upside: the design assumed none. |
+| 4 | `TextShape` vertical position | likely OK | Reported as level with the reference cube, but the answer was ambiguous — treat as unconfirmed and re-check on the deployed scene, where the plaque is readable in context |
+| 5 | Photo capture control exists | not measured | Informational only; nothing in the design depends on it |
+| 6 | Permission prompt shown on load | none observed | No dialog was reported during load. USE_WEBSOCKET / USE_FETCH appear not to cost a consent step |
 
 Also worth writing down while the phone is in hand: the reported platform,
 canvas size, FPS, and whether the account is a guest or a wallet — all four are

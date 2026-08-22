@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [main]
 
+# Least privilege. Nothing in this pipeline writes to the repository — it
+# builds, tests, scans and measures. The default token is broader than that,
+# and CodeQL flags the gap, so the whole workflow is pinned read-only. Jobs
+# that need more (Pages, releases) live in their own files and ask there.
+permissions:
+  contents: read
+
 # One run per branch. A superseded push should stop burning minutes.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -79,7 +86,7 @@ jobs:
         with:
           fetch-depth: 0 # the point is to scan history, not the tip
       - name: TruffleHog
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@bcfcf73aaf4759d4dadc2783177c245a02792318 # v3.97.0
         with:
           extra_args: --only-verified
 
@@ -166,7 +173,7 @@ jobs:
       - name: Summary
         run: |
           echo "🚀 All gates passed"
-          echo "  ✅ Stage 1 — scene build + typecheck, server typecheck + 82 tests"
+          echo "  ✅ Stage 1 — scene build + typecheck, server typecheck + 221 tests at 100% coverage"
           echo "  ✅ Stage 2 — secret scan over full history, dependency audit, licenses"
           echo "  ✅ Stage 3 — deployable payload within budget"
           echo "  ✅ Stage 4 — protocol end-to-end over a real socket"

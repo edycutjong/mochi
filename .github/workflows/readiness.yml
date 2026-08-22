@@ -10,6 +10,10 @@ name: submission-readiness
 on:
   workflow_dispatch:
 
+# Reads the tree and reports. It writes nothing.
+permissions:
+  contents: read
+
 jobs:
   readiness:
     runs-on: ubuntu-latest

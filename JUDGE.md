@@ -34,7 +34,8 @@ Every number below is measured and reproducible. Full detail in
 
 | | |
 |---|---|
-| Tests | **82**, across 16 suites |
+| Tests | **220**, across 13 files |
+| Server coverage | **100%** lines and branches, 98.3% functions |
 | Exhaustive verification | **78,482 combinations** — no input produces a starving creature |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
 | Away-line, live | `{name: "Rue", kind: "feed"}` — resolved from real rows, different wallet |

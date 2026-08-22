@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="docs/assets/icon.svg" alt="Mochi Icon" width="144">
+  <img src="docs/assets/icon-animated.svg" alt="Mochi Icon" width="144">
   <h1>Mochi 🫧</h1>
   <p><em>A giant pastel blob co-parented by every stranger who visits.</em></p>
-  <img src="docs/assets/readme-hero.png" alt="Mochi — its size is the sum of every feeding; its dance is a chain taught by named strangers" width="100%">
+  <img src="docs/assets/readme-hero-animated.svg" alt="Mochi — its size is the sum of every feeding; its dance is a chain taught by named strangers" width="100%">
 
   <p>
     Its size is the <strong>literal sum of every feeding</strong>, and its dance is a chain
@@ -144,7 +144,8 @@ different entities, and why hunger is derived rather than ticked.
 
 | Metric | Value |
 |---|---|
-| Tests | **82** across 16 suites |
+| Tests | **220** across 13 files |
+| Server coverage | **100%** lines · **100%** branches · 98.3% functions |
 | Exhaustive verification | **78,482 combinations** |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain |
@@ -184,7 +185,8 @@ people — in **[DEMO.md](DEMO.md)**.
 ## 🧪 Testing & CI
 
 ```bash
-cd server && npm test    # 82 tests, 16 suites
+cd server && npm test             # 220 tests, 13 files
+cd server && npm run test:coverage  # the same, with the coverage table
 npm run build            # scene bundle + typecheck
 ```
 
@@ -196,6 +198,13 @@ npm run build            # scene bundle + typecheck
 | Secret scanning | TruffleHog (CI) + gitleaks over full history |
 | Dependency audit | Dependabot + `npm audit` |
 | Submission gate | `scripts/check_submission_readiness.ts` |
+| Versioning | semantic-release — SemVer derived from Conventional Commits |
+
+Releases are cut automatically and only after the whole pipeline is green: the
+release workflow is triggered by a **successful** CI run rather than by a push,
+so a version tag always points at a commit whose tests actually passed. The
+version, the tag, `CHANGELOG.md` and the GitHub Release all come from the commit
+messages — nothing is bumped by hand.
 
 ## ⛓️ Live Deployment
 

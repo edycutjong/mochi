@@ -108,8 +108,9 @@ cd server
 npm test
 ```
 
-**82 tests across 16 suites**, and one of them is exhaustive rather than
-example-based:
+**220 tests across 13 files**, at **100% line and branch coverage** of the
+server — run `npm run test:coverage` for the table. One test is exhaustive
+rather than example-based:
 
 ```
 40,480 decay combinations verified
@@ -142,9 +143,13 @@ the top right.
 
 Stated here rather than discovered:
 
-- The capability probe in `docs/PROBE.md` has not been run on a device, so its
-  results table is still empty. `MODE` at the top of `src/index.ts` switches
-  the build to it.
+- The capability probe in `docs/PROBE.md` has been run on a real device and most
+  of it came back clean: `AvatarShape` renders, the emote loop driven by
+  `expressionTriggerTimestamp` works, and **particles render** — the mobile
+  missing-features page listed those as unsupported, so the design had already
+  been built to do without them. One row is still open, below. `MODE` at the top
+  of `src/index.ts` switches the build back to the probe.
 - Emote *observation* — catching a move a visitor performs with the client's
-  own emote wheel — is unverified on mobile. The picker route does not depend
-  on it and is what the demo above uses.
+  own emote wheel — is the probe's one unanswered check. The picker route does
+  not depend on it and is what the demo above uses, so what is unresolved is how
+  spontaneous TEACH can be, not whether it works.

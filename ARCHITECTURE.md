@@ -138,7 +138,7 @@ which is the exact emptiness this project exists to answer.
 | `src/net/client.ts` | 182 | connection, queue, reconnect |
 | `src/probe/` | 465 | day-one capability probe (see `docs/PROBE.md`) |
 | `server/src/` | 1,337 | protocol, rules, store, hunger, transport |
-| `server/test/` | 1,150 | 82 tests, one of them exhaustive |
+| `server/test/` | 2,525 | 220 tests at 100% line/branch coverage, one exhaustive |
 
 Scene and server share one definition of the wire format: `server/src/protocol.ts`
 has no imports at all, so the scene includes it directly and the two cannot

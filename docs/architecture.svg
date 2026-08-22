@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" role="img"
+     aria-label="Mochi architecture: the Decentraland scene sends feed, teach, pet and stamp intents over a WebSocket to an authoritative Node server, which applies rules, rate limits and guest rejection, writes to SQLite, and returns authoritative state to the scene. The scene owns no state.">
+  <title>Mochi architecture — the scene owns no state</title>
+
+  <style>
+    .box   { fill: #FFFFFF; stroke: #E4D3C4; stroke-width: 2; }
+    .lbl   { font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #3B2A44; }
+    .h     { font-size: 21px; font-weight: 800; }
+    .s     { font-size: 14px; font-weight: 600; fill: #5E4666; }
+    .t     { font-size: 12.5px; font-weight: 700; fill: #B2436A; letter-spacing: .02em; }
+    .r     { font-size: 12.5px; font-weight: 700; fill: #4A8F73; letter-spacing: .02em; }
+    .wire  { stroke: #B2436A; stroke-width: 2.5; fill: none; stroke-linecap: round; }
+    .back  { stroke: #4A8F73; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-dasharray: 7 6; }
+    .note  { font-size: 13px; font-weight: 700; fill: #9B8AA6;
+             font-family: 'Nunito', system-ui, -apple-system, sans-serif; }
+
+    /* Intents travel left to right; authoritative state returns underneath. */
+    .flowR { stroke-dasharray: 10 14; animation: dashR 1.5s linear infinite; }
+    .flowL { animation: dashL 2.4s linear infinite; }
+    @keyframes dashR { to { stroke-dashoffset: -24; } }
+    @keyframes dashL { to { stroke-dashoffset: -26; } }
+
+    /* Mochi breathes at the scene's own constant: 1.04 over 2400ms. */
+    .breathe { transform-origin: 122px 128px; animation: breathe 2.4s ease-in-out infinite; }
+    @keyframes breathe { 50% { transform: scale(1.04); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .flowR, .flowL, .breathe { animation: none; }
+    }
+  </style>
+
+  <rect width="1200" height="340" rx="20" fill="#FFF1E0"/>
+
+  <!-- ── the scene ─────────────────────────────────────────── -->
+  <rect class="box" x="36" y="58" width="250" height="180" rx="18"/>
+  <g class="breathe">
+    <ellipse cx="122" cy="128" rx="30" ry="27" fill="#FFC9DC"/>
+    <circle cx="112" cy="124" r="3.4" fill="#3B2A44"/>
+    <circle cx="132" cy="124" r="3.4" fill="#3B2A44"/>
+    <path d="M115 137 q7 5 14 0" stroke="#3B2A44" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  </g>
+  <text class="lbl h" x="170" y="122">Scene</text>
+  <text class="lbl s" x="170" y="143">SDK7</text>
+  <text class="lbl s" x="62" y="188">renders · sends intents</text>
+  <text class="lbl s" x="62" y="209" font-weight="800" fill="#B2436A">owns no state</text>
+
+  <!-- ── intents ───────────────────────────────────────────── -->
+  <path class="wire flowR" d="M296 132 H452"/>
+  <path class="wire" d="M446 126 l8 6 -8 6" stroke-linejoin="round"/>
+  <text class="lbl t" x="298" y="118">feed · teach · pet · stamp</text>
+
+  <!-- ── the server ────────────────────────────────────────── -->
+  <rect class="box" x="462" y="58" width="286" height="180" rx="18"/>
+  <text class="lbl h" x="488" y="104">Authoritative server</text>
+  <text class="lbl s" x="488" y="128">Node 22.5 · ws · 1 dependency</text>
+  <text class="lbl s" x="488" y="162">· rules — every verb decided here</text>
+  <text class="lbl s" x="488" y="184">· rate limits, per wallet</text>
+  <text class="lbl s" x="488" y="206">· guests refused, never recorded</text>
+
+  <!-- ── persistence ───────────────────────────────────────── -->
+  <path class="wire flowR" d="M758 132 H884"/>
+  <path class="wire" d="M878 126 l8 6 -8 6" stroke-linejoin="round"/>
+
+  <rect class="box" x="894" y="58" width="270" height="180" rx="18"/>
+  <ellipse cx="944" cy="104" rx="26" ry="9" fill="#A8E6CF" stroke="#4A8F73" stroke-width="2"/>
+  <path d="M918 104 v34 a26 9 0 0 0 52 0 v-34" fill="#C9F0DC" stroke="#4A8F73" stroke-width="2"/>
+  <ellipse cx="944" cy="138" rx="26" ry="9" fill="#A8E6CF" stroke="#4A8F73" stroke-width="2"/>
+  <text class="lbl h" x="986" y="112">SQLite</text>
+  <text class="lbl s" x="986" y="133">node:sqlite</text>
+  <text class="lbl s" x="920" y="182">pet · chain_move · carer_event</text>
+  <text class="lbl s" x="920" y="204" font-weight="800" fill="#4A8F73">append-only · no delete verb</text>
+
+  <!-- ── authoritative state returns ───────────────────────── -->
+  <path class="back flowL" d="M1030 250 V286 H166 V250"/>
+  <path class="wire" d="M160 256 l6 -8 6 8" stroke="#4A8F73" stroke-linejoin="round"/>
+  <text class="lbl r" x="516" y="278">authoritative state — the same creature for everybody</text>
+
+  <text class="note" x="36" y="316">Every write crosses one wallet handshake. Nothing the scene believes is trusted.</text>
+</svg>

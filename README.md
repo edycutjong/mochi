@@ -125,16 +125,7 @@ so the creature is the same creature for everybody.
 | **Persistence** | SQLite via Node's built-in `node:sqlite` |
 | **Runtime dependencies** | **1** (`ws`) |
 
-```mermaid
-flowchart LR
-    Scene["Decentraland scene<br/>renders · sends intents"]
-    WS["WebSocket"]
-    Game["Rules · rate limits · guests"]
-    DB[("SQLite<br/>pet · chain_move · carer_event")]
-
-    Scene -->|"feed · teach · pet · stamp"| WS --> Game --> DB
-    Game -->|"authoritative state"| Scene
-```
+<img src="docs/architecture.svg" alt="The Decentraland scene sends feed, teach, pet and stamp intents over a WebSocket to an authoritative Node server, which applies rules, rate limits and guest rejection, writes to an append-only SQLite database, and returns authoritative state to the scene. The scene owns no state." width="100%">
 
 See **[ARCHITECTURE.md](ARCHITECTURE.md)** for the full diagram and the three
 decisions that shaped the code — including why growth and breathing live on
@@ -207,7 +198,7 @@ logic in it lives in the server, and that is the half at 100%.
 | Layer | Tool |
 |---|---|
 | Scene build + typecheck | `sdk-commands build` |
-| Server tests | `node:test` |
+| Server tests + coverage | vitest + v8, thresholds at 100% |
 | Static analysis | CodeQL |
 | Secret scanning | TruffleHog (CI) + gitleaks over full history |
 | Dependency audit | Dependabot + `npm audit` |
@@ -219,6 +210,21 @@ release workflow is triggered by a **successful** CI run rather than by a push,
 so a version tag always points at a commit whose tests actually passed. The
 version, the tag, `CHANGELOG.md` and the GitHub Release all come from the commit
 messages — nothing is bumped by hand.
+
+## 🔗 Where to Find It
+
+| | |
+|---|---|
+| 🫧 **Live World** | «PENDING:world-url» — open in the Decentraland mobile app |
+| 🌐 **Landing page** | **[mochi.edycu.dev](https://mochi.edycu.dev/)** — the creature on the page is sized by the real feed count |
+| 🎞️ **Pitch deck** | **[mochi.edycu.dev/deck](https://mochi.edycu.dev/deck/)** — 12 slides, works offline |
+| 🎥 **Demo video** | «PENDING:video-url» |
+| 🏆 **BUIDL** | «PENDING:buidl-url» — DoraHacks [Friendzone Buildathon](https://dorahacks.io/hackathon/friendzone) |
+| 📋 **For judges** | [JUDGE.md](JUDGE.md) — every number, and how to check it in 30 seconds |
+| 🩺 **Server health** | [mochi-friendzone.fly.dev/health](https://mochi-friendzone.fly.dev/health) · [/state](https://mochi-friendzone.fly.dev/state) |
+
+Both web surfaces redeploy from `main` on every commit that passes CI, so
+neither can drift ahead of a green build.
 
 ## ⛓️ Live Deployment
 

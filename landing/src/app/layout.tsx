@@ -32,8 +32,10 @@ export const metadata: Metadata = {
     default: "Mochi — the creature Decentraland is raising together",
     template: "%s · Mochi",
   },
+  // 149 characters. Google truncates around 155–160, so this is close to the
+  // limit while still ending on a whole thought rather than an ellipsis.
   description:
-    "A giant pastel blob co-parented by every stranger who visits. Its size is the literal sum of every feeding, and its dance is a chain where each move was taught by a named stranger. A Decentraland SDK7 world that feels inhabited with nobody online.",
+    "A giant pastel blob co-parented by every stranger who visits. Its size is the sum of every feeding; its dance was taught by named strangers.",
   keywords: [
     "Decentraland",
     "SDK7",
@@ -46,13 +48,23 @@ export const metadata: Metadata = {
     "Friendzone Buildathon",
     "open source",
   ],
-  authors: [{ name: "DCL Regenesis Labs" }],
-  creator: "DCL Regenesis Labs",
+  // Edy Cu built this. DCL Regenesis Labs runs the buildathon it was built
+  // for — crediting them as the author would be wrong in a machine-readable
+  // field that feeds search results and social cards.
+  authors: [{ name: "Edy Cu", url: "https://github.com/edycutjong" }],
+  creator: "Edy Cu",
+  publisher: "Edy Cu",
   openGraph: {
     type: "website",
+    // Discord renders this above the title; without it the card is anonymous.
+    siteName: "Mochi",
+    url: "https://mochi.edycu.dev",
+    locale: "en_GB",
     title: "Mochi — the creature Decentraland is raising together",
+    // 97 characters. Social cards commonly clip around 125 and mobile clips
+    // sooner, so this stays comfortably inside the shortest of them.
     description:
-      "Its size is the literal sum of every feeding. Its dance is a chain where every move was taught by a named stranger. Two thumb buttons, one creature, no typing.",
+      "Its size is the sum of every feeding. Its dance was taught, move by move, by named strangers.",
     images: [
       {
         url: "/og-image.png",
@@ -65,9 +77,15 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Mochi — the creature Decentraland is raising together",
+    // 113 characters — X clips the card description early on mobile.
     description:
-      "A giant pastel blob co-parented by every stranger who visits. Its body is the record of everyone who cared for it.",
-    images: ["/og-image.png"],
+      "A blob co-parented by strangers. Its body is the record of everyone who ever cared for it. Come feed it.",
+    images: [
+      {
+        url: "/og-image.png",
+        alt: "Mochi, a giant pastel blob on a green meadow under a cream sky",
+      },
+    ],
   },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],

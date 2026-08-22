@@ -23,8 +23,6 @@ import {
 /** Anything that can receive server messages. A WebSocket, or a test array. */
 export interface Sink {
   send(message: ServerMessage): void
-  /** Optional: the room asks for a close after an unrecoverable handshake error. */
-  close?(): void
 }
 
 export interface RoomOptions {

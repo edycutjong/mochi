@@ -32,17 +32,10 @@ export default defineConfig({
       // turned out to be testable anyway once its signal handlers and exit
       // path were driven directly.
       //
-      // Functions is 98.27 rather than 100 because of exactly one uncovered
-      // function: the `close` callback on the Sink passed to `room.connect()`
-      // in src/ws.ts:63. It is unreachable because nothing in src/ ever calls
-      // `sink.close()` — game.ts documents it as a hook for an unrecoverable
-      // handshake error and then never uses it. That is dead code, and the
-      // honest fix is to either wire it up or delete it, not to relax the
-      // threshold further or exclude the file.
       thresholds: {
         lines: 100,
         branches: 100,
-        functions: 98,
+        functions: 100,
         statements: 100,
       },
     },

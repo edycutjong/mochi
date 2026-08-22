@@ -59,8 +59,7 @@ export function createTransport(room: Room, config: Config): Transport {
     const connection = room.connect({
       send: (message: ServerMessage) => {
         if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(message))
-      },
-      close: () => socket.close()
+      }
     })
 
     socket.on('message', (data) => {

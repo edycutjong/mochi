@@ -1,0 +1,407 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* ============================================================================
+   Mochi — landing page design system
+   ----------------------------------------------------------------------------
+   AESTHETIC DIRECTION: "Organic & Natural", executed as DAYLIGHT PASTEL.
+
+   Deliberately NOT dark mode. specs/ui.md is explicit: "Not dark mode — the
+   template's default is wrong for this brief. The brand is bright pastel and
+   the meadow reads better lit. Night is a state, not the theme." So the page
+   is warm cream and meadow green, and the only dark surface on the whole page
+   is the one section that is literally about 2am.
+
+   Every colour below traces to ../../assets/_tokens.css. Nothing invented.
+
+   TYPE PAIRING: Fraunces (display) + Nunito (UI/body).
+     Fraunces carries variable SOFT and WONK axes — a serif engineered to be
+     squishy and slightly wrong-shaped. It is the typographic equivalent of
+     squash-and-stretch, which is the product's entire thesis.
+     Nunito is the brand font: the repo wordmark is Nunito 800 outlines, so the
+     UI layer is literally the same typeface as the BUIDL and the icon.
+   ============================================================================ */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-nunito);
+  --font-display: var(--font-fraunces);
+  --font-mono: var(--font-mono-stack);
+  --font-heading: var(--font-fraunces);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Brand-native scale, exposed to Tailwind */
+  --color-mochi-body: var(--mochi-primary);
+  --color-mochi-body-soft: var(--mochi-primary-soft);
+  --color-mochi-accent: var(--mochi-accent);
+  --color-mochi-ink: var(--untended-ink);
+  --color-credited-ink: var(--credited-ink);
+  --color-meadow-far: var(--meadow-far);
+  --color-meadow-near: var(--meadow-near);
+  --color-night: var(--night);
+  --color-text-hi: var(--text-hi);
+  --color-text-mid: var(--text-mid);
+  --color-text-low: var(--text-low);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* === BRAND (verbatim from assets/_tokens.css) ========================== */
+  --mochi-primary: #ffc2dc;
+  --mochi-primary-soft: #ffd9e8;
+  --mochi-accent: #ff8fb1;
+
+  --untended-ink: #7a5165; /* 6.58:1 on white  */
+  --credited-ink: #b2436a; /* 4.84:1 on surface */
+
+  --meadow-far: #c9f0dc;
+  --meadow-near: #a8e6cf;
+  --sky-day: #fff4e6;
+  --night: #2b2d5c;
+
+  --text-hi: #3b2a44; /* 11.81:1 on surface */
+  --text-mid: #5e4666; /*  7.43:1 on surface */
+  --text-low: #9b8aa6; /* decorative only — 2.94:1, NEVER carries words */
+
+  /* The tokens file marks --text-low decorative, and it means it. Hint text,
+     captions, the «PENDING» tokens and the footer's legal line are all real
+     copy, so they use this instead: same hue family, 4.95:1 on the surface. */
+  --text-soft: #776384;
+
+  --mono-stack: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    monospace;
+  --font-mono-stack: var(--mono-stack);
+
+  /* === SHADCN SEMANTIC MAPPING ==========================================
+     Mapping brand onto shadcn's own variable names means every component we
+     pull from the registry inherits Mochi without per-component overrides. */
+  --background: var(--sky-day);
+  --foreground: var(--text-hi);
+  --card: #fff1e0;
+  --card-foreground: var(--text-hi);
+  --popover: #fff1e0;
+  --popover-foreground: var(--text-hi);
+  --primary: var(--credited-ink);
+  --primary-foreground: #fff6fa;
+  --secondary: #ffe8f1;
+  --secondary-foreground: var(--credited-ink);
+  --muted: #f6ead9;
+  --muted-foreground: var(--text-mid);
+  --accent: var(--mochi-accent);
+  --accent-foreground: #46101f;
+  --destructive: #ef4444;
+  --border: rgba(74, 59, 82, 0.14);
+  --input: rgba(74, 59, 82, 0.2);
+  --ring: var(--mochi-accent);
+  --radius: 1rem;
+
+  /* === ATMOSPHERE ======================================================== */
+  --gradient-mesh: radial-gradient(
+      60% 80% at 18% 12%,
+      rgba(255, 194, 220, 0.4) 0%,
+      transparent 62%
+    ),
+    radial-gradient(
+      55% 70% at 84% 22%,
+      rgba(255, 143, 177, 0.32) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 60% at 50% 108%,
+      rgba(168, 230, 207, 0.55) 0%,
+      transparent 70%
+    ),
+    linear-gradient(180deg, var(--sky-day) 0%, #ffefe3 100%);
+
+  --shadow-soft: 0 2px 4px rgba(74, 59, 82, 0.05),
+    0 12px 32px rgba(74, 59, 82, 0.09);
+  --shadow-lift: 0 4px 8px rgba(74, 59, 82, 0.06),
+    0 24px 56px rgba(74, 59, 82, 0.16);
+  --shadow-glow: 0 0 40px rgba(255, 194, 220, 0.45),
+    0 0 90px rgba(255, 143, 177, 0.22);
+
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-squish: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================================
+   BASE
+   ----------------------------------------------------------------------------
+   These MUST live inside @layer base. Tailwind v4 puts its utilities in a
+   cascade layer, and unlayered CSS outranks every layered rule regardless of
+   specificity — so an unlayered `h2 { color }` here silently beats
+   `class="text-[#fff4e6]"` on the element itself. That bug rendered the dark
+   section's headline dark-on-dark and invisible. Keep this layered.
+   ============================================================================ */
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* The header is sticky, so anchored sections must reserve room for it or
+     every in-page link lands with its heading hidden behind the bar. */
+  section[id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  body {
+    background-color: var(--sky-day);
+    background-image: var(--gradient-mesh);
+    background-attachment: fixed;
+    color: var(--text-hi);
+    font-family: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-fraunces), Georgia, serif;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--text-hi);
+    font-variation-settings: "SOFT" 60, "WONK" 1;
+    /* Display type at this size orphans single words badly; balance evens the
+       line lengths so headlines break where a typesetter would break them. */
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--mochi-accent);
+    color: #3d0d1c;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--credited-ink);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+/* Grain — keeps large pastel fields from banding, adds a papery tactility that
+   flat pastel gradients otherwise lack. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ============================================================================
+   MOTION
+   The product's whole claim is squash-stretch aliveness. A still page about it
+   would be a contradiction — so the creature never fully stops moving.
+   ============================================================================ */
+
+@keyframes mochi-breathe {
+  0%,
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+  35% {
+    transform: scale(1.035, 0.955) translateY(1.4%);
+  }
+  70% {
+    transform: scale(0.978, 1.042) translateY(-1.2%);
+  }
+}
+
+@keyframes mochi-squash {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+  28% {
+    transform: scale(1.16, 0.8) translateY(6%);
+  }
+  62% {
+    transform: scale(0.94, 1.1) translateY(-3%);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+@keyframes mochi-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95%,
+  97% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-14px) translateX(6px);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bead-land {
+  0% {
+    opacity: 0;
+    transform: translateY(-26px) scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(3px) scale(1.14);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.82);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.animate-rise {
+  animation: rise 0.75s var(--ease-soft) both;
+}
+
+/* transform-box: fill-box makes percentage transform-origin resolve against the
+   element's own bounding box inside SVG, not the viewport. Without it the
+   squash pivots off-canvas. */
+.breathing {
+  animation: mochi-breathe 4.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 50% 92%;
+}
+
+.squashing {
+  animation: mochi-squash 0.62s var(--ease-squish);
+  transform-box: fill-box;
+  transform-origin: 50% 92%;
+}
+
+.blinking {
+  animation: mochi-blink 6.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.drifting {
+  animation: drift 9s ease-in-out infinite;
+}
+
+/* Scroll reveal — set by IntersectionObserver in use-reveal.ts */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s var(--ease-soft),
+    transform 0.7s var(--ease-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 194, 220, 0.18) 25%,
+    rgba(255, 194, 220, 0.42) 50%,
+    rgba(255, 194, 220, 0.18) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* ============================================================================
+   ACCESSIBILITY — reduced motion.
+   The creature still *exists*, it simply stops moving. Nothing is hidden and
+   no information is carried by motion alone.
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

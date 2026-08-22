@@ -1,0 +1,99 @@
+name: Pages
+
+# Publishes the two web surfaces to https://mochi.edycu.dev
+#
+#   /        the landing page  — Next.js static export from landing/
+#   /deck/   the pitch deck    — one self-contained HTML file from deck/
+#
+# Gated on the CI pipeline, for the same reason the release workflow is: what
+# is on the domain should be a commit whose tests passed. A landing page that
+# quotes "100% coverage" while the suite is red would be the exact kind of
+# unverifiable claim the rest of this repo goes out of its way to avoid.
+#
+# Neither surface reaches the Decentraland World — .dclignore excludes landing/
+# and deck/, so the scene payload is unchanged by anything here.
+on:
+  workflow_run:
+    workflows: ["CI/CD Pipeline"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; let a newer one supersede a queued older one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: "Build both surfaces"
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: landing/package-lock.json
+
+      - name: Install landing dependencies
+        working-directory: landing
+        run: npm ci
+
+      # The landing page fetches the live creature state at build time so the
+      # first paint carries real numbers and the page works with JavaScript
+      # off. If the server is unreachable the page falls back to its offline
+      # state rather than failing the build — a deploy should not depend on
+      # Fly.io being up at that exact minute.
+      - name: Build landing page
+        working-directory: landing
+        run: npm run build
+
+      - name: Add the pitch deck at /deck/
+        run: |
+          mkdir -p landing/out/deck
+          cp deck/index.html landing/out/deck/index.html
+
+      # GitHub Pages serves _next/ fine, but Jekyll — which Pages runs by
+      # default — ignores any directory beginning with an underscore. Without
+      # this file every stylesheet and script 404s and the site renders naked.
+      - name: Disable Jekyll
+        run: touch landing/out/.nojekyll
+
+      - name: Verify the artifact before publishing it
+        run: |
+          set -e
+          test -f landing/out/index.html      || { echo "::error::no landing index.html"; exit 1; }
+          test -f landing/out/deck/index.html || { echo "::error::no deck index.html"; exit 1; }
+          test -f landing/out/CNAME           || { echo "::error::no CNAME — custom domain would reset"; exit 1; }
+          test -f landing/out/.nojekyll       || { echo "::error::no .nojekyll"; exit 1; }
+          echo "domain: $(cat landing/out/CNAME)"
+          echo "size:   $(du -sh landing/out | cut -f1)"
+          echo "files:  $(find landing/out -type f | wc -l)"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: landing/out
+
+  deploy:
+    name: "Deploy to mochi.edycu.dev"
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

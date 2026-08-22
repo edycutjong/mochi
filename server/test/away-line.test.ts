@@ -5,7 +5,7 @@
  * ones where the honest answer is *nothing*.
  */
 
-import { test, describe, beforeEach } from 'node:test'
+import { test, describe, beforeEach } from 'vitest'
 import assert from 'node:assert/strict'
 
 import { openDatabase } from '../src/db.js'

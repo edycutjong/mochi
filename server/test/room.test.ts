@@ -6,7 +6,7 @@
  * replies and — more importantly — on what did or did not reach the database.
  */
 
-import { test, describe, beforeEach } from 'node:test'
+import { test, describe, beforeEach } from 'vitest'
 import assert from 'node:assert/strict'
 
 import { openDatabase } from '../src/db.js'

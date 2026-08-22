@@ -17,5 +17,9 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "scripts/**/*.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts", "scripts/**/*.ts"],
+  // Config files are linted too, so the type-aware ESLint parser needs a
+  // project that knows about them. They are excluded from the build output by
+  // `include` above, which only emits src/test/scripts.
+  "exclude": ["dist", "coverage", "node_modules"]
 }

@@ -7,7 +7,7 @@
  * back: the size, the plaque, the chain with its credits, and the away-line.
  */
 
-import { test, describe, after } from 'node:test'
+import { test, describe, afterAll } from 'vitest'
 import assert from 'node:assert/strict'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -30,7 +30,7 @@ function tempDbPath(): string {
   return join(root, 'mochi.db')
 }
 
-after(() => {
+afterAll(() => {
   for (const root of roots) rmSync(root, { recursive: true, force: true })
 })
 

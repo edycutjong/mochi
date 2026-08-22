@@ -17,7 +17,7 @@
  * not the test, is the artifact.
  */
 
-import { test, describe } from 'node:test'
+import { test, describe } from 'vitest'
 import assert from 'node:assert/strict'
 
 import { hungerAt, hungerAfterFeed } from '../src/hunger.js'

@@ -7,9 +7,9 @@
  * health endpoint an uptime monitor polls actually answers.
  */
 
-import { test, describe, before, after } from 'node:test'
+import { test, describe, beforeAll, afterAll } from 'vitest'
 import assert from 'node:assert/strict'
-import { WebSocket } from 'ws'
+import { WebSocket, type RawData } from 'ws'
 
 import { openDatabase } from '../src/db.js'
 import { Store } from '../src/store.js'
@@ -21,18 +21,25 @@ import type { ServerMessage, StateMessage } from '../src/protocol.js'
 const ADA = '0x' + 'a1'.repeat(20)
 const config = testConfig({ host: '127.0.0.1', port: 0 })
 
+/** Mirrors `frameToText` in src/ws.ts — see the note there on why `.toString()` alone is wrong. */
+function frameText(data: RawData): string {
+  if (Array.isArray(data)) return Buffer.concat(data).toString('utf8')
+  if (data instanceof ArrayBuffer) return Buffer.from(data).toString('utf8')
+  return data.toString('utf8')
+}
+
 let db: ReturnType<typeof openDatabase>
 let transport: Transport
 let port = 0
 
-before(async () => {
+beforeAll(async () => {
   db = openDatabase({ path: ':memory:' })
   const room = new Room(new Store(db, config.hunger), config)
   transport = createTransport(room, config)
   port = (await transport.listen()).port
 })
 
-after(async () => {
+afterAll(async () => {
   await transport.close()
   db.close()
 })
@@ -51,7 +58,7 @@ function exchange(messages: unknown[], expected: number): Promise<ServerMessage[
       for (const message of messages) socket.send(JSON.stringify(message))
     })
     socket.on('message', (data) => {
-      received.push(JSON.parse(data.toString()) as ServerMessage)
+      received.push(JSON.parse(frameText(data)) as ServerMessage)
       if (received.length >= expected) {
         clearTimeout(timer)
         socket.close()
@@ -94,7 +101,7 @@ describe('websocket transport', () => {
       const timer = setTimeout(() => reject(new Error('timed out')), 4000)
       socket.on('open', () => socket.send('this is not json'))
       socket.on('message', (data) => {
-        received.push(JSON.parse(data.toString()) as ServerMessage)
+        received.push(JSON.parse(frameText(data)) as ServerMessage)
         clearTimeout(timer)
         socket.close()
         resolve(received)

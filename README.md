@@ -145,7 +145,7 @@ different entities, and why hunger is derived rather than ticked.
 | Metric | Value |
 |---|---|
 | Tests | **220** across 13 files |
-| Server coverage | **100%** lines · **100%** branches · 98.3% functions |
+| Server coverage | **100%** lines · **100%** branches · **100%** functions |
 | Exhaustive verification | **78,482 combinations** |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain |

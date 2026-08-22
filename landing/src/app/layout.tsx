@@ -3,6 +3,17 @@ import { Fraunces, Nunito } from "next/font/google";
 import "./globals.css";
 
 /**
+ * Social cards are cached by URL, not by content. Discord, X, Slack, LinkedIn
+ * and Facebook each keep the first copy they scrape, so republishing the same
+ * filename changes nothing for anyone who has already shared the link — the
+ * old card just keeps appearing.
+ *
+ * Bumping this forces every scraper to treat it as a new image. Increment it
+ * whenever og-image.png changes.
+ */
+const OG_IMAGE = "/og-image.png?v=2";
+
+/**
  * TYPE PAIRING — chosen, not defaulted.
  *
  * Fraunces exposes variable SOFT and WONK axes: a serif deliberately engineered
@@ -67,7 +78,7 @@ export const metadata: Metadata = {
       "Its size is the sum of every feeding. Its dance was taught, move by move, by named strangers.",
     images: [
       {
-        url: "/og-image.png",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Mochi, a giant pastel blob on a green meadow under a cream sky",
@@ -82,7 +93,7 @@ export const metadata: Metadata = {
       "A blob co-parented by strangers. Its body is the record of everyone who ever cared for it. Come feed it.",
     images: [
       {
-        url: "/og-image.png",
+        url: OG_IMAGE,
         alt: "Mochi, a giant pastel blob on a green meadow under a cream sky",
       },
     ],

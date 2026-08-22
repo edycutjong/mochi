@@ -1,6 +1,6 @@
 import { Wordmark } from "@/components/wordmark";
 import { PendingWorldNote } from "@/components/enter-world";
-import { REPO_URL, STATE_ENDPOINT, worldIsLive, WORLD_URL } from "@/lib/mochi";
+import { JUDGE_URL, REPO_URL, STATE_ENDPOINT, worldIsLive, WORLD_URL } from "@/lib/mochi";
 
 /**
  * ELEMENT 11 — footer.
@@ -27,6 +27,7 @@ const COLUMNS: {
   {
     heading: "Verify",
     links: [
+      { label: "For judges — every number, and how to check it", href: JUDGE_URL, external: true },
       { label: "Live /state endpoint", href: STATE_ENDPOINT, external: true },
       { label: "Source on GitHub", href: REPO_URL, external: true },
       { label: "MIT licence", href: `${REPO_URL}/blob/main/LICENSE`, external: true },

@@ -1,4 +1,4 @@
-import { PERF_SCORE, PERF_SCORE_PENDING, REPO_URL } from "@/lib/mochi";
+import { JUDGE_URL, PERF_SCORE, PERF_SCORE_PENDING, REPO_URL } from "@/lib/mochi";
 
 /**
  * ELEMENT 8 — testimonials, replaced on purpose.
@@ -25,7 +25,7 @@ interface Line {
 }
 
 const LINES: Line[] = [
-  { label: "Tests", value: "220", emphasis: true },
+  { label: "Tests", value: "221", emphasis: true },
   { label: "Test files", value: "13" },
   { label: "Statement coverage", value: "100%" },
   { label: "Branch coverage", value: "100%" },
@@ -199,7 +199,39 @@ export function Receipts() {
                   github.com/edycutjong/mochi · MIT
                 </p>
                 <p className="mt-1.5 text-xs text-[#776384]">
-                  Private until submission, public the moment it is submitted.
+                  Public, MIT, and green on every check.
+                </p>
+              </div>
+              <span
+                aria-hidden
+                className="shrink-0 text-2xl text-[#b2436a] transition-transform duration-300 group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </a>
+
+            {/*
+              A separate link, not nested inside the card above — the whole
+              card is already an anchor to the repository root, and a judge
+              arriving there has to go looking for the page written for them.
+            */}
+            <a
+              href={JUDGE_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="reveal group flex items-center justify-between gap-4 rounded-[1.75rem] border-2 border-[#7a5165]/18 bg-[#fff6fa] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#b2436a]/50"
+              style={{ ["--reveal-delay" as string]: "360ms" }}
+            >
+              <div>
+                <p className="text-lg font-black text-[#3b2a44]">
+                  In a hurry? Start here
+                </p>
+                <p className="mt-1 font-mono text-xs text-[#5e4666]">
+                  JUDGE.md
+                </p>
+                <p className="mt-1.5 text-xs text-[#776384]">
+                  Every number above, and the command that proves each one — about
+                  thirty seconds end to end.
                 </p>
               </div>
               <span

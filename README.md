@@ -1,6 +1,6 @@
 <div align="center">
   <img src="docs/assets/icon-animated.svg" alt="Mochi Icon" width="144">
-  <h1>Mochi 🫧</h1>
+  <h1>Mochi 🍡</h1>
   <p><em>A giant pastel blob co-parented by every stranger who visits.</em></p>
   <img src="docs/assets/readme-hero-animated.svg" alt="Mochi — its size is the sum of every feeding; its dance is a chain taught by named strangers" width="100%">
 

@@ -23,6 +23,13 @@ export const PERF_SCORE: string | null = null;
 export const PERF_SCORE_PENDING = "«PENDING:perf-score»";
 
 export const REPO_URL = "https://github.com/edycutjong/mochi";
+
+/**
+ * The page written for someone verifying in a hurry — every number and how to
+ * check it. Linking the repo root instead makes a judge go hunting for it,
+ * which is the opposite of the point.
+ */
+export const JUDGE_URL = `${REPO_URL}/blob/main/JUDGE.md`;
 export const STATE_ENDPOINT = "https://mochi-friendzone.fly.dev/state";
 
 /** True once a real World exists — drives CTA copy and enabled/disabled state. */

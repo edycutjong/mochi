@@ -3,6 +3,16 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.2.0](https://github.com/edycutjong/mochi/compare/v1.1.1...v1.2.0) (2026-08-22)
+
+### Features
+
+* **web:** route judges to JUDGE.md, and give the card a call to action ([0fc20b1](https://github.com/edycutjong/mochi/commit/0fc20b182eccea691ceffbbc15ade577adef58bd))
+
+### Performance
+
+* **web:** mobile Lighthouse 91 to 96 ([af8de85](https://github.com/edycutjong/mochi/commit/af8de851733a004f4c7d8036e65a651f1997de71))
+
 ## [1.1.1](https://github.com/edycutjong/mochi/compare/v1.1.0...v1.1.1) (2026-08-22)
 
 ### Fixes

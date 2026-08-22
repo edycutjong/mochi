@@ -3,6 +3,16 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.1.1](https://github.com/edycutjong/mochi/compare/v1.1.0...v1.1.1) (2026-08-22)
+
+### Fixes
+
+* **ci:** least-privilege tokens, pinned actions, patched transitive deps ([36e7a5c](https://github.com/edycutjong/mochi/commit/36e7a5cb008b168ab203671b7711f675f21d6159))
+
+### Documentation
+
+* draw the architecture, and say where to find everything ([6571e54](https://github.com/edycutjong/mochi/commit/6571e548ccf6f7576c61f8c0b998a0af3fb5146f))
+
 ## [1.1.0](https://github.com/edycutjong/mochi/compare/v1.0.0...v1.1.0) (2026-08-22)
 
 ### Features

@@ -11,7 +11,7 @@ import "./globals.css";
  * Bumping this forces every scraper to treat it as a new image. Increment it
  * whenever og-image.png changes.
  */
-const OG_IMAGE = "/og-image.png?v=2";
+const OG_IMAGE = "/og-image.png?v=3";
 
 /**
  * TYPE PAIRING — chosen, not defaulted.

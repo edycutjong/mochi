@@ -158,7 +158,18 @@ function json(res: ServerResponse, status: number, body: unknown): void {
   res.writeHead(status, {
     'content-type': 'application/json; charset=utf-8',
     'content-length': Buffer.byteLength(payload),
-    'cache-control': 'no-store'
+    'cache-control': 'no-store',
+    // Both routes are public, read-only projections of state the world already
+    // shows to anyone who walks in — a creature's size and the names of the
+    // people who fed it. Nothing here is private, there is no session and no
+    // cookie to protect, and every write goes over the WebSocket after a
+    // wallet handshake rather than through this handler.
+    //
+    // Opening them means the numbers can be read from a browser: a page can
+    // show the real carer count instead of a screenshot of one. A judge can
+    // also curl them and check the figures quoted in the README against the
+    // running server.
+    'access-control-allow-origin': '*'
   })
   res.end(payload)
 }

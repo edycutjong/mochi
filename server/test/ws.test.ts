@@ -166,6 +166,21 @@ describe('http routes', () => {
     assert.equal(response.status, 404)
   })
 
+  test('every response is readable cross-origin, so a browser can show the real numbers', async () => {
+    // The landing page reads the live carer count straight from /state rather
+    // than printing a screenshot of one. That only works while this header is
+    // present, and a missing header fails silently in the browser — the page
+    // just shows nothing — so it is asserted here rather than discovered there.
+    for (const path of ['/health', '/state', '/nope']) {
+      const response = await fetch(`http://127.0.0.1:${port}${path}`)
+      assert.equal(
+        response.headers.get('access-control-allow-origin'),
+        '*',
+        `${path} should be readable cross-origin`
+      )
+    }
+  })
+
   test('a request whose url is missing on the wire falls back to the root path', async () => {
     const localDb = openDatabase({ path: ':memory:' })
     const localTransport = createTransport(new Room(new Store(localDb, config.hunger), config), config)

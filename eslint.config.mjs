@@ -37,6 +37,11 @@ export default tseslint.config(
       'server/**',
       'assets/**',
       'coverage/**',
+      // The landing page is a separate Next.js package with its own tsconfig
+      // and its own lint config. Linting it from here would resolve it against
+      // the scene's program, which knows nothing about React or the DOM.
+      'landing/**',
+      'deck/**',
       '*.js',
       '*.mjs',
     ],

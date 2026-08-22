@@ -7,7 +7,10 @@
     "navmapThumbnail": "images/scene-thumbnail.png",
     "favicon": "favicon_asset"
   },
-  "owner": "",
+  "owner": "0x94A63619c8e41b0298B7B268c73323A6CdE8Ee50",
+  "worldConfiguration": {
+    "name": "wunderland.dcl.eth"
+  },
   "contact": {
     "name": "Edy Cu",
     "email": "edy.cu@live.com"

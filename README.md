@@ -135,7 +135,7 @@ different entities, and why hunger is derived rather than ticked.
 
 | Metric | Value |
 |---|---|
-| Tests | **220** across 13 files |
+| Tests | **221** across 13 files |
 | Server coverage | **100%** lines · **100%** branches · **100%** functions |
 | Exhaustive verification | **78,482 combinations** |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
@@ -176,7 +176,7 @@ people — in **[DEMO.md](DEMO.md)**.
 ## 🧪 Testing & CI
 
 ```bash
-npm test               # 220 tests, 13 files
+npm test               # 221 tests, 13 files
 npm run test:coverage  # the same, plus the coverage table
 npm run lint           # type-aware ESLint
 npm run build          # scene bundle + typecheck

@@ -34,7 +34,7 @@ Every number below is measured and reproducible. Full detail in
 
 | | |
 |---|---|
-| Tests | **220**, across 13 files |
+| Tests | **221**, across 13 files |
 | Server coverage | **100%** — lines, branches, functions and statements |
 | Exhaustive verification | **78,482 combinations** — no input produces a starving creature |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |

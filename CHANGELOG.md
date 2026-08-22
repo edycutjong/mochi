@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.2.1](https://github.com/edycutjong/mochi/compare/v1.2.0...v1.2.1) (2026-08-22)
+
+### Fixes
+
+* **web:** cache-bust the social card so the new one is actually seen ([6874ef2](https://github.com/edycutjong/mochi/commit/6874ef29aae8aee1c9dbe604325a4b8124a37523))
+
 ## [1.2.0](https://github.com/edycutjong/mochi/compare/v1.1.1...v1.2.0) (2026-08-22)
 
 ### Features

@@ -7,7 +7,7 @@
  */
 
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http'
-import { WebSocketServer, type WebSocket } from 'ws'
+import { WebSocketServer, type RawData, type WebSocket } from 'ws'
 
 import type { Room } from './game.js'
 import type { Config } from './config.js'
@@ -19,6 +19,22 @@ const MAX_PAYLOAD_BYTES = 32 * 1024
 
 /** How often dead connections are reaped. */
 const HEARTBEAT_MS = 30_000
+
+/**
+ * Decode an inbound frame to text.
+ *
+ * `ws` types a message as `Buffer | ArrayBuffer | Buffer[]`, and only the first
+ * of those survives a bare `.toString()`: an `ArrayBuffer` stringifies to the
+ * literal `"[object ArrayBuffer]"`, and an array of fragments comma-joins.
+ * Both would reach `JSON.parse` as garbage and be answered with `bad_message`,
+ * so a fragmented or binary-typed frame would look to the client like a
+ * malformed one. Normalise all three shapes instead.
+ */
+function frameToText(data: RawData): string {
+  if (Array.isArray(data)) return Buffer.concat(data).toString('utf8')
+  if (data instanceof ArrayBuffer) return Buffer.from(data).toString('utf8')
+  return data.toString('utf8')
+}
 
 export interface Transport {
   http: Server
@@ -50,7 +66,7 @@ export function createTransport(room: Room, config: Config): Transport {
     socket.on('message', (data) => {
       let parsed: unknown
       try {
-        parsed = JSON.parse(data.toString())
+        parsed = JSON.parse(frameToText(data))
       } catch {
         // Not JSON at all. Let the room answer with its own `bad_message`
         // rather than inventing a second vocabulary for the same refusal.

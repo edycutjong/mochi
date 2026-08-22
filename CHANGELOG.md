@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.1.0](https://github.com/edycutjong/mochi/compare/v1.0.0...v1.1.0) (2026-08-22)
+
+### Features
+
+* **web:** landing page and pitch deck, deployed to mochi.edycu.dev ([02ab2f1](https://github.com/edycutjong/mochi/commit/02ab2f14c334b665acf9bdd7583b4bb28d92b8e3))
+
 ## 1.0.0 (2026-08-22)
 
 ### Features

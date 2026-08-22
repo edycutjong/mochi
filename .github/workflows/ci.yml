@@ -29,6 +29,10 @@ jobs:
       - run: npm ci
       # sdk-commands build bundles AND runs the type checker; a type error
       # fails this step.
+      - name: Lint
+        run: npm run lint
+      # `sdk-commands build` runs the type checker as its second phase, so this
+      # step is the scene's typecheck as well as its bundle.
       - name: Build scene
         run: npm run build
 
@@ -50,10 +54,21 @@ jobs:
           cache: npm
           cache-dependency-path: server/package-lock.json
       - run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Typecheck
         run: npm run typecheck
-      - name: Tests
-        run: npm test
+      # Coverage thresholds live in vitest.config.ts and are a ratchet: the
+      # build fails if coverage drops below where it already is.
+      - name: Tests + coverage
+        run: npm run test:coverage
+      - name: Upload coverage report
+        if: matrix.node-version == 24
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-server
+          path: server/coverage/
+          retention-days: 14
 
   # ── STAGE 2 · Security (parallel with Stage 1) ─────────────
   secret-scan:
@@ -139,7 +154,7 @@ jobs:
       # cannot be exercised from CI. This is the honest edge of what CI can
       # reach; the rest is verified on a device.
       - name: Transport + room end-to-end
-        run: npm run build && node --test "dist/test/transport.test.js"
+        run: npx vitest run test/transport.test.ts
 
   # ── STAGE 5 · Gate ─────────────────────────────────────────
   gate:

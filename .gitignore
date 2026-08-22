@@ -7,6 +7,11 @@ node_modules/
 # source — it is created on first run and backed up from the host, never here.
 server/dist/
 server/data/
+
+# Coverage output. The number belongs in CI and in the README; the generated
+# HTML and lcov do not belong in the repository.
+coverage/
+server/coverage/
 *.db
 *.db-wal
 *.db-shm
@@ -21,6 +26,15 @@ dclcontext/
 
 # ...except the documented example, which contains only defaults and no secrets
 !.env.example
+
+# Judge-facing media: allowlist, not a dumping ground. Only the two files the
+# README actually renders belong here. Everything else the project generates
+# (logo exports, OG image, video thumbnails) lives in the private assets/ folder
+# and is uploaded to submission forms from there — it has no reason to sit in a
+# public repo, and stale platform-named files leak the pipeline.
+docs/assets/*
+!docs/assets/icon-animated.svg
+!docs/assets/readme-hero-animated.svg
 
 # OS / editor noise
 .DS_Store

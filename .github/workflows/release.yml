@@ -1,0 +1,57 @@
+name: Release
+
+# Gated on the CI pipeline rather than on push. A version tag is a claim that
+# the tree at that commit works; cutting one before the tests have run would
+# make the tag meaningless. `workflow_run` fires after "CI/CD Pipeline"
+# finishes, and the job below refuses to do anything unless it succeeded.
+on:
+  workflow_run:
+    workflows: ["CI/CD Pipeline"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+# semantic-release commits the changelog and version bump back to main, tags
+# the commit, and opens a GitHub Release — all three need write access.
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: "Semantic release"
+    runs-on: ubuntu-latest
+    # workflow_dispatch has no workflow_run payload, so allow it through too.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # semantic-release reads the whole history to work out what changed
+          # since the last tag; a shallow clone makes it think everything is new.
+          fetch-depth: 0
+          # Let semantic-release authenticate with its own token instead of the
+          # checkout action's persisted credentials.
+          persist-credentials: false
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          npx --yes
+          --package semantic-release@24
+          --package conventional-changelog-conventionalcommits@8
+          --package @semantic-release/changelog@6
+          --package @semantic-release/git@10
+          semantic-release

@@ -1,4 +1,4 @@
-import { test, describe } from 'node:test'
+import { test, describe } from 'vitest'
 import assert from 'node:assert/strict'
 
 import { RateLimiter } from '../src/ratelimit.js'
@@ -79,5 +79,16 @@ describe('rate limiter', () => {
     assert.equal(limiter.size, 1)
     limiter.check(OTHER, 'feed', 100 * RATE_LIMIT_WINDOW_MS)
     assert.equal(limiter.size, 1, 'the idle wallet should have been swept')
+  })
+
+  test('a sweep tolerates a tracked key whose hits are already empty', () => {
+    // A zero limit always refuses, so the key is recorded with an empty hit
+    // list (never pushed to). A later sweep must still be able to look up
+    // "the newest hit" for that key without one to find.
+    const limiter = new RateLimiter({ feed: 0, teach: 2, pet: 5, stamp: 1 })
+    limiter.check(WALLET, 'feed', 0)
+    assert.equal(limiter.size, 1)
+    limiter.check(WALLET, 'teach', RATE_LIMIT_WINDOW_MS)
+    assert.equal(limiter.size, 2, 'the empty-hit key should survive a sweep that is not yet idle enough to evict it')
   })
 })

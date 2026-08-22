@@ -1,9 +1,3 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { PERF_SCORE_PENDING, WORLD_URL_PENDING } from "@/lib/mochi";
 
 /**
@@ -158,28 +152,37 @@ export function FAQ() {
         </div>
 
         <div className="mt-12 grid gap-x-10 gap-y-2 lg:grid-cols-2">
+          {/*
+            Native <details> rather than the Radix accordion this used to be.
+            Radix was the single heaviest thing on a page that is otherwise
+            static, and it bought nothing: the browser already implements
+            disclosure, with keyboard support, correct ARIA and in-page find
+            built in. It also works with JavaScript disabled, which the Radix
+            version did not.
+          */}
           {columns.map((column, colIndex) => (
-            <Accordion
-              key={colIndex}
-              type="single"
-              collapsible
-              className="gap-2"
-            >
+            <div key={colIndex} className="flex flex-col gap-2">
               {column.map((faq) => (
-                <AccordionItem
+                <details
                   key={faq.q}
-                  value={faq.q}
-                  className="reveal overflow-hidden rounded-[1.5rem] border border-[#7a5165]/12 bg-[#fff1e0]/75 px-6 backdrop-blur-sm transition-colors duration-300 hover:border-[#ff8fb1]/45 not-last:border-b"
+                  name={`faq-${colIndex}`}
+                  className="faq-item reveal group overflow-hidden rounded-[1.5rem] border border-[#7a5165]/12 bg-[#fff1e0]/75 px-6 backdrop-blur-sm transition-colors duration-300 hover:border-[#ff8fb1]/45"
                 >
-                  <AccordionTrigger className="items-center gap-4 py-5 text-[1.05rem] font-black text-[#3b2a44] hover:no-underline">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-[1.05rem] font-black text-[#3b2a44] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b2436a] [&::-webkit-details-marker]:hidden">
                     {faq.q}
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5 text-[0.95rem] leading-relaxed text-[#5e4666]">
+                    <span
+                      aria-hidden
+                      className="shrink-0 text-[#b2436a] transition-transform duration-300 group-open:rotate-180"
+                    >
+                      ⌄
+                    </span>
+                  </summary>
+                  <div className="pb-5 text-[0.95rem] leading-relaxed text-[#5e4666]">
                     {faq.a}
-                  </AccordionContent>
-                </AccordionItem>
+                  </div>
+                </details>
               ))}
-            </Accordion>
+            </div>
           ))}
         </div>
       </div>

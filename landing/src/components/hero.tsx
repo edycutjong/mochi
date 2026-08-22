@@ -79,8 +79,8 @@ export function Hero() {
             {TITLE_WORDS.map((word, i) => (
               <span
                 key={word}
-                className="animate-rise mr-[0.22em] inline-block"
-                style={{ animationDelay: `${80 + i * 70}ms` }}
+                className="animate-rise-slide mr-[0.22em] inline-block"
+                style={{ animationDelay: `${i * 26}ms` }}
               >
                 {word}
               </span>
@@ -89,9 +89,9 @@ export function Hero() {
             {TITLE_WORDS_2.map((word, i) => (
               <span
                 key={word}
-                className="animate-rise mr-[0.22em] inline-block"
+                className="animate-rise-slide mr-[0.22em] inline-block"
                 style={{
-                  animationDelay: `${80 + (TITLE_WORDS.length + i) * 70}ms`,
+                  animationDelay: `${(TITLE_WORDS.length + i) * 26}ms`,
                   color: i === 2 ? "var(--credited-ink)" : undefined,
                   fontVariationSettings: i === 2 ? '"SOFT" 100, "WONK" 1' : undefined,
                 }}
@@ -106,7 +106,7 @@ export function Hero() {
         <div className="max-w-xl [grid-area:bottom]">
           <p
             className="animate-rise text-lg leading-relaxed text-[#5e4666] sm:text-xl lg:mt-6"
-            style={{ animationDelay: "580ms" }}
+            style={{ animationDelay: "170ms" }}
           >
             A giant pastel blob co-parented by every stranger who visits. Its
             size is the{" "}
@@ -122,14 +122,14 @@ export function Hero() {
 
           <p
             className="animate-rise mt-4 text-base text-[#5e4666]"
-            style={{ animationDelay: "660ms" }}
+            style={{ animationDelay: "230ms" }}
           >
             Two thumb buttons. One creature. One meadow. No typing anywhere.
           </p>
 
           <div
             className="animate-rise mt-8 flex flex-wrap items-start gap-4"
-            style={{ animationDelay: "740ms" }}
+            style={{ animationDelay: "290ms" }}
           >
             <a
               href="#live"
@@ -158,7 +158,7 @@ export function Hero() {
 
           {/* The plaque. Lowercase and two lines, because that is exactly how
               build/src/mochi/plaque.ts renders it in-world. */}
-          <div className="animate-rise -mt-2 w-full max-w-[330px]" style={{ animationDelay: "900ms" }}>
+          <div className="animate-rise -mt-2 w-full max-w-[330px]" style={{ animationDelay: "350ms" }}>
             <div className="rounded-2xl border border-[#7a5165]/15 bg-[#fff1e0]/90 px-5 py-3.5 text-center shadow-[0_8px_28px_rgba(74,59,82,0.10)] backdrop-blur-sm">
               {/* The static words are lowercase because plaque.ts renders them
                   that way. The NAME keeps whatever case its owner chose — a CSS

@@ -17,7 +17,7 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
-  axes: ["SOFT", "WONK", "opsz"],
+  axes: ["opsz"],
 });
 
 const nunito = Nunito({

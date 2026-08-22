@@ -331,6 +331,38 @@
   animation: rise 0.75s var(--ease-soft) both;
 }
 
+/*
+ * The headline's variant: it slides, it does not fade.
+ *
+ * The h1 is the LCP element, and Largest Contentful Paint only counts text
+ * that has actually been painted. `rise` starts at opacity 0 with fill-mode
+ * `both`, so every staggered word was invisible until its delay elapsed and
+ * LCP waited for the last one — 827ms of "element render delay" on a page
+ * whose HTML arrived in 6ms.
+ *
+ * Sliding from a transform paints immediately at full opacity, so the metric
+ * fires on the first frame while the word-by-word movement survives intact.
+ * Below-the-fold copy keeps the fade, where nothing is measuring it.
+ */
+@keyframes rise-slide {
+  from {
+    transform: translateY(18px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-rise-slide {
+  animation: rise-slide 0.6s var(--ease-soft) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise-slide {
+    animation: none;
+  }
+}
+
 /* transform-box: fill-box makes percentage transform-origin resolve against the
    element's own bounding box inside SVG, not the viewport. Without it the
    squash pivots off-canvas. */

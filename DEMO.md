@@ -104,7 +104,6 @@ path. The only dependency at runtime is `ws`.
 ## Verify the server independently
 
 ```bash
-cd server
 npm test
 ```
 

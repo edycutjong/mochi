@@ -59,7 +59,7 @@ the deployed World.
 **Verify the numbers yourself:**
 
 ```bash
-cd server && npm test
+npm test
 ```
 
 *(CI runs the same command on every push, plus CodeQL and a full-history

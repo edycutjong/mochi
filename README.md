@@ -185,10 +185,24 @@ people — in **[DEMO.md](DEMO.md)**.
 ## 🧪 Testing & CI
 
 ```bash
-cd server && npm test             # 220 tests, 13 files
-cd server && npm run test:coverage  # the same, with the coverage table
-npm run build            # scene bundle + typecheck
+npm test               # 220 tests, 13 files
+npm run test:coverage  # the same, plus the coverage table
+npm run lint           # type-aware ESLint
+npm run build          # scene bundle + typecheck
+npm run ci             # everything CI runs, in one command
 ```
+
+All of these work from the repository root, once `npm install` has been run
+here **and** in `server/` — the two steps in Getting Started above.
+
+`test:coverage` also writes a browsable report to `server/coverage/index.html`,
+green line by green line, plus an `lcov.info` your editor can read. Neither is
+committed.
+
+The tests themselves live in `server/`, because a Decentraland scene only runs
+inside the Decentraland client and there is no headless runtime to unit-test it
+against. The scene's half of the gate is lint and typecheck; everything with
+logic in it lives in the server, and that is the half at 100%.
 
 | Layer | Tool |
 |---|---|

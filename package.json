@@ -7,11 +7,14 @@
     "start:mobile": "sdk-commands start --mobile",
     "deploy": "sdk-commands deploy",
     "build": "sdk-commands build",
+    "test": "npm --prefix server test",
+    "test:watch": "npm --prefix server run test:watch",
+    "test:coverage": "npm --prefix server run test:coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "upgrade-sdk": "npm install --save-dev @dcl/sdk@latest",
     "upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next",
-    "ci": "npm run lint && npm run build"
+    "ci": "npm run lint && npm run build && npm --prefix server run ci"
   },
   "devDependencies": {
     "@dcl/js-runtime": "7.26.0",

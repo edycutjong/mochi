@@ -15,7 +15,9 @@ import { Color4 } from '@dcl/sdk/math'
 import { probe, shortUrn } from './state'
 
 const PASS = '#7ddc8aff'
-const FAIL = '#ff8f8fff'
+// No FAIL colour: none of the six checks has a failing state that stops the
+// probe. "DATA YES / onChange NO" is amber rather than red because it is a
+// working route — polling instead of callbacks — not a dead end.
 const WAIT = '#ffd88aff'
 const INFO = '#dfe8f0ff'
 

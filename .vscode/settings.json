@@ -1,0 +1,15 @@
+{
+  // Use the TypeScript that ships with this project (5.9.3, via @dcl/sdk)
+  // rather than the one bundled with the editor.
+  //
+  // Without this, a newer editor TypeScript reports TS7.0 deprecation errors
+  // for `moduleResolution: node10` and `downlevelIteration` — both of which
+  // come from @dcl/sdk/types/tsconfig.ecs7.json inside node_modules, are not
+  // ours to change, and are regenerated on every install. The suggested
+  // silencer, `"ignoreDeprecations": "6.0"`, is rejected outright by 5.9.3, so
+  // adding it would break the build to quiet the editor.
+  //
+  // Matching the compiler CI actually uses is the correct fix: the editor
+  // should show the errors the build shows, no more and no fewer.
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

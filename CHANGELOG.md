@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.2.5](https://github.com/edycutjong/mochi/compare/v1.2.4...v1.2.5) (2026-08-23)
+
+### Fixes
+
+* **web:** stop the browser drawing its own ring when the creature is pressed ([877c7eb](https://github.com/edycutjong/mochi/commit/877c7eb2875fafc3f1c7eba6d9857f8b972f4af8))
+
 ## [1.2.4](https://github.com/edycutjong/mochi/compare/v1.2.3...v1.2.4) (2026-08-23)
 
 ### Performance

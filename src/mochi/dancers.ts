@@ -91,8 +91,32 @@ let standing: string | null = null
  * one they may legally contain — which is all it takes for two different rings
  * to collide into one signature and silently stop redrawing.
  */
+/**
+ * One ghost per PERSON, not per move.
+ *
+ * The chain is a list of moves, and slicing it directly meant a visitor who
+ * taught six moves got six identical copies of themselves standing in the ring.
+ * That is not merely uncanny — it is a false claim. The ring is the scene's
+ * visual assertion of how many people have tended the creature, and a project
+ * whose whole premise is "every visible property was produced by somebody else"
+ * cannot draw one person six times and let it read as six.
+ *
+ * The most recent move wins, and re-teaching moves that person to the end of
+ * the ring, so the order is who-contributed-most-recently rather than an
+ * arbitrary first-seen order. With one carer this draws exactly one ghost,
+ * which is the honest picture; with six people it draws the intended one.
+ */
+function oneDancerPerTeacher(chain: ChainEntry[]): ChainEntry[] {
+  const byTeacher = new Map<string, ChainEntry>()
+  for (const entry of chain) {
+    byTeacher.delete(entry.teacherName)
+    byTeacher.set(entry.teacherName, entry)
+  }
+  return [...byTeacher.values()]
+}
+
 function ringSignature(chain: ChainEntry[], level: Fidelity): string {
-  const recent = chain.slice(-CAPACITY[level])
+  const recent = oneDancerPerTeacher(chain).slice(-CAPACITY[level])
   return JSON.stringify([level, recent.map((e) => [e.emoteId, e.teacherName, e.wearables])])
 }
 
@@ -192,7 +216,7 @@ export function setDancers(chain: ChainEntry[]) {
   clearDancers()
 
   const capacity = CAPACITY[fidelity]
-  const recent = chain.slice(-capacity)
+  const recent = oneDancerPerTeacher(chain).slice(-capacity)
   const total = Math.max(recent.length, 1)
 
   recent.forEach((entry, i) => {

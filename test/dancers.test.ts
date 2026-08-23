@@ -196,3 +196,50 @@ describe('clearing forgets', () => {
     expect(avatars()).toHaveLength(2)
   })
 })
+
+describe('the ring counts people, not moves', () => {
+  /** Same person, several moves — what a solo visitor's chain actually is. */
+  function movesBy(teacherName: string, ...emoteIds: string[]): ChainEntry[] {
+    return emoteIds.map((emoteId) => ({ teacherName, emoteId, wearables: ['urn:test:hat'] }))
+  }
+
+  test('one person who taught six moves is one ghost, not six copies of them', () => {
+    // Reported from a real phone: a solo visitor saw six identical clones of
+    // themselves. The ring is the scene's visual claim about how many people
+    // have tended the creature, so drawing one person six times asserts
+    // something untrue — and this project's whole premise is that every
+    // visible property was produced by somebody else.
+    setDancers(movesBy('Edy', 'wave', 'clap', 'dab', 'kiss', 'shrug', 'disco'))
+
+    expect(avatars()).toHaveLength(1)
+    expect(nameTags().length).toBeGreaterThanOrEqual(1)
+  })
+
+  test('six different people are still six ghosts', () => {
+    setDancers(chain('Kito', 'Rue', 'Ada', 'Nim', 'Oro', 'Vex'))
+    expect(avatars()).toHaveLength(6)
+  })
+
+  test('a person is drawn once however many times they appear in the chain', () => {
+    setDancers([
+      ...movesBy('Kito', 'wave', 'clap'),
+      ...movesBy('Rue', 'dab'),
+      ...movesBy('Kito', 'kiss')
+    ])
+    expect(avatars()).toHaveLength(2)
+  })
+
+  test('teaching again moves you to the end of the ring, not back to where you were', () => {
+    // Order is who-contributed-most-recently. Keeping a re-teacher at their
+    // first-seen position would make the ring read as arrival order instead.
+    setDancers([...movesBy('Kito', 'wave'), ...movesBy('Rue', 'clap')])
+    const twoPeople = avatars()
+    expect(twoPeople).toHaveLength(2)
+
+    setDancers([...movesBy('Kito', 'wave'), ...movesBy('Rue', 'clap'), ...movesBy('Kito', 'dab')])
+
+    // Still two people, but the ring changed, so it must have been rebuilt.
+    expect(avatars()).toHaveLength(2)
+    expect(avatars()).not.toEqual(twoPeople)
+  })
+})

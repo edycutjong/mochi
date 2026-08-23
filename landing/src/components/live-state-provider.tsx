@@ -84,6 +84,11 @@ export function LiveStateProvider({
       }
     }
 
+    // Read once on mount. Without this the page served the build-time snapshot
+    // for a full interval, so the first thing a visitor saw was the state as of
+    // the last deploy while the copy beside it said the numbers were live.
+    poll();
+
     const id = window.setInterval(poll, 45_000);
     document.addEventListener("visibilitychange", poll);
     return () => {

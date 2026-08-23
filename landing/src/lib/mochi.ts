@@ -30,7 +30,7 @@ export const REPO_URL = "https://github.com/edycutjong/mochi";
  * which is the opposite of the point.
  */
 export const JUDGE_URL = `${REPO_URL}/blob/main/JUDGE.md`;
-export const STATE_ENDPOINT = "https://mochi-friendzone.fly.dev/state";
+export const STATE_ENDPOINT = "https://api.mochi.edycu.dev/state";
 
 /** True once a real World exists — drives CTA copy and enabled/disabled state. */
 export const worldIsLive = WORLD_URL !== null;
@@ -109,9 +109,24 @@ export interface MochiState {
     lastFedBy: string;
   };
   chain: ChainMove[];
-  carers: string[];
+  carers: Carer[];
   chainLength: number;
   carerCount: number;
+}
+
+/**
+ * One entry in the carer list.
+ * build/server/src/protocol.ts — `CarerDto`
+ *
+ * The server sends objects, not names. Typing this as `string[]` made the
+ * parser's `typeof c === "string"` filter discard every carer silently, so the
+ * list always arrived empty regardless of what the server said.
+ */
+export interface Carer {
+  name: string;
+  kind: string;
+  at: number;
+  isSeed: boolean;
 }
 
 /** Narrow an unknown JSON payload to MochiState without trusting the network. */
@@ -155,7 +170,19 @@ export function parseState(input: unknown): MochiState | null {
     },
     chain,
     carers: Array.isArray(raw.carers)
-      ? (raw.carers as unknown[]).filter((c): c is string => typeof c === "string")
+      ? (raw.carers as unknown[]).flatMap((entry) => {
+          if (typeof entry !== "object" || entry === null) return [];
+          const carer = entry as Record<string, unknown>;
+          if (typeof carer.name !== "string") return [];
+          return [
+            {
+              name: carer.name,
+              kind: typeof carer.kind === "string" ? carer.kind : "feed",
+              at: typeof carer.at === "number" ? carer.at : 0,
+              isSeed: carer.isSeed === true,
+            } satisfies Carer,
+          ];
+        })
       : [],
     chainLength:
       typeof raw.chainLength === "number" ? raw.chainLength : chain.length,
@@ -171,14 +198,14 @@ export const EMOTE_LABELS: Record<string, string> = {
   wave: "wave",
   clap: "clap",
   dance: "dance",
-  raise: "raise",
-  pump: "pump",
+  raiseHand: "raise",
+  fistpump: "pump",
   robot: "robot",
   kiss: "kiss",
   shrug: "shrug",
   dab: "dab",
   disco: "disco",
-  whoa: "whoa",
+  headexplode: "whoa",
   tik: "tik",
 };
 

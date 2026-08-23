@@ -85,7 +85,7 @@ export function LiveSection() {
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-[#5e4666]">
             These are not marketing numbers. They are read from the running
-            authoritative server every 30 seconds, and you can check them
+            authoritative server every 45 seconds, and you can check them
             yourself at{" "}
             <a
               href={STATE_ENDPOINT}

@@ -29,8 +29,10 @@ What is missing or awkward today? Describe the situation, not the solution.
 Mochi has some deliberate constraints. If your idea touches one of these,
 please say how it works around it:
 
-- **Zero typing, two buttons.** The mobile client only gives us press and
-  release — no drag, no text entry.
+- **Zero typing, and no on-screen buttons.** Every verb is a tap on an object
+  in the meadow, because the bottom of the screen belongs to the Decentraland
+  client's own controls. The client also only gives us press and release — no
+  drag, no text entry.
 - **Nothing is ever punished, lost, or reset.** There is no fail state and no
   delete verb anywhere in the server.
 - **Every act is attributed to a named person.** An anonymous version of a

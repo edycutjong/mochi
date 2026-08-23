@@ -144,6 +144,20 @@ function ChainDiagram() {
   );
 }
 
+/**
+ * The scene's four verbs, and the object in the meadow each one lives on.
+ *
+ * Kept in the same order a visitor meets them: the bowl and the stage flank the
+ * path in from the spawn point, the creature is at the end of it, and the totem
+ * is off to one side for when you are leaving.
+ */
+const VERBS = [
+  { verb: "FEED", thing: "the bowl", accent: true },
+  { verb: "TEACH", thing: "the stage", accent: false },
+  { verb: "PET", thing: "the creature", accent: false },
+  { verb: "STAMP", thing: "the totem", accent: false },
+];
+
 export function Mechanism() {
   return (
     <section id="how" className="relative px-5 py-20 sm:px-8 sm:py-28">
@@ -235,24 +249,47 @@ export function Mechanism() {
           </Card>
         </div>
 
-        {/* The two buttons. The entire input surface of the product. */}
+        {/*
+          The four verbs. Every one of them is an object in the meadow.
+
+          This card used to show two pink FEED / TEACH pills, because that is
+          what the scene used to draw. Device testing on 2026-08-23 found that
+          bottom-of-screen strip sitting directly on the Decentraland client's
+          own joystick, jump and emote controls — a tap aimed at jump landed on
+          TEACH — so the buttons were deleted and the verbs became props. The
+          card follows the product rather than the other way round.
+        */}
         <div className="reveal mt-14 overflow-hidden rounded-[2rem] border border-[#7a5165]/12 bg-gradient-to-br from-[#fff1e0] to-[#ffe8f1] px-7 py-10 text-center sm:px-12">
           <Eyebrow>The whole interface</Eyebrow>
           <h3 className="mx-auto mt-3 max-w-2xl text-[clamp(1.6rem,4vw,2.3rem)] font-black">
-            Two thumb buttons. That is the entire input surface.
+            No buttons. Four things you can touch.
           </h3>
-          <div className="mx-auto mt-8 flex max-w-md gap-3">
-            <div className="flex h-16 flex-1 items-center justify-center rounded-2xl bg-[#ff8fb1] text-lg font-black tracking-[0.1em] text-[#46101f] shadow-[0_8px_24px_rgba(255,143,177,0.45)]">
-              FEED
-            </div>
-            <div className="flex h-16 flex-1 items-center justify-center rounded-2xl border-2 border-[#7a5165]/25 bg-[#fff1e0] text-lg font-black tracking-[0.1em] text-[#3b2a44]">
-              TEACH
-            </div>
+          <div className="mx-auto mt-8 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-4">
+            {VERBS.map((verb) => (
+              <div
+                key={verb.verb}
+                className={
+                  "flex h-20 flex-col items-center justify-center rounded-2xl " +
+                  (verb.accent
+                    ? "bg-[#ff8fb1] text-[#46101f] shadow-[0_8px_24px_rgba(255,143,177,0.45)]"
+                    : "border-2 border-[#7a5165]/25 bg-[#fff1e0] text-[#3b2a44]")
+                }
+              >
+                <span className="text-base font-black tracking-[0.1em]">
+                  {verb.verb}
+                </span>
+                <span className="mt-1 text-xs font-semibold opacity-70">
+                  {verb.thing}
+                </span>
+              </div>
+            ))}
           </div>
           <p className="mx-auto mt-6 max-w-lg text-sm text-[#5e4666]">
-            Petting is a press on the creature itself, not a button. Signing the
-            guestbook is one tap on a totem. There is no text input anywhere in
-            the scene — your identity comes from your wallet.
+            The scene draws nothing over the bottom of the screen, where the
+            Decentraland client keeps its own joystick and jump control — an
+            earlier two-button HUD sat on top of them on a real phone, so it was
+            deleted rather than nudged. There is no text input anywhere either;
+            your identity comes from your wallet.
           </p>
         </div>
       </div>

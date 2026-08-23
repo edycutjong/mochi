@@ -1,4 +1,4 @@
-import { engine, inputSystem, InputAction, PointerEventType, PointerEvents } from '@dcl/sdk/ecs'
+import { engine, inputSystem, InputAction, PointerEventType } from '@dcl/sdk/ecs'
 
 import { SERVER_URL } from './config'
 import { createMochi, applyGrowth, applyHunger, Mochi } from './mochi/creature'
@@ -8,7 +8,7 @@ import { createPlaque, renderPlaque, ago } from './mochi/plaque'
 import { emoteObserverSystem, onTaught, teachFromPicker, sessionIdentity } from './mochi/teach'
 import { setDancers, danceLoopSystem, ChainEntry } from './mochi/dancers'
 import { setupReplay, startReplay, replaySystem, isReplaying } from './mochi/replay'
-import { setupHud, hudSystem, say } from './ui/hud'
+import { setupHud, hudSystem, say, openPicker } from './ui/hud'
 import { setupTouchControls } from './ui/controls'
 import { connect, send, canWrite, currentState } from './net/client'
 
@@ -49,7 +49,18 @@ let meadow: Meadow | null = null
  */
 let petLatched = false
 
-function petSystem() {
+/**
+ * Every verb, and all four are a tap on something in the meadow.
+ *
+ * There is no screen-space control anywhere in this scene. FEED and TEACH were
+ * buttons in a bottom thumb arc until a real phone showed that arc sitting on
+ * the client's own joystick, jump and emote controls — a tap meant for jump
+ * landed on TEACH and wrote a permanent, undeletable row to the chain. Moving
+ * the arc was tried twice and failed twice, because Decentraland does not
+ * publish where its controls are. Owning none of that strip is the only fix
+ * that cannot be wrong, so the buttons are gone and the verbs are props.
+ */
+function worldTapSystem() {
   if (!mochi || !meadow) return
 
   if (inputSystem.isTriggered(InputAction.IA_POINTER, PointerEventType.PET_DOWN, mochi.body)) {
@@ -64,6 +75,17 @@ function petSystem() {
     if (canWrite()) send({ t: 'pet' })
   }
 
+  // FEED — the bowl of berries in front of the creature.
+  if (inputSystem.isTriggered(InputAction.IA_POINTER, PointerEventType.PET_DOWN, meadow.bowl)) {
+    feed()
+  }
+
+  // TEACH — the stage opens the picker. Same modal as before; only the thing
+  // that summons it moved out of the screen and into the world.
+  if (inputSystem.isTriggered(InputAction.IA_POINTER, PointerEventType.PET_DOWN, meadow.stage)) {
+    openPicker()
+  }
+
   // The guestbook stamp closes a visit. One tap, no confirmation.
   if (inputSystem.isTriggered(InputAction.IA_POINTER, PointerEventType.PET_DOWN, meadow.totem)) {
     if (canWrite()) {
@@ -71,6 +93,17 @@ function petSystem() {
       say('your visit is in the guestbook')
     }
   }
+}
+
+/** FEED. Plays immediately, counts when the server says so. */
+function feed() {
+  if (!canWrite()) {
+    say('sign in with a wallet to feed Mochi')
+    return
+  }
+  awaitingOwnFeed = true
+  playEat()
+  send({ t: 'feed' })
 }
 
 /**
@@ -186,16 +219,6 @@ function scene() {
   setupTouchControls()
   createPlaque(meadow.plaque)
 
-  // The totem is tappable; the plaque is not. Reading needs no permission.
-  PointerEvents.createOrReplace(meadow.totem, {
-    pointerEvents: [
-      {
-        eventType: PointerEventType.PET_DOWN,
-        eventInfo: { button: InputAction.IA_POINTER, hoverText: 'sign the guestbook', maxDistance: 6 }
-      }
-    ]
-  })
-
   const who = sessionIdentity()
   if (who) {
     connect(SERVER_URL, who, {
@@ -227,24 +250,16 @@ function scene() {
     send({ t: 'teach', emoteId: move.emoteId, wearables: move.wearables })
   })
 
+  // The picker is all that is left of the HUD's actionable surface, and it is
+  // opened by the stage rather than by anything on screen.
   setupHud({
-    onFeed: () => {
-      if (!canWrite()) {
-        say('sign in with a wallet to feed Mochi')
-        return
-      }
-      // Plays immediately, counts when the server says so.
-      awaitingOwnFeed = true
-      playEat()
-      send({ t: 'feed' })
-    },
     onTeach: (emoteId) => {
       void teachFromPicker(emoteId)
     }
   })
 
   engine.addSystem(alivenessSystem)
-  engine.addSystem(petSystem)
+  engine.addSystem(worldTapSystem)
   engine.addSystem(hudSystem)
   engine.addSystem(emoteObserverSystem)
   engine.addSystem(danceLoopSystem)

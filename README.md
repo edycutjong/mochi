@@ -62,11 +62,27 @@ no schedule.
 
 Portrait, one-handed, **zero typing anywhere**.
 
-**Two buttons, ever.** FEED and TEACH sit in the bottom thumb arc. Petting is a
-hold on the creature's own body and signing the guestbook is a tap on the
-totem, so neither needs screen furniture. There is no tutorial, no onboarding
-modal and no instruction text — every affordance is carried by motion, scale
-and one verb per button.
+**No buttons at all.** Every verb is a tap on something in the meadow: FEED is
+the bowl of berries in front of the creature, TEACH is the pale stage beside
+it, PET is a hold on the creature's own body, and signing the guestbook is a
+tap on the totem. The scene draws nothing over the bottom of the screen. There
+is no tutorial, no onboarding modal and no instruction text — a visitor knows
+what the bowl and the stage are from where they stand, what they look like, and
+a single billboarded word floating over each, the same way the memory dancers
+carry their names.
+
+**Why it is built that way, honestly.** It used to be two buttons in a bottom
+thumb arc, which is where Decentraland's own mobile guidance puts actions. On a
+real phone, on 2026-08-23, that arc landed directly on top of the client's own
+controls — it covered the movement joystick and the emote buttons either side
+of it, and a tap aimed at jump landed on TEACH, which writes a permanent row to
+an append-only chain that has no delete verb. Decentraland warns that scene UI
+"will clash with the system controls" but does not publish where those controls
+sit, and two attempts to dodge them by adjusting percentages both failed on the
+device. So the arc was deleted rather than tuned: owning none of that strip is
+the only fix that cannot be wrong. The change removed HUD code instead of
+adding more, and it moved FEED and TEACH onto the same world-space pattern that
+PET and STAMP were already using successfully.
 
 **Tap and press only.** The mobile client exposes no drag deltas —
 `screenDelta` reports zero there and gestures are not planned — so the entire
@@ -75,8 +91,8 @@ vocabulary is press and release. That is not a compromise: the hold to pet
 creature does not cancel it. There is no fail state anywhere in the scene.
 
 **A budget measured, not asserted.** At its most expensive the scene builds
-**27 entities against the 200 a parcel allows** — 13.5%, or 7.4× under — and
-**11 materials against 20**, which is the tight dimension at 55%. No texture is
+**32 entities against the 200 a parcel allows** — 16.0%, or 6.3× under — and
+**14 materials against 20**, which is the tight dimension at 70%. No texture is
 loaded anywhere. Those figures come from `npm run budget:scene`, which builds
 the real scene graph against the real engine and counts it, against
 `@dcl/inspector`'s own per-parcel limits; `npm run test:scene` fails the build
@@ -154,14 +170,14 @@ different entities, and why hunger is derived rather than ticked.
 
 | Metric | Value |
 |---|---|
-| Tests | **238** server across 13 files · **16** headless scene across 2 |
+| Tests | **238** server across 13 files · **18** headless scene across 2 |
 | Server coverage | **100%** lines · **100%** branches · **100%** functions |
 | Exhaustive verification | **78,482 combinations** |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
 | Intent latency | **p50 0.67 ms · p95 0.94 ms · p99 2.29 ms** over N=2,160 |
 | `GET /state` | **p50 0.54 ms · p95 0.90 ms · p99 2.32 ms** at a 40-move chain |
 | Throughput | **425 intents/s**, 24 concurrent wallets, 12,120 frames fanned out |
-| Scene budget | **27/200 entities · 11/20 materials · 0/10 textures**, 1 parcel |
+| Scene budget | **32/200 entities · 14/20 materials · 0/10 textures**, 1 parcel |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain |
 | Deployable payload | **6,820 KB** against the 25,000 KB gate CI enforces |
 | Scene performance | **«PENDING:perf-score»%**, Galaxy A54, High profile |
@@ -208,7 +224,7 @@ people — in **[DEMO.md](DEMO.md)**.
 ```bash
 npm test               # 238 server tests, 13 files
 npm run test:coverage  # the same, plus the coverage table
-npm run test:scene     # 16 headless scene tests, 2 files
+npm run test:scene     # 18 headless scene tests, 2 files
 npm run budget:scene   # the one-parcel budget audit
 npm run bench          # the protocol benchmark — p50/p95/p99, ~30 seconds
 npm run lint           # type-aware ESLint

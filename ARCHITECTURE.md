@@ -11,7 +11,8 @@ its own.
 ```mermaid
 flowchart TD
     subgraph Phone["Decentraland Mobile client"]
-        HUD["ui/hud.tsx<br/>two thumb buttons + status line"]
+        World["index.ts + mochi/meadow.ts<br/>every verb is a tap in the world"]
+        HUD["ui/hud.tsx<br/>ambient status line"]
         Picker["ui/emote-picker.tsx<br/>12 built-in moves"]
         Creature["mochi/creature.ts<br/>squashed sphere + plane eyes"]
         Alive["mochi/aliveness.ts<br/>Tween squash-stretch"]
@@ -29,13 +30,14 @@ flowchart TD
         DB[("SQLite<br/>pet · chain_move · carer_event")]
     end
 
-    HUD --> Net
+    World --> Net
+    World -->|"the stage opens it"| Picker
     Picker --> Teach --> Net
     Net -->|"feed · teach · pet · stamp"| WS
     WS --> Game --> Store --> DB
     Store --> Hunger
     Game -->|"state broadcast"| Net
-    Net --> Creature & Alive & Dancers & Plaque
+    Net --> Creature & Alive & Dancers & Plaque & HUD
 ```
 
 ## Why the client owns nothing
@@ -144,14 +146,14 @@ which is the exact emptiness this project exists to answer.
 
 | Path | Lines | What |
 |---|---|---|
-| `src/index.ts` | 247 | wiring, PET latch, guestbook, deferred ring rebuild |
-| `src/mochi/` | 1,326 | creature, aliveness, dancers, meadow, plaque, teach |
-| `src/ui/` | 296 | HUD, emote picker, touch controls |
+| `src/index.ts` | 281 | wiring, the world-tap system for all four verbs, deferred ring rebuild |
+| `src/mochi/` | 1,505 | creature, aliveness, dancers, meadow, plaque, teach |
+| `src/ui/` | 303 | status line, emote picker, touch controls |
 | `src/net/client.ts` | 182 | connection, queue, reconnect |
 | `src/probe/` | 467 | day-one capability probe (see `docs/PROBE.md`) |
 | `server/src/` | 1,427 | protocol, rules, store, hunger, transport |
 | `server/test/` | 2,638 | 238 tests at 100% line/branch coverage, one exhaustive |
-| `test/` | 234 | 16 headless scene tests — the ring, and the parcel budget |
+| `test/` | 254 | 18 headless scene tests — the ring, and the parcel budget |
 | `server/scripts/bench.ts` | 432 | the protocol benchmark behind the latency table |
 | `scripts/scene_budget.ts` | 205 | the one-parcel budget audit |
 

@@ -52,8 +52,8 @@ The scene connects to `ws://127.0.0.1:8080` by default (`src/config.ts`).
 | Do this | Expect |
 |---|---|
 | Arrive | The creature notices you and waddles over |
-| Tap **FEED** | It gulps, gets fractionally bigger, and your name appears on the plaque |
-| Tap **TEACH**, pick a move | Your avatar performs it, and a dancer appears in the ring wearing your wearables |
+| Tap the **bowl of berries** (left of the path, marked *feed*) | It gulps, gets fractionally bigger, and your name appears on the plaque |
+| Tap the **pale stage** (right of the path, marked *teach*), pick a move | Your avatar performs it, and a dancer appears in the ring wearing your wearables |
 | Hold on its body | It compresses under your thumb. Slide off — it does not cancel |
 | Tap the totem | Your visit is signed |
 | Reload | Everything is still there. The size, the chain and the names are on the server |
@@ -135,7 +135,7 @@ The scene has a second, much smaller suite:
 npm run test:scene
 ```
 
-**16 tests across 2 files.** `@dcl/ecs`, the engine underneath `@dcl/sdk/ecs`,
+**18 tests across 2 files.** `@dcl/ecs`, the engine underneath `@dcl/sdk/ecs`,
 is ordinary TypeScript with no renderer attached, so entities, components and
 systems can be driven outside the Decentraland client. Nothing visual can be
 asserted that way and nothing here tries to — these tests exist to pin two
@@ -224,24 +224,32 @@ the package the Decentraland editor uses to draw its scene-metrics panel.
 
 ```
   dimension                     used    limit    share      headroom
-  entities (scene graph)          27      200    13.5%    7.4× under
-  materials (components)          11       20    55.0%    1.8× under
+  entities (scene graph)          32      200    16.0%    6.3× under
+  materials (components)          14       20    70.0%    1.4× under
   materials (distinct)             8       20    40.0%    2.5× under
   textures                         0       10     0.0%        unused
 
-  the 27 entities, by what they carry
-  MeshRenderer primitives         11
-  MeshCollider                     5
-  TextShape                        9
+  the 32 entities, by what they carry
+  MeshRenderer primitives         14
+  MeshCollider                     7
+  TextShape                       11
   AvatarShape (dancers)            6
-  Billboard                        7
-  PointerEvents                    1
+  Billboard                        9
+  PointerEvents                    4
 ```
 
-Materials are the tight dimension, at a little over half the allowance —
-against entities at an eighth. That is worth stating plainly because it is the
-opposite of what the design would suggest: the scene is geometrically almost
-empty and every flat colour costs a material.
+Materials are the tight dimension, at seven tenths of the allowance — against
+entities at a sixth. That is worth stating plainly because it is the opposite
+of what the design would suggest: the scene is geometrically almost empty and
+every flat colour costs a material.
+
+Three of those fourteen were added when FEED and TEACH stopped being buttons
+and became a bowl and a stage in the meadow. All three reuse a material
+*definition* the scene already had — the bowl is the totem's tone, the berries
+in it are the bush's, the stage is the plaque's — which is why the distinct
+count did not move at all. The platform counts distinct definitions; the
+component column is the stricter of the two readings and is the one quoted
+everywhere in this repository.
 
 Two numbers a judge might reasonably expect are **not** here, on purpose.
 Triangles and the platform's `bodies` count are produced by the renderer after

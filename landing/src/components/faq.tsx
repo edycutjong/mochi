@@ -118,10 +118,11 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     q: "Do I have to type anything?",
     a: (
       <p>
-        Nothing, anywhere. Two thumb buttons, FEED and TEACH; petting is a press
-        on the creature and signing the guestbook is one tap on a totem. Your
-        display name comes from your wallet. Guests without a wallet can walk in
-        and see everything, they just cannot leave a mark.
+        Nothing, anywhere — and there are no buttons either. Feeding is a tap on
+        a bowl of berries, teaching is a tap on a small stage, petting is a press
+        on the creature itself and signing the guestbook is one tap on a totem.
+        Your display name comes from your wallet. Guests without a wallet can
+        walk in and see everything, they just cannot leave a mark.
       </p>
     ),
   },

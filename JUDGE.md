@@ -13,15 +13,19 @@ taught by a named stranger.
 1. Open **«PENDING:world-url»** in the Decentraland mobile app.
 2. You arrive facing the creature. Wait two seconds — it notices you and
    waddles over. Nothing to press yet.
-3. Tap **FEED**. It gulps, gets fractionally bigger, and your name appears on
-   the plaque beside it.
-4. Tap **TEACH**, pick any move. Your avatar performs it, and a dancer joins
-   the ring wearing your wearables, with your name above them.
+3. Two low props flank the path in front of the creature, each with a word
+   floating over it. Tap the **bowl of berries** on the left, marked *feed*.
+   Mochi gulps, gets fractionally bigger, and your name appears on the plaque.
+4. Tap the **pale stage** on the right, marked *teach*, and pick any move. Your
+   avatar performs it, and a dancer joins the ring wearing your wearables, with
+   your name above them.
 5. Look at the plaque. It names the last person who was here before you, and
    how long ago.
 
 That is the whole product. There is no tutorial because there is nothing to
-explain — two buttons, one creature, no typing anywhere.
+explain — four things to touch, one creature, no typing anywhere. The scene
+draws no buttons and covers none of the client's own controls: every verb is a
+tap on an object in the world.
 
 **If you are the first person here today,** the clearing will be quiet: the
 plaque and the ring are made of other people, so they fill as people arrive.
@@ -34,7 +38,7 @@ Every number below is measured and reproducible. Full detail in
 
 | | | Regenerate with |
 |---|---|---|
-| Tests | **238** server across 13 files · **16** headless scene across 2 | `npm test` · `npm run test:scene` |
+| Tests | **238** server across 13 files · **18** headless scene across 2 | `npm test` · `npm run test:scene` |
 | Server coverage | **100%** — lines, branches, functions and statements | `npm run test:coverage` |
 | Exhaustive verification | **78,482 combinations** — no input produces a starving creature | `npm test` |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database | walkthrough in DEMO.md |
@@ -42,7 +46,7 @@ Every number below is measured and reproducible. Full detail in
 | Intent latency | **p50 0.67 ms · p95 0.94 ms · p99 2.29 ms**, N=2,160, rate limiter on | `npm run bench` |
 | `GET /state` | **p50 0.54 ms · p95 0.90 ms · p99 2.32 ms** at a 40-move chain | `npm run bench` |
 | Throughput | **425 intents/s** from 24 concurrent wallets, 12,120 frames fanned out | `npm run bench` |
-| Scene budget, 1 parcel | **27/200 entities · 11/20 materials · 0/10 textures** | `npm run budget:scene` |
+| Scene budget, 1 parcel | **32/200 entities · 14/20 materials · 0/10 textures** | `npm run budget:scene` |
 | Ring rebuilds per busy minute | **18 avatar entities, down from 120** | `npm run test:scene` |
 | Deployable payload | **6,820 KB** against the 25,000 KB gate CI enforces | `du -sk bin assets images main.crdt scene.json` |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain | — |
@@ -71,7 +75,7 @@ the deployed World.
 
 ```bash
 npm test               # 238 server tests, 100% coverage
-npm run test:scene     # 16 headless scene tests + the one-parcel budget audit
+npm run test:scene     # 18 headless scene tests + the one-parcel budget audit
 npm run bench          # the latency and throughput table, ~30 seconds
 npm run ci             # all of it, the way CI runs it
 ```

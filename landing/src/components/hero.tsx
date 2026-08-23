@@ -124,7 +124,8 @@ export function Hero() {
             className="animate-rise mt-4 text-base text-[#5e4666]"
             style={{ animationDelay: "230ms" }}
           >
-            Two thumb buttons. One creature. One meadow. No typing anywhere.
+            No buttons. One creature, one meadow, four things you can touch. No
+            typing anywhere.
           </p>
 
           <div

@@ -905,8 +905,8 @@ body.overview-on #counter,body.overview-on #hint,body.overview-on #brandmark
       <div class="eyebrow">Sixty seconds, one thumb</div>
       <h2>The whole loop, on a phone.</h2>
     </div>
-    <div class="kicker">No typing anywhere. No tutorial. No fail state. Two buttons on screen,
-      ever &mdash; petting is a hold on the body, stamping is a tap on the totem.</div>
+    <div class="kicker">No typing anywhere. No tutorial. No fail state. No buttons on screen
+      at all &mdash; every verb is a tap on an object in the meadow.</div>
   </div>
 
   <div style="display:flex;gap:74px;justify-content:center;align-items:flex-start;flex:1;
@@ -1191,11 +1191,12 @@ body.overview-on #counter,body.overview-on #hint,body.overview-on #brandmark
 
     <div style="display:flex;flex-direction:column;gap:22px">
       <div class="plate" style="flex:1;display:flex;flex-direction:column;gap:14px">
-        <h4 class="cred">Two buttons, ever</h4>
-        <p class="small">FEED and TEACH sit in a bottom thumb arc. PET is a hold on the body,
-          STAMP is a tap on the totem &mdash; neither needs screen furniture.</p>
-        <div class="mono" style="font-size:18px;margin-top:auto">HUD split 12 / 74 / 14 —
-          the creature owns the middle</div>
+        <h4 class="cred">No buttons, ever</h4>
+        <p class="small">FEED is the bowl, TEACH is the stage, PET is a hold on the body,
+          STAMP is a tap on the totem. Device testing found a bottom thumb arc sitting on the
+          client&rsquo;s own joystick and jump control, so the arc was deleted, not nudged.</p>
+        <div class="mono" style="font-size:18px;margin-top:auto">HUD is a status line —
+          the bottom of the screen is the client&rsquo;s</div>
       </div>
       <div class="plate" style="flex:1;display:flex;flex-direction:column;gap:14px">
         <h4 class="cred">Zero typing, zero tutorial</h4>
@@ -1386,9 +1387,9 @@ body.overview-on #counter,body.overview-on #hint,body.overview-on #brandmark
         <tr>
           <td class="k">Mobile-First Experience <span class="chip hot" style="font-size:14px;
               padding:3px 9px;margin-left:6px">tie-break 1</span></td>
-          <td>Two thumb buttons, no typing, no tutorial, no fail state. The loop completes
-              standing still.</td>
-          <td class="m">hud.tsx · controls.ts</td>
+          <td>No buttons at all &mdash; four world-space taps, no typing, no tutorial, no fail
+              state. Nothing is drawn over the client&rsquo;s own controls.</td>
+          <td class="m">meadow.ts · hud.tsx · controls.ts</td>
         </tr>
         <tr>
           <td class="k">Social Value</td>

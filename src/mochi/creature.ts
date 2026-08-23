@@ -136,10 +136,10 @@ export function applyGrowth(mochi: Mochi, feedCount: number) {
  * glows warm and saturated; a hungry one goes pale and dim, like something that
  * has been waiting.
  *
- * Deliberately not a HUD element. This scene has two buttons and no instruction
- * text, and a status bar would be the third thing on screen competing with the
- * creature it describes. Putting the state *in the body* means a visitor reads
- * it in the same glance they read everything else.
+ * Deliberately not a HUD element. This scene draws no buttons and no
+ * instruction text, and a status bar would be the one piece of screen furniture
+ * competing with the creature it describes. Putting the state *in the body*
+ * means a visitor reads it in the same glance they read everything else.
  *
  * Never reaches zero, because the server's hunger never does — the floor is
  * what keeps the creature reading as needy rather than dying.

@@ -79,7 +79,7 @@ const BENEFITS = [
   {
     icon: <IconThumb />,
     title: "Nothing to learn",
-    body: "Two thumb buttons and a creature you can press. No typing anywhere in the scene; your name comes from your wallet.",
+    body: "No buttons to find. Every verb is a thing in the meadow you tap — a bowl, a stage, a totem, and the creature itself. No typing anywhere; your name comes from your wallet.",
     wide: true,
   },
   {

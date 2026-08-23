@@ -107,7 +107,7 @@ path. The only dependency at runtime is `ws`.
 npm test
 ```
 
-**221 tests across 13 files**, at **100% line and branch coverage** of the
+**238 tests across 13 files**, at **100% line and branch coverage** of the
 server — run `npm run test:coverage` for the table. One test is exhaustive
 rather than example-based:
 

@@ -34,11 +34,11 @@ Every number below is measured and reproducible. Full detail in
 
 | | |
 |---|---|
-| Tests | **221**, across 13 files |
+| Tests | **238**, across 13 files |
 | Server coverage | **100%** — lines, branches, functions and statements |
 | Exhaustive verification | **78,482 combinations** — no input produces a starving creature |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
-| Away-line, live | `{name: "Rue", kind: "feed"}` — resolved from real rows, different wallet |
+| Away-line, local run | `{name: "Rue", kind: "feed"}` — resolved from real rows, different wallet. Kito and Rue are names from the four-session local run in DEMO.md, not from the live world |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain |
 | Scene performance | **«PENDING:perf-score»%**, Galaxy A54, High profile |
 | Runtime dependencies | **1** (`ws`) |

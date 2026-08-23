@@ -92,7 +92,10 @@ Recorded so a result can be told apart from a surprise:
   and the creature is a real cost. Declared early precisely so check 6 can
   measure it now instead of on the day the server lands.
 
-  Note that `ALLOW_TO_TRIGGER_AVATAR_EMOTE` is **not** declared. Triggering an
+  Note: this was written before the picker route existed. The permission **is**
+  now declared in `scene.json`, because `teachFromPicker` calls `triggerEmote`
+  on the player's own avatar. The reasoning below still explains why check 1
+  does not need it. Triggering an
   emote on a scene-owned `AvatarShape` (via `expressionTriggerTimestamp`, as
   check 1 does) is believed to be a different thing from making the *player's*
   avatar emote, which is what that permission appears to govern. If check 1's
@@ -100,8 +103,7 @@ Recorded so a result can be told apart from a surprise:
 
 ## Results
 
-Filled in from a real device. Until then this table is the open question, not a
-record.
+Filled in from a real device.
 
 | # | Check | Result | Device / notes |
 |---|---|---|---|

@@ -12,7 +12,7 @@ By participating you agree to abide by our
 |---|---|
 | `src/` | The Decentraland SDK7 scene — TypeScript, `react-ecs` UI, `Tween` motion |
 | `server/` | The authoritative game server — Node, `ws`, `node:sqlite` |
-| `server/test/` | The server test suite (`node:test`) |
+| `server/test/` | The server test suite (`vitest`) |
 | `scene.json` | Scene metadata and parcel layout |
 | `ARCHITECTURE.md` | The diagram and the decisions behind the code |
 | `DEMO.md` | How to run the thing and see it work |
@@ -58,7 +58,7 @@ Both of these must pass:
 
 ```bash
 npm run build           # at the repository root — builds and typechecks the scene
-cd server && npm test   # 82 tests, 16 suites (builds the server first)
+cd server && npm test   # 238 tests, 13 files, 100% coverage enforced
 ```
 
 `npm test` in `server/` compiles the TypeScript before running, so it covers the
@@ -69,8 +69,9 @@ CI runs exactly these two commands, so a green local run is a green CI run.
 
 ## Tests
 
-Server tests live in `server/test/` and use the built-in `node:test` runner —
-no test framework dependency. Add tests alongside the behaviour you change:
+Server tests live in `server/test/` and run under `vitest`, which enforces 100%
+line, branch and function coverage of `server/src/` — a patch that adds an
+uncovered line fails CI. Add tests alongside the behaviour you change:
 
 - New protocol message or field → extend the protocol parsing tests.
 - New rule (rate limit, hunger, chain ordering) → a test that fails before your

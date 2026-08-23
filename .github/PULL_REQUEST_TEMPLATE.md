@@ -16,7 +16,7 @@
 
 ```bash
 npm run build           # scene build + typecheck, at the repository root
-cd server && npm test   # server build + 82 tests (node:test)
+cd server && npm test   # 238 tests (vitest), 100% coverage enforced
 ```
 
 - [ ] `npm run build` passes at the repository root

@@ -24,9 +24,10 @@ import { setupProbeHud } from './probe/hud'
  * `'probe'` — the day-1 capability probe. Five questions about what SDK7
  *             actually does on the mobile client; see docs/PROBE.md.
  *
- * The probe is still unanswered. Flip this one word, scan the QR, read the
- * answers off the phone, and fill in the table in docs/PROBE.md. Both the
- * probe and this switch are deleted once those answers are recorded.
+ * The probe has been run on a real device and its table is filled in; one row
+ * (emote observation) is still open and is no longer load-bearing, because the
+ * picker route does not depend on it. Flip this one word to re-run it. Both the
+ * probe and this switch are deleted once that last row is recorded.
  */
 const MODE: 'scene' | 'probe' = 'scene'
 

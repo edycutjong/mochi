@@ -93,6 +93,10 @@ Everything else in the design is broadcast to a room. That line is addressed to
 a person. It is one indexed query, and it turns care from something announced
 into something directed.
 
+*Kito and Rue are names from the four-session local run recorded in
+[DEMO.md](DEMO.md), used here to show the shape of the sentence. They are not
+people in the live world — `/state` is the authority on who is.*
+
 Underneath, `chain_move.teacher_name` is `NOT NULL` at the schema level and
 there is no delete verb anywhere in the server. An anonymous chain would be a
 leaderboard; a leaderboard is not what this is.
@@ -135,7 +139,7 @@ different entities, and why hunger is derived rather than ticked.
 
 | Metric | Value |
 |---|---|
-| Tests | **221** across 13 files |
+| Tests | **238** across 13 files |
 | Server coverage | **100%** lines · **100%** branches · **100%** functions |
 | Exhaustive verification | **78,482 combinations** |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
@@ -176,7 +180,7 @@ people — in **[DEMO.md](DEMO.md)**.
 ## 🧪 Testing & CI
 
 ```bash
-npm test               # 221 tests, 13 files
+npm test               # 238 tests, 13 files
 npm run test:coverage  # the same, plus the coverage table
 npm run lint           # type-aware ESLint
 npm run build          # scene bundle + typecheck
@@ -219,9 +223,9 @@ messages — nothing is bumped by hand.
 | 🌐 **Landing page** | **[mochi.edycu.dev](https://mochi.edycu.dev/)** — the creature on the page is sized by the real feed count |
 | 🎞️ **Pitch deck** | **[mochi.edycu.dev/deck](https://mochi.edycu.dev/deck/)** — 12 slides, works offline |
 | 🎥 **Demo video** | «PENDING:video-url» |
-| 🏆 **BUIDL** | «PENDING:buidl-url» — DoraHacks [Friendzone Buildathon](https://dorahacks.io/hackathon/friendzone) |
+| 🏆 **BUIDL** | [dorahacks.io/buidl/48053](https://dorahacks.io/buidl/48053) — DoraHacks [Friendzone Buildathon](https://dorahacks.io/hackathon/friendzone) |
 | 📋 **For judges** | [JUDGE.md](JUDGE.md) — every number, and how to check it in 30 seconds |
-| 🩺 **Server health** | [mochi-friendzone.fly.dev/health](https://mochi-friendzone.fly.dev/health) · [/state](https://mochi-friendzone.fly.dev/state) |
+| 🩺 **Server health** | [api.mochi.edycu.dev/health](https://api.mochi.edycu.dev/health) · [/state](https://api.mochi.edycu.dev/state) |
 
 Both web surfaces redeploy from `main` on every commit that passes CI, so
 neither can drift ahead of a green build.

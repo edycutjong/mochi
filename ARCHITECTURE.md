@@ -132,13 +132,13 @@ which is the exact emptiness this project exists to answer.
 
 | Path | Lines | What |
 |---|---|---|
-| `src/index.ts` | 185 | wiring, PET latch, guestbook |
-| `src/mochi/` | 902 | creature, aliveness, dancers, meadow, plaque, teach |
+| `src/index.ts` | 223 | wiring, PET latch, guestbook |
+| `src/mochi/` | 1,276 | creature, aliveness, dancers, meadow, plaque, teach |
 | `src/ui/` | 296 | HUD, emote picker, touch controls |
 | `src/net/client.ts` | 182 | connection, queue, reconnect |
-| `src/probe/` | 465 | day-one capability probe (see `docs/PROBE.md`) |
-| `server/src/` | 1,337 | protocol, rules, store, hunger, transport |
-| `server/test/` | 2,525 | 221 tests at 100% line/branch coverage, one exhaustive |
+| `src/probe/` | 467 | day-one capability probe (see `docs/PROBE.md`) |
+| `server/src/` | 1,427 | protocol, rules, store, hunger, transport |
+| `server/test/` | 2,638 | 238 tests at 100% line/branch coverage, one exhaustive |
 
 Scene and server share one definition of the wire format: `server/src/protocol.ts`
 has no imports at all, so the scene includes it directly and the two cannot

@@ -16,7 +16,8 @@ import {
   MAX_NAME_LENGTH,
   MAX_WEARABLES,
   MAX_WEARABLE_LENGTH,
-  MUTATING_KINDS
+  MUTATING_KINDS,
+  TEACHABLE_EMOTE_IDS
 } from '../src/protocol.js'
 import type { ClientMessage, HelloMessage } from '../src/protocol.js'
 
@@ -195,10 +196,42 @@ describe('parseClientMessage — teach', () => {
   }
 
   test('accepts an emoteId at exactly the length cap', () => {
-    const emoteId = 'e'.repeat(MAX_EMOTE_ID_LENGTH)
+    // A teachable move wearing the longest namespace that still fits, so the
+    // cap is exercised without smuggling in an id the picker never offers.
+    const emoteId = `urn:${'x'.repeat(87)}:kiss`
+    assert.equal(emoteId.length, MAX_EMOTE_ID_LENGTH)
     const result = parseClientMessage({ t: 'teach', emoteId, wearables: [] })
-    assert.deepEqual(result, { t: 'teach', emoteId, wearables: [] })
+    assert.deepEqual(result, { t: 'teach', emoteId: 'kiss', wearables: [] })
   })
+
+  test('refuses a move the picker never offers', () => {
+    // The chain is append-only and presented as a record of moves real people
+    // taught, so an id that could not have come from the picker must not enter
+    // it. `money` reached production before this check existed.
+    assert.equal(
+      parseClientMessage({ t: 'teach', emoteId: 'money', wearables: [] }),
+      null
+    )
+  })
+
+  test('reduces a full URN to the short id the picker uses', () => {
+    const result = parseClientMessage({
+      t: 'teach',
+      emoteId: 'urn:decentraland:off-chain:base-emotes:kiss',
+      wearables: []
+    })
+    assert.deepEqual(result, { t: 'teach', emoteId: 'kiss', wearables: [] })
+  })
+
+  for (const id of TEACHABLE_EMOTE_IDS) {
+    test(`accepts the teachable move ${id}`, () => {
+      assert.deepEqual(parseClientMessage({ t: 'teach', emoteId: id, wearables: [] }), {
+        t: 'teach',
+        emoteId: id,
+        wearables: []
+      })
+    })
+  }
 
   const badWearableContainers = [
     ['missing entirely', undefined],

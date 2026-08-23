@@ -89,6 +89,24 @@ export function isObservationWorking(): boolean {
 }
 
 /**
+ * The short id for an emote, whatever form it arrives in.
+ *
+ * The picker names moves the way `triggerEmote` wants them — `'kiss'` — but the
+ * client reports the same act back through `AvatarEmoteCommand` as a full URN,
+ * `'urn:decentraland:off-chain:base-emotes:kiss'`. They are one move, so they
+ * must reduce to one id before anything compares or stores them. Without this
+ * the picker echo fails to match, the move is appended twice under one name,
+ * and `SIGNATURES` in replay.ts — keyed by short id — misses the URN copy and
+ * animates the duplicate differently.
+ *
+ * A bare id passes through unchanged, so this is safe on both routes.
+ */
+export function shortEmoteId(id: string): string {
+  const cut = id.lastIndexOf(':')
+  return cut === -1 ? id : id.slice(cut + 1)
+}
+
+/**
  * Identity for opening a connection, guests included.
  *
  * Distinct from `localIdentity` on purpose. That one gates *crediting* and so
@@ -129,8 +147,12 @@ export function emoteObserverSystem() {
     observationWorks = true
 
     // A move triggered BY the picker also lands here. `pickerExpecting` marks
-    // that case so the same act is not appended to the chain twice.
-    if (pickerExpecting === emote.emoteUrn) {
+    // that case so the same act is not appended to the chain twice. Both sides
+    // are reduced to the short id first — the picker holds `'kiss'` while the
+    // client echoes the full URN, and comparing them raw never matches.
+    const observed = shortEmoteId(emote.emoteUrn)
+
+    if (pickerExpecting === observed) {
       pickerExpecting = null
       continue
     }
@@ -139,7 +161,7 @@ export function emoteObserverSystem() {
     if (!who) continue
 
     emit({
-      emoteId: emote.emoteUrn,
+      emoteId: observed,
       teacherId: who.id,
       teacherName: who.name,
       wearables: who.wearables,
@@ -168,12 +190,14 @@ export async function teachFromPicker(emoteId: string) {
   const who = localIdentity()
   if (!who) return
 
-  pickerExpecting = emoteId
-  emit({ emoteId, teacherId: who.id, teacherName: who.name, wearables: who.wearables, source: 'picker' })
+  const id = shortEmoteId(emoteId)
+
+  pickerExpecting = id
+  emit({ emoteId: id, teacherId: who.id, teacherName: who.name, wearables: who.wearables, source: 'picker' })
 
   try {
     const { triggerEmote } = await import('~system/RestrictedActions')
-    await triggerEmote({ predefinedEmote: emoteId })
+    await triggerEmote({ predefinedEmote: id })
   } catch {
     // The move is already recorded and credited; only the visitor's own avatar
     // failed to perform it. Degrading quietly is correct here — the chain is

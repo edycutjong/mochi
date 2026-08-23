@@ -232,16 +232,35 @@ describe('teaching', () => {
   })
 
   test('the chain keeps its order across teachers', () => {
-    helloAs(ADA, 'Ada').handle.receive({ t: 'teach', emoteId: 'a', wearables: [] })
+    helloAs(ADA, 'Ada').handle.receive({ t: 'teach', emoteId: 'wave', wearables: [] })
     clock += 1000
-    helloAs(KITO, 'Kito').handle.receive({ t: 'teach', emoteId: 'b', wearables: [] })
+    helloAs(KITO, 'Kito').handle.receive({ t: 'teach', emoteId: 'clap', wearables: [] })
 
     assert.deepEqual(
       store.recentChain(10).map((m) => [m.seq, m.emoteId, m.teacherName]),
       [
-        [1, 'a', 'Ada'],
-        [2, 'b', 'Kito']
+        [1, 'wave', 'Ada'],
+        [2, 'clap', 'Kito']
       ]
+    )
+  })
+
+  test('a move the picker never offers is refused, not appended', () => {
+    const { sink, handle } = helloAs(ADA, 'Ada')
+    handle.receive({ t: 'teach', emoteId: 'money', wearables: [] })
+    assert.equal(sink.errors[0]?.code, 'bad_message')
+    assert.equal(countChain(), 0)
+  })
+
+  test('the same move taught as a URN and as a bare id is one id in the chain', () => {
+    helloAs(ADA, 'Ada').handle.receive({
+      t: 'teach',
+      emoteId: 'urn:decentraland:off-chain:base-emotes:kiss',
+      wearables: []
+    })
+    assert.deepEqual(
+      store.recentChain(10).map((m) => m.emoteId),
+      ['kiss']
     )
   })
 

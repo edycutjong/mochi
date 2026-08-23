@@ -194,6 +194,47 @@ export type ServerMessage = StateMessage | ErrorMessage
 
 /** Longest accepted emote id. */
 export const MAX_EMOTE_ID_LENGTH = 96
+
+/**
+ * The only moves that may enter the chain.
+ *
+ * Mirrors `TEACHABLE` in `src/ui/emote-picker.tsx` — the twelve built-in emotes
+ * the in-scene picker offers. Length was the only check before, which let any
+ * client append an arbitrary 96-character string to an append-only structure
+ * that is presented to visitors as a record of real moves real people taught.
+ * The chain cannot be edited or deleted, so anything accepted here is permanent.
+ *
+ * Ids are the short form. A full URN is reduced to its last segment before it
+ * reaches this set, so both the picker and the emote-observation route agree.
+ */
+export const TEACHABLE_EMOTE_IDS: ReadonlySet<string> = new Set([
+  'wave',
+  'clap',
+  'dance',
+  'raiseHand',
+  'fistpump',
+  'robot',
+  'kiss',
+  'shrug',
+  'dab',
+  'disco',
+  'headexplode',
+  'tik'
+])
+
+/**
+ * The short id for an emote, whatever form it arrives in.
+ *
+ * The client reports observed emotes as full URNs
+ * (`urn:decentraland:off-chain:base-emotes:kiss`) and picker-triggered ones as
+ * bare ids (`kiss`). One move must reduce to one id, or the same act is stored
+ * under two names. Mirrors `shortEmoteId` in `src/mochi/teach.ts`; the server
+ * repeats it rather than trusting the client to have done it.
+ */
+export function shortEmoteId(id: string): string {
+  const cut = id.lastIndexOf(':')
+  return cut === -1 ? id : id.slice(cut + 1)
+}
 /** Longest accepted display name. */
 export const MAX_NAME_LENGTH = 64
 /** Most wearable urns accepted on one `teach`. */
@@ -235,8 +276,12 @@ export function parseClientMessage(raw: unknown): ClientMessage | null {
     }
 
     case 'teach': {
-      const emoteId = trimmedString(raw['emoteId'], MAX_EMOTE_ID_LENGTH)
-      if (emoteId === null) return null
+      const rawEmoteId = trimmedString(raw['emoteId'], MAX_EMOTE_ID_LENGTH)
+      if (rawEmoteId === null) return null
+      // Reduce first, then check membership: the same move arrives as a bare id
+      // from the picker and as a full URN from emote observation.
+      const emoteId = shortEmoteId(rawEmoteId)
+      if (!TEACHABLE_EMOTE_IDS.has(emoteId)) return null
       const rawWearables = raw['wearables']
       if (!Array.isArray(rawWearables)) return null
       const wearables: string[] = []

@@ -3,6 +3,16 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.3.0](https://github.com/edycutjong/mochi/compare/v1.2.5...v1.3.0) (2026-08-23)
+
+### Features
+
+* **web:** surface the judge route and the deck where they can be found ([e76115c](https://github.com/edycutjong/mochi/commit/e76115cc333e1404bbe53e8474277632315fd203))
+
+### Documentation
+
+* **security:** record why the dismissed alerts are not code defects ([f2cc03c](https://github.com/edycutjong/mochi/commit/f2cc03c074c65b83d3b0a3a17a83cab57874efee))
+
 ## [1.2.5](https://github.com/edycutjong/mochi/compare/v1.2.4...v1.2.5) (2026-08-23)
 
 ### Fixes

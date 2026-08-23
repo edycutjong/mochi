@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.2.4](https://github.com/edycutjong/mochi/compare/v1.2.3...v1.2.4) (2026-08-23)
+
+### Performance
+
+* stop rebuilding the ring on every broadcast, and measure what was claimed ([0651355](https://github.com/edycutjong/mochi/commit/065135577f8959499c27e7a5d58df5be21c6f055))
+
 ## [1.2.3](https://github.com/edycutjong/mochi/compare/v1.2.2...v1.2.3) (2026-08-23)
 
 ### Fixes

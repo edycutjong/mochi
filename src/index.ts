@@ -90,6 +90,10 @@ function petSystem() {
 let awaitingOwnTeach = false
 let lastChainLength = -1
 
+/** Same idea for FEED, so a confirmed feeding can say so. */
+let awaitingOwnFeed = false
+let lastFeedCount = -1
+
 /**
  * A ring rebuild that arrived while the chain was being performed.
  *
@@ -135,6 +139,20 @@ function renderFromServer() {
   // The replay guard is for the rare broadcast that *does* move it.
   if (isReplaying()) pendingRing = ring
   else setDancers(ring)
+
+  // A feed the visitor asked for, confirmed by the server. Without this the
+  // only feedback a successful feed produced was the eat animation and a size
+  // change of GROWTH.perFeed — 0.012, which is imperceptible on one tap. So on
+  // a real phone the button appeared to do nothing, and the ONLY line a feeder
+  // ever saw was the refusal when they hit the rate limit. Confirming a success
+  // costs one short line and removes the reading that the button is broken.
+  const fedMore = state.pet.feedCount > lastFeedCount && lastFeedCount >= 0
+  lastFeedCount = state.pet.feedCount
+
+  if (awaitingOwnFeed && fedMore) {
+    awaitingOwnFeed = false
+    say(`Mochi is fuller — ${state.pet.feedCount} feedings and counting`, 4)
+  }
 
   // The payoff: the visitor's move landed, so play back the whole chain and let
   // them watch a dance authored by named strangers that ends with them.
@@ -216,6 +234,7 @@ function scene() {
         return
       }
       // Plays immediately, counts when the server says so.
+      awaitingOwnFeed = true
       playEat()
       send({ t: 'feed' })
     },

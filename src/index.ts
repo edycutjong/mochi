@@ -6,7 +6,7 @@ import { createMeadow, Meadow } from './mochi/meadow'
 import { setupAliveness, alivenessSystem, playEat, playPetDown, playPetUp } from './mochi/aliveness'
 import { createPlaque, renderPlaque, ago } from './mochi/plaque'
 import { emoteObserverSystem, onTaught, teachFromPicker, sessionIdentity } from './mochi/teach'
-import { setDancers, danceLoopSystem } from './mochi/dancers'
+import { setDancers, danceLoopSystem, ChainEntry } from './mochi/dancers'
 import { setupReplay, startReplay, replaySystem, isReplaying } from './mochi/replay'
 import { setupHud, hudSystem, say } from './ui/hud'
 import { setupTouchControls } from './ui/controls'
@@ -90,6 +90,24 @@ function petSystem() {
 let awaitingOwnTeach = false
 let lastChainLength = -1
 
+/**
+ * A ring rebuild that arrived while the chain was being performed.
+ *
+ * Somebody else teaching a move mid-replay is the one case where the ring
+ * genuinely has to change and the worst possible moment to change it: the
+ * rebuild instantiates avatars, and it would land in the middle of the five
+ * seconds this whole scene is built around. So it waits, and `ringSystem`
+ * applies it the moment the performance ends.
+ */
+let pendingRing: ChainEntry[] | null = null
+
+function ringSystem() {
+  if (pendingRing === null || isReplaying()) return
+  const ring = pendingRing
+  pendingRing = null
+  setDancers(ring)
+}
+
 function renderFromServer() {
   const state = currentState()
   if (!state || !mochi) return
@@ -106,13 +124,17 @@ function renderFromServer() {
     awayLine: ''
   })
 
-  setDancers(
-    state.chain.map((m) => ({
-      emoteId: m.emoteId,
-      teacherName: m.teacherName,
-      wearables: m.wearables
-    }))
-  )
+  const ring = state.chain.map((m) => ({
+    emoteId: m.emoteId,
+    teacherName: m.teacherName,
+    wearables: m.wearables
+  }))
+
+  // `setDancers` is a no-op when the chain has not moved, which is almost
+  // every broadcast — the server sends the whole world after every pet too.
+  // The replay guard is for the rare broadcast that *does* move it.
+  if (isReplaying()) pendingRing = ring
+  else setDancers(ring)
 
   // The payoff: the visitor's move landed, so play back the whole chain and let
   // them watch a dance authored by named strangers that ends with them.
@@ -208,6 +230,7 @@ function scene() {
   engine.addSystem(emoteObserverSystem)
   engine.addSystem(danceLoopSystem)
   engine.addSystem(replaySystem)
+  engine.addSystem(ringSystem)
 }
 
 function probe() {

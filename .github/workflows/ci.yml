@@ -42,6 +42,17 @@ jobs:
       # step is the scene's typecheck as well as its bundle.
       - name: Build scene
         run: npm run build
+      # The scene tests live outside the scene's own program on purpose — see
+      # test/tsconfig.json — so they need their own typecheck.
+      - name: Typecheck scene tests
+        run: npm run typecheck:scene-test
+      # `@dcl/ecs` runs headlessly, which is enough to pin two things that used
+      # to be answerable only on a phone: that a state broadcast does not tear
+      # down and rebuild the ring of avatars, and that the whole scene fits
+      # inside a single parcel's published entity and material budget. The
+      # budget audit prints its table into this job's log.
+      - name: Scene tests + one-parcel budget audit
+        run: npm run test:scene
 
   server-quality:
     name: "Stage 1 · Server typecheck + tests"
@@ -173,7 +184,7 @@ jobs:
       - name: Summary
         run: |
           echo "🚀 All gates passed"
-          echo "  ✅ Stage 1 — scene build + typecheck, server typecheck + 221 tests at 100% coverage"
+          echo "  ✅ Stage 1 — scene build + typecheck + headless scene tests, server typecheck + tests at 100% coverage"
           echo "  ✅ Stage 2 — secret scan over full history, dependency audit, licenses"
           echo "  ✅ Stage 3 — deployable payload within budget"
           echo "  ✅ Stage 4 — protocol end-to-end over a real socket"

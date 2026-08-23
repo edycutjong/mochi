@@ -28,6 +28,23 @@
  * `expressionTriggerTimestamp`, which is what `danceLoopSystem` does. Without
  * it the clearing fills with people standing perfectly still, which reads as
  * broken rather than as memory.
+ *
+ * ## Why the ring remembers what it drew
+ *
+ * The server broadcasts the whole world after *every* successful mutation,
+ * including a pet — which one wallet may send ten times a minute. Almost none
+ * of those broadcasts change the chain at all. Rebuilding on each one would
+ * destroy and recreate up to six `AvatarShape` entities, the single most
+ * expensive instantiation the mobile client performs, up to ten times a minute
+ * *per other visitor in the clearing* — so the more people are here, the worse
+ * the frame rate gets, which is the exact opposite of what this scene is for.
+ *
+ * So `setDancers` compares a signature of what it is being asked to draw
+ * against what is already standing there, and returns without touching the
+ * engine when they match. "Match" means the same moves, taught by the same
+ * people, wearing the same things, in the same order — not the same objects:
+ * every broadcast arrives as freshly parsed JSON, so object identity is never
+ * equal and comparing it would skip nothing.
  */
 
 import { engine, Transform, AvatarShape, TextShape, Billboard, Entity } from '@dcl/sdk/ecs'
@@ -58,6 +75,26 @@ let dancers: Dancer[] = []
 let fidelity: Fidelity = 'avatars-6'
 let sinceRetrigger = 0
 let retriggerCount = 0
+/** Signature of the ring currently standing in the meadow. Null when empty. */
+let standing: string | null = null
+
+/**
+ * A stable identity for a ring: the moves, their teachers, their clothes, in
+ * order, at a given fidelity.
+ *
+ * Fidelity is part of it because it decides both how many entries are drawn
+ * and what kind of entity each one becomes — the same chain at a different
+ * rung is a different ring and must be rebuilt.
+ *
+ * Serialised rather than joined with a separator: a display name and a
+ * wearable urn are both free text, and any character a separator could use is
+ * one they may legally contain — which is all it takes for two different rings
+ * to collide into one signature and silently stop redrawing.
+ */
+function ringSignature(chain: ChainEntry[], level: Fidelity): string {
+  const recent = chain.slice(-CAPACITY[level])
+  return JSON.stringify([level, recent.map((e) => [e.emoteId, e.teacherName, e.wearables])])
+}
 
 /** Places dancers on a ring around the creature, facing inward. */
 function placement(index: number, total: number): { position: Vector3; rotation: Quaternion } {
@@ -123,11 +160,15 @@ function spawnNameTag(entry: ChainEntry, index: number, total: number): Dancer {
 export function clearDancers() {
   for (const d of dancers) engine.removeEntityWithChildren(d.root)
   dancers = []
+  standing = null
 }
 
 export function setFidelity(next: Fidelity) {
   if (next === fidelity) return
   fidelity = next
+  // The rung is part of what the ring is, so dropping down one has to redraw
+  // even though the chain behind it has not moved.
+  standing = null
 }
 
 export function getFidelity(): Fidelity {
@@ -139,8 +180,15 @@ export function getFidelity(): Fidelity {
  *
  * Most recent rather than a sample: the people who were here lately are the
  * ones whose presence makes the place feel currently inhabited.
+ *
+ * Idempotent. Called on every state the server sends — most of which are pets
+ * and feedings that leave the chain untouched — and does nothing at all when
+ * the ring it is asked for is the ring already standing there.
  */
 export function setDancers(chain: ChainEntry[]) {
+  const signature = ringSignature(chain, fidelity)
+  if (signature === standing) return
+
   clearDancers()
 
   const capacity = CAPACITY[fidelity]
@@ -152,6 +200,8 @@ export function setDancers(chain: ChainEntry[]) {
       fidelity === 'nametags' ? spawnNameTag(entry, i, total) : spawnAvatar(entry, i, total)
     )
   })
+
+  standing = signature
 }
 
 /** Re-triggers each dancer's emote, because avatar animations play once. */

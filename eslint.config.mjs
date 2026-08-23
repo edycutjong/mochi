@@ -72,8 +72,23 @@ export default tseslint.config(
     // Node script and sits outside the scene tsconfig's `include` on purpose —
     // pulling it in would make `sdk-commands build` typecheck Node built-ins
     // the scene has no types for.
-    files: ['scripts/**/*.ts'],
+    files: ['scripts/**/*.ts', 'vitest.config.ts'],
     extends: [...tseslint.configs.recommended],
+    rules: namingRules,
+  },
+
+  {
+    // The headless scene tests. Full type-aware ruleset, resolved against
+    // test/tsconfig.json — which exists precisely because the scene's own
+    // program must not include a test runner.
+    files: ['test/**/*.ts'],
+    extends: [...tseslint.configs.recommendedTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     rules: namingRules,
   },
 )

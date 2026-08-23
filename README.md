@@ -70,14 +70,25 @@ vocabulary is press and release. That is not a compromise: the hold to pet
 **latches on press** and completes on a timer, so a thumb that slides off the
 creature does not cancel it. There is no fail state anywhere in the scene.
 
-**A budget kept 15× under the platform's own limits.** The creature is a
-sub-2k-triangle sphere with two plane eyes, animated entirely by Tween
+**A budget measured, not asserted.** At its most expensive the scene builds
+**27 entities against the 200 a parcel allows** — 13.5%, or 7.4× under — and
+**11 materials against 20**, which is the tight dimension at 55%. No texture is
+loaded anywhere. Those figures come from `npm run budget:scene`, which builds
+the real scene graph against the real engine and counts it, against
+`@dcl/inspector`'s own per-parcel limits; `npm run test:scene` fails the build
+if an addition ever breaks them. Triangles are the renderer's own count and
+cannot be measured outside the client, so no triangle figure is claimed here.
+
+The creature is a sphere with two plane eyes, animated entirely by Tween
 squash-stretch — no rig, no sculpt, no animation data. Warmth comes from
 emissive materials because the mobile client has no dynamic lights.
 
 The only elastic cost is the ring of memory dancers, and it is built as a
 ladder — six avatars, three, or floating name-tags — so a slow device gets a
-plainer clearing rather than a broken one.
+plainer clearing rather than a broken one. It is also idempotent: the server
+broadcasts the whole world after every pet, and the ring redraws only when the
+chain behind it actually moved. Over a plausible minute that is **18 avatar
+entities built instead of 120**.
 
 ## 🤝 How It Encourages Social Interaction
 
@@ -139,12 +150,16 @@ different entities, and why hunger is derived rather than ticked.
 
 | Metric | Value |
 |---|---|
-| Tests | **238** across 13 files |
+| Tests | **238** server across 13 files · **16** headless scene across 2 |
 | Server coverage | **100%** lines · **100%** branches · **100%** functions |
 | Exhaustive verification | **78,482 combinations** |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
+| Intent latency | **p50 0.67 ms · p95 0.94 ms · p99 2.29 ms** over N=2,160 |
+| `GET /state` | **p50 0.54 ms · p95 0.90 ms · p99 2.32 ms** at a 40-move chain |
+| Throughput | **425 intents/s**, 24 concurrent wallets, 12,120 frames fanned out |
+| Scene budget | **27/200 entities · 11/20 materials · 0/10 textures**, 1 parcel |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain |
-| Deployable payload | **6.6 MB** against a 25 MB budget |
+| Deployable payload | **6,820 KB** against the 25,000 KB gate CI enforces |
 | Scene performance | **«PENDING:perf-score»%**, Galaxy A54, High profile |
 
 The exhaustive test sweeps every stored hunger value against every elapsed time
@@ -154,7 +169,14 @@ produces a creature that starves.** That property is the emotional premise of
 the whole design, so it is verified across its input space rather than at a
 handful of points.
 
-Full measured receipt in **[DEMO.md](DEMO.md)**.
+Every row above was produced by a command in this repository — `npm run bench`
+for the latency and throughput figures, `npm run budget:scene` for the parcel
+budget — except the last, which is the Decentraland client's own reading of a
+deployed scene on a real phone and cannot be produced by any script here. It is
+left unfilled rather than approximated from the numbers that can.
+
+Full measured receipt, with the command beside every number, in
+**[DEMO.md](DEMO.md)**.
 
 ## 🚀 Getting Started
 
@@ -180,8 +202,11 @@ people — in **[DEMO.md](DEMO.md)**.
 ## 🧪 Testing & CI
 
 ```bash
-npm test               # 238 tests, 13 files
+npm test               # 238 server tests, 13 files
 npm run test:coverage  # the same, plus the coverage table
+npm run test:scene     # 16 headless scene tests, 2 files
+npm run budget:scene   # the one-parcel budget audit
+npm run bench          # the protocol benchmark — p50/p95/p99, ~30 seconds
 npm run lint           # type-aware ESLint
 npm run build          # scene bundle + typecheck
 npm run ci             # everything CI runs, in one command
@@ -194,14 +219,24 @@ here **and** in `server/` — the two steps in Getting Started above.
 green line by green line, plus an `lcov.info` your editor can read. Neither is
 committed.
 
-The tests themselves live in `server/`, because a Decentraland scene only runs
-inside the Decentraland client and there is no headless runtime to unit-test it
-against. The scene's half of the gate is lint and typecheck; everything with
-logic in it lives in the server, and that is the half at 100%.
+Almost all of the tests live in `server/`, because everything with logic in it
+lives in the server and that is the half held at 100%. The scene cannot be
+tested the same way: it renders only inside the Decentraland client, and the
+parts that reach for the client runtime — the react-ecs HUD, anything importing
+`~system/*` — cannot even be loaded outside it.
+
+`@dcl/ecs` itself can, though. The engine underneath `@dcl/sdk/ecs` is ordinary
+TypeScript with no renderer attached, so entities, components and systems can be
+driven headlessly. `test/` uses that for exactly two things that used to be
+answerable only on a phone: that a state broadcast does not tear down and
+rebuild the ring of avatars, and that the whole scene fits inside one parcel's
+published budget. Nothing there asserts about anything visual, because nothing
+there can see.
 
 | Layer | Tool |
 |---|---|
 | Scene build + typecheck | `sdk-commands build` |
+| Scene behaviour + parcel budget | vitest over a headless `@dcl/ecs` engine |
 | Server tests + coverage | vitest + v8, thresholds at 100% |
 | Static analysis | CodeQL |
 | Secret scanning | TruffleHog (CI) + gitleaks over full history |

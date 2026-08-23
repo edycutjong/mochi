@@ -17,6 +17,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "seed:dev": "npm run build && node dist/scripts/seed-dev.js",
+    "bench": "npm run build && node dist/scripts/bench.js",
     "ci": "npm run lint && npm run typecheck && npm run test:coverage"
   },
   "engines": {

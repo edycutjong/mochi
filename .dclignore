@@ -19,6 +19,8 @@ README.md
 *.rar
 *.md
 src
+test
+scripts
 cursor.config
 cursorignore
 .github

@@ -55,6 +55,27 @@ This is a **development fixture only**. It writes to its own path, refuses to ru
 `NODE_ENV=production`, and every row it creates is named `DEV_ONLY_…` and flagged `is_seed` so it is
 identifiable in the data itself. It is not how the live world gets its history.
 
+### Benchmark
+
+```bash
+npm run bench        # ~30 seconds, writes and deletes ./data/bench.db
+```
+
+Percentile latency for every intent in the protocol, measured against this server over a real
+socket into a real SQLite file. It builds the same `Room` over the same `Store` behind the same
+`createTransport` that `src/index.ts` builds — there is no in-process shortcut and no rule switched
+off. In particular **the rate limiter stays on at its production values**: the workload is spread
+across 120 distinct wallets, each spending exactly one minute's allowance, because a benchmark that
+has to disable a rule is measuring a server nobody runs.
+
+The workload is fixed and seeded, so two runs send the identical sequence of messages against an
+identical starting database; only the timings differ. It asserts nothing and always exits 0 — it is
+an instrument, not a gate. Same two guards as the fixture above: it refuses `NODE_ENV=production`,
+and it writes to `MOCHI_BENCH_DB_PATH` (default `./data/bench.db`), refusing to share a path with
+`MOCHI_DB_PATH` or with the production default.
+
+The output, and what it means, is in [DEMO.md](../DEMO.md#performance).
+
 ### Docker
 
 ```bash
@@ -87,8 +108,9 @@ the server holds no credentials.
 | `MOCHI_LIMIT_PET` | `10` | Pets per wallet per minute |
 | `MOCHI_LIMIT_STAMP` | `2` | Guestbook stamps per wallet per minute |
 
-`MOCHI_DEV_DB_PATH` (default `./data/dev.db`) is read by the development fixture only, and it
-refuses to share a path with `MOCHI_DB_PATH`.
+`MOCHI_DEV_DB_PATH` (default `./data/dev.db`) is read by the development fixture only, and
+`MOCHI_BENCH_DB_PATH` (default `./data/bench.db`) by the benchmark only. Both refuse to share a
+path with `MOCHI_DB_PATH`.
 
 ---
 
@@ -232,7 +254,9 @@ server/
 │   ├── game.ts       the room: all the rules, none of the networking
 │   ├── ws.ts         the transport: WebSocket + health endpoints, none of the rules
 │   └── index.ts      entry point, graceful shutdown
-├── scripts/seed-dev.ts   local fixture, DEV_ONLY_ rows, refuses NODE_ENV=production
+├── scripts/
+│   ├── seed-dev.ts   local fixture, DEV_ONLY_ rows, refuses NODE_ENV=production
+│   └── bench.ts      percentile latency over a real socket, throwaway database
 └── test/             vitest — hunger, away-line, rate limits, room rules, restart, transport
 ```
 

@@ -87,6 +87,18 @@ person stood. Chain, credit and order survive at every rung, so a frame-rate
 problem or a platform gap can make the clearing plainer but cannot take the
 mechanic away.
 
+The ring is also **idempotent**, which turned out to matter more than the
+ladder. The server broadcasts the whole world after every successful mutation,
+including a pet — ten a minute per wallet — and almost none of those change the
+chain. `setDancers` compares a signature of the moves, their teachers, their
+wearables and their order against what is already standing, and returns without
+touching the engine when they match. Object identity would be no use: every
+broadcast arrives as freshly parsed JSON.
+
+Measured over twenty broadcasts of which two were teaches, that is **18 avatar
+entities built instead of 120** — see `test/dancers.test.ts`, which fails
+without the guard.
+
 ## Data model
 
 Three tables. One append-only log and one row of derived state.
@@ -132,13 +144,16 @@ which is the exact emptiness this project exists to answer.
 
 | Path | Lines | What |
 |---|---|---|
-| `src/index.ts` | 223 | wiring, PET latch, guestbook |
-| `src/mochi/` | 1,276 | creature, aliveness, dancers, meadow, plaque, teach |
+| `src/index.ts` | 247 | wiring, PET latch, guestbook, deferred ring rebuild |
+| `src/mochi/` | 1,326 | creature, aliveness, dancers, meadow, plaque, teach |
 | `src/ui/` | 296 | HUD, emote picker, touch controls |
 | `src/net/client.ts` | 182 | connection, queue, reconnect |
 | `src/probe/` | 467 | day-one capability probe (see `docs/PROBE.md`) |
 | `server/src/` | 1,427 | protocol, rules, store, hunger, transport |
 | `server/test/` | 2,638 | 238 tests at 100% line/branch coverage, one exhaustive |
+| `test/` | 234 | 16 headless scene tests — the ring, and the parcel budget |
+| `server/scripts/bench.ts` | 432 | the protocol benchmark behind the latency table |
+| `scripts/scene_budget.ts` | 205 | the one-parcel budget audit |
 
 Scene and server share one definition of the wire format: `server/src/protocol.ts`
 has no imports at all, so the scene includes it directly and the two cannot

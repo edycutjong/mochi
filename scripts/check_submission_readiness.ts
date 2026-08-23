@@ -132,12 +132,18 @@ function checkSeedRows() {
     return
   }
   // Deliberately not opening the DB with a driver: this script must run with
-  // zero dependencies. A grep of the file catches the marker either way.
+  // zero dependencies. A grep of the file catches the markers either way.
+  //
+  // Both prefixes are checked. The development fixture writes DEV_ONLY_ rows
+  // and the benchmark writes BENCH_ONLY_ ones; each refuses to open the live
+  // database, but that refusal is a guard and this is the check that the guard
+  // held.
   const raw = readFileSync(db)
-  if (raw.includes(Buffer.from('DEV_ONLY_'))) {
-    fail('seed rows', `${db} contains DEV_ONLY_ rows`)
+  const found = ['DEV_ONLY_', 'BENCH_ONLY_'].filter((marker) => raw.includes(Buffer.from(marker)))
+  if (found.length) {
+    fail('seed rows', `${db} contains ${found.join(' and ')} rows`)
   } else {
-    pass('no DEV_ONLY_ rows in the production database')
+    pass('no synthetic rows in the production database')
   }
 }
 

@@ -1,0 +1,18 @@
+{
+  // The scene's own tsconfig deliberately does not know about these files:
+  // `sdk-commands build` typechecks and bundles whatever it includes, and it
+  // has no business bundling a test runner into a Decentraland scene. This is
+  // the program the tests are checked against instead, and the one the
+  // type-aware linter resolves them with.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    // Vitest's types reach for @types/node, whose global `console`, `fetch` and
+    // `WebSocket` declarations collide with the Decentraland runtime's own. The
+    // conflict is between two dependencies' .d.ts files and says nothing about
+    // this code; the scene's real typecheck is still `sdk-commands build`,
+    // which runs against the untouched program next door.
+    "skipLibCheck": true
+  },
+  "include": ["**/*.ts", "../src/**/*.ts", "../scripts/scene_budget.ts", "../server/src/protocol.ts"]
+}

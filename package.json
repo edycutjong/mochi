@@ -10,18 +10,24 @@
     "test": "npm --prefix server test",
     "test:watch": "npm --prefix server run test:watch",
     "test:coverage": "npm --prefix server run test:coverage",
+    "test:scene": "vitest run",
+    "typecheck:scene-test": "tsc -p test/tsconfig.json",
+    "budget:scene": "vite-node scripts/scene_budget.ts",
+    "bench": "npm --prefix server run bench",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "upgrade-sdk": "npm install --save-dev @dcl/sdk@latest",
     "upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next",
-    "ci": "npm run lint && npm run build && npm --prefix server run ci"
+    "ci": "npm run lint && npm run build && npm run typecheck:scene-test && npm run test:scene && npm --prefix server run ci"
   },
   "devDependencies": {
     "@dcl/js-runtime": "7.26.0",
     "@dcl/sdk": "latest",
     "@eslint/js": "^9.39.5",
     "eslint": "^9.39.5",
-    "typescript-eslint": "^8.67.0"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^3.2.7"
   },
   "engines": {
     "node": ">=16.0.0",

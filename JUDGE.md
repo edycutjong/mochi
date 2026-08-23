@@ -32,16 +32,27 @@ That is the design working, not failing.
 Every number below is measured and reproducible. Full detail in
 [DEMO.md](DEMO.md).
 
-| | |
-|---|---|
-| Tests | **238**, across 13 files |
-| Server coverage | **100%** — lines, branches, functions and statements |
-| Exhaustive verification | **78,482 combinations** — no input produces a starving creature |
-| Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
-| Away-line, local run | `{name: "Rue", kind: "feed"}` — resolved from real rows, different wallet. Kito and Rue are names from the four-session local run in DEMO.md, not from the live world |
-| Provider cost | **$0.00** — no external API, no model, nothing on-chain |
-| Scene performance | **«PENDING:perf-score»%**, Galaxy A54, High profile |
-| Runtime dependencies | **1** (`ws`) |
+| | | Regenerate with |
+|---|---|---|
+| Tests | **238** server across 13 files · **16** headless scene across 2 | `npm test` · `npm run test:scene` |
+| Server coverage | **100%** — lines, branches, functions and statements | `npm run test:coverage` |
+| Exhaustive verification | **78,482 combinations** — no input produces a starving creature | `npm test` |
+| Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database | walkthrough in DEMO.md |
+| Away-line, local run | `{name: "Rue", kind: "feed"}` — resolved from real rows, different wallet. Kito and Rue are names from the four-session local run in DEMO.md, not from the live world | walkthrough in DEMO.md |
+| Intent latency | **p50 0.67 ms · p95 0.94 ms · p99 2.29 ms**, N=2,160, rate limiter on | `npm run bench` |
+| `GET /state` | **p50 0.54 ms · p95 0.90 ms · p99 2.32 ms** at a 40-move chain | `npm run bench` |
+| Throughput | **425 intents/s** from 24 concurrent wallets, 12,120 frames fanned out | `npm run bench` |
+| Scene budget, 1 parcel | **27/200 entities · 11/20 materials · 0/10 textures** | `npm run budget:scene` |
+| Ring rebuilds per busy minute | **18 avatar entities, down from 120** | `npm run test:scene` |
+| Deployable payload | **6,820 KB** against the 25,000 KB gate CI enforces | `du -sk bin assets images main.crdt scene.json` |
+| Provider cost | **$0.00** — no external API, no model, nothing on-chain | — |
+| Runtime dependencies | **1** (`ws`) | `server/package.json` |
+| Scene performance | **«PENDING:perf-score»%**, Galaxy A54, High profile | **needs a phone — see below** |
+
+The last row is the only number here no command can produce. It is the
+Decentraland client's own Scene Limits reading of a deployed scene on real
+hardware, so it needs both a published World and the device in hand. It is left
+unfilled rather than approximated from the figures above.
 
 ## Reproduce it
 
@@ -59,7 +70,10 @@ the deployed World.
 **Verify the numbers yourself:**
 
 ```bash
-npm test
+npm test               # 238 server tests, 100% coverage
+npm run test:scene     # 16 headless scene tests + the one-parcel budget audit
+npm run bench          # the latency and throughput table, ~30 seconds
+npm run ci             # all of it, the way CI runs it
 ```
 
 *(CI runs the same command on every push, plus CodeQL and a full-history

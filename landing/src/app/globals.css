@@ -211,6 +211,16 @@
     outline-offset: 3px;
     border-radius: 6px;
   }
+
+  /* Chrome paints its own blue ring on a focused <svg tabindex="0"> even when
+     :focus-visible does not match, so pressing the creature with a mouse drew
+     a hard blue rectangle around it that no rule here had asked for. Suppress
+     the ring only in the case the browser should not have drawn it — pointer
+     focus. Keyboard focus still matches :focus-visible above and keeps the
+     3px ink ring, so nothing is taken away from anyone navigating by tab. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 /* Grain — keeps large pastel fields from banding, adds a papery tactility that

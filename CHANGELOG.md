@@ -3,6 +3,20 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.2.3](https://github.com/edycutjong/mochi/compare/v1.2.2...v1.2.3) (2026-08-23)
+
+### Fixes
+
+* point the scene at a domain we control, not at the host's own name ([3f2c8d3](https://github.com/edycutjong/mochi/commit/3f2c8d3d361058381641ae34bcf9fcdcc7acebb7))
+* point the scene at wunderland.dcl.eth and correct the test count ([b2ac43f](https://github.com/edycutjong/mochi/commit/b2ac43f59ee88f0b9996a8c207e5de06637d8717))
+* reduce every emote to one id, and gate the chain to teachable moves ([45d5668](https://github.com/edycutjong/mochi/commit/45d566839fc337857e2574af672cbff47381338e))
+* **server:** contain a throwing receive instead of exiting the process ([aa32d9b](https://github.com/edycutjong/mochi/commit/aa32d9bf7b9148c448ebe0f1d9dc5fd1efde7409))
+* **web:** correct the emote label map, the carer shape, and the first read ([b075215](https://github.com/edycutjong/mochi/commit/b07521504d4cbed32d7ec8b29e448f0bd7b155d5))
+
+### Documentation
+
+* make every stated number match what the repo actually does ([2c91c3a](https://github.com/edycutjong/mochi/commit/2c91c3a7a7a25641172962f45ea043d433876832))
+
 ## [1.2.2](https://github.com/edycutjong/mochi/compare/v1.2.1...v1.2.2) (2026-08-22)
 
 ### Fixes

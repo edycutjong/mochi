@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.4.1](https://github.com/edycutjong/mochi/compare/v1.4.0...v1.4.1) (2026-08-23)
+
+### Fixes
+
+* **scene:** the ring counts people, not moves ([13a2ee3](https://github.com/edycutjong/mochi/commit/13a2ee35195840b141ba21e50a24b2988ad27ae0))
+
 ## [1.4.0](https://github.com/edycutjong/mochi/compare/v1.3.0...v1.4.0) (2026-08-23)
 
 ### Features

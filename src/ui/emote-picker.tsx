@@ -10,6 +10,11 @@
  * an icon grid needs a legend, and a legend is instruction text.
  */
 
+// `ReactEcs` looks unused and is not. jsx is "react" with jsxFactory
+// "ReactEcs.createElement" (@dcl/sdk/types/tsconfig.ecs7.json), so every tag
+// below compiles to a call on it; deleting the import fails the build with
+// TS2874. CodeQL does not read jsxFactory and flags it — dismissed as a false
+// positive rather than "fixed".
 import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 import { isMobile } from '@dcl/sdk/platform'

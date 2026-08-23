@@ -84,21 +84,42 @@ substituted.
 | Largest cluster | `protobufjs` — the SDK's own wire-format encoder |
 
 Two counts exist and they disagree, so neither is quoted as *the* number here:
-GitHub's Dependabot tab reports one alert per advisory-and-path, while
-`npm audit` groups them differently — currently 16 and 15 respectively. Both
-describe the same set.
+`npm audit` currently reports **6** (4 high, 2 moderate), all in the scene's
+tree. `npm audit fix` has been applied and resolved what it could without
+breaking changes. The remainder need `npm audit fix --force`, which would
+downgrade or replace packages the SDK pins and break the scene build.
+**`@dcl/sdk@7.26.0` is the latest published version**, so no upgrade clears them.
 
-`npm audit fix` has been applied and resolved what it could without breaking
-changes. The remainder need `npm audit fix --force`, which would downgrade or
-replace packages the SDK pins, breaking the scene build. **`@dcl/sdk@7.26.0` is
-the latest published version**, so there is no upgrade available that clears
-them.
+### What is dismissed, and why
 
-Being precise about one thing, because "development dependency" is misleading
-here: `@dcl/sdk` is declared as a dev dependency, but its runtime code is
-**bundled into the deployed scene**. So this is not purely a build-time
-exposure. What limits it is that a Decentraland scene executes inside the
-client's own sandbox with no filesystem, no process access and no ambient
-credentials — the scene cannot reach anything worth reaching.
+Two dismissals are recorded in the Security tab. Both are documented here so the
+reasoning is visible without opening it.
+
+**`extract-zip` — unvalidated symlink path traversal (high), dismissed as
+tolerable risk.** It arrives via `@dcl/sdk → @dcl/sdk-commands → extract-zip`.
+There is nothing to upgrade to: `2.0.1` is simultaneously the vulnerable version
+and the latest ever published, and the advisory lists no patched release.
+`@dcl/sdk-commands` is the build CLI, and neither it nor `extract-zip` appears in
+the deployed bundle — checked with `grep -c extract-zip bin/index.js`, which
+returns 0. The exposure is a developer extracting a hostile archive at build
+time, not anything a visitor can reach.
+
+**Three `js/unused-local-variable` alerts on `import ReactEcs`, dismissed as
+false positives.** `jsx` is `"react"` with `jsxFactory: "ReactEcs.createElement"`,
+so every JSX tag compiles to a call on that import. Removing it — the change the
+alert implies — fails the build with `TS2874: This JSX tag requires 'ReactEcs' to
+be in scope`. CodeQL does not read `jsxFactory`. The rule was **not** excluded in
+a CodeQL config: that would have cleared the tab while also hiding genuine unused
+variables. Each import carries a comment saying so, so nobody tidies it away.
+
+### One thing worth being precise about
+
+"Development dependency" is misleading for `@dcl/sdk` as a whole: it is declared
+as one, but its runtime code is **bundled into the deployed scene**, so those
+advisories are not purely build-time. What limits them is that a Decentraland
+scene executes inside the client's own sandbox with no filesystem, no process
+access and no ambient credentials — the scene cannot reach anything worth
+reaching. The `extract-zip` case above is different and genuinely build-only,
+because it comes from the CLI rather than the bundled runtime.
 
 We would rather state this plainly than present a clean-looking dashboard.

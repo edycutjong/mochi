@@ -12,8 +12,12 @@
 
   <br/>
 
-  [![Built for Friendzone](https://img.shields.io/badge/DoraHacks-Friendzone_Buildathon-8b5cf6?style=for-the-badge)](https://dorahacks.io/hackathon/friendzone)
+  [![Live site](https://img.shields.io/badge/🫧_Live-mochi.edycu.dev-ff6fa5?style=for-the-badge)](https://mochi.edycu.dev)
   [![For Judges](https://img.shields.io/badge/📋_For-Judges-06b6d4?style=for-the-badge)](JUDGE.md)
+
+  [![Pitch deck](https://img.shields.io/badge/🎞_Pitch-Deck-7c5cff?style=for-the-badge)](https://mochi.edycu.dev/deck/)
+  [![BUIDL](https://img.shields.io/badge/🏆_BUIDL-48053-f59e0b?style=for-the-badge)](https://dorahacks.io/buidl/48053)
+  [![Built for Friendzone](https://img.shields.io/badge/DoraHacks-Friendzone_Buildathon-8b5cf6?style=for-the-badge)](https://dorahacks.io/hackathon/friendzone)
 
   <br/>
 

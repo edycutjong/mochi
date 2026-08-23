@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Wordmark } from "@/components/wordmark";
 import { EnterWorldButton } from "@/components/enter-world";
+import { JUDGE_URL } from "@/lib/mochi";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -70,6 +71,22 @@ export function SiteHeader() {
               {item.label}
             </a>
           ))}
+
+          {/* The only nav item that leaves the page, so it is marked rather
+              than blended in: judges are the audience this page exists for,
+              and the receipts were previously reachable only from the footer
+              or by scrolling to the right section. */}
+          <a
+            href={JUDGE_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-1 inline-flex items-center gap-1.5 rounded-full border-2 border-[#b2436a]/30 px-3.5 py-1.5 text-sm font-bold text-[#b2436a] transition-colors duration-200 hover:border-[#b2436a]/60 hover:bg-[#ffd9e8]/70"
+          >
+            For judges
+            <span aria-hidden className="text-xs">
+              ↗
+            </span>
+          </a>
         </nav>
 
         <div className="flex items-center gap-3">

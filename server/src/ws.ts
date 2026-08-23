@@ -71,7 +71,28 @@ export function createTransport(room: Room, config: Config): Transport {
         // rather than inventing a second vocabulary for the same refusal.
         parsed = null
       }
-      connection.receive(parsed)
+      // Contained deliberately. This runs inside an EventEmitter listener, so an
+      // exception escaping here is an unhandled throw that exits the process —
+      // and the mutations reachable from `receive` can throw for reasons that
+      // have nothing to do with the visitor: SQLITE_BUSY, a full disk, a missing
+      // pet row. Fly would restart within its 30s health check, but this server
+      // is meant to sit unattended for the judging window, where a repeatable
+      // trigger becomes a crash loop with nobody watching. One visitor sending
+      // one unlucky frame should cost that frame, not everyone's session.
+      try {
+        connection.receive(parsed)
+      } catch (error) {
+        console.error('receive failed', error)
+        if (socket.readyState === socket.OPEN) {
+          socket.send(
+            JSON.stringify({
+              t: 'error',
+              code: 'bad_message',
+              message: 'that did not go through'
+            } satisfies ServerMessage)
+          )
+        }
+      }
     })
 
     socket.on('close', () => connection.close())

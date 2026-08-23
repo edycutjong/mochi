@@ -258,6 +258,52 @@ describe('heartbeat reaper', () => {
   })
 })
 
+describe('a throwing receive is contained', () => {
+  test('a mutation that throws answers the sender instead of killing the process', async () => {
+    // The realistic trigger is not a malicious frame — it is SQLITE_BUSY, a
+    // full disk, or the `pet row missing` throw in store.ts, any of which
+    // surfaces inside `receive`. This runs in an EventEmitter listener, so
+    // before the try/catch in ws.ts an escaping throw took the whole server
+    // down. During the unattended judging window a repeatable trigger would
+    // become a crash loop, so the containment is worth a test of its own.
+    const localDb = openDatabase({ path: ':memory:' })
+    const room = new Room(new Store(localDb, config.hunger), config)
+
+    const realConnect = room.connect.bind(room)
+    room.connect = (sink) => {
+      const connection = realConnect(sink)
+      return {
+        ...connection,
+        receive: () => {
+          throw new Error('SQLITE_BUSY: database is locked')
+        },
+        close: () => connection.close()
+      }
+    }
+
+    const localTransport = createTransport(room, config)
+    const localPort = (await localTransport.listen()).port
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    try {
+      const socket = new WebSocket(`ws://127.0.0.1:${localPort}`)
+      await waitForOpen(socket)
+      const reply = nextMessage(socket)
+
+      socket.send(JSON.stringify({ t: 'hello', wallet: ADA, name: 'Cate', isGuest: false }))
+
+      const message = await reply
+      assert.equal(message.t === 'error' && message.code, 'bad_message')
+      assert.equal(errors.mock.calls.length, 1)
+      socket.close()
+    } finally {
+      errors.mockRestore()
+      await localTransport.close()
+      localDb.close()
+    }
+  })
+})
+
 describe('listen()', () => {
   test('an address that is not a bound TCP socket falls back to the configured port', async () => {
     const localDb = openDatabase({ path: ':memory:' })

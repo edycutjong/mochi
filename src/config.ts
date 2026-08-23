@@ -36,10 +36,18 @@ export const MOCHI_HOME = { x: 8, y: 0, z: 8 }
  * plaintext socket from a secure page, and the failure looks like the server
  * being down rather than like a protocol mistake.
  *
+ * This is a domain we control, not the host's own name, and that is the whole
+ * point: because the value is frozen into the deployed scene, pointing it at
+ * the host's own name would make that host unchangeable for as long as the
+ * scene is live. It is a CNAME today. If the host ever has to move, the record
+ * moves and the deployed scene follows once the record's TTL expires — no
+ * redeploy, which matters because redeploying needs a World permission we do
+ * not own.
+ *
  * To run against a server on this machine instead, swap in
  * `ws://127.0.0.1:8080` — but never deploy with that value.
  */
-export const SERVER_URL = 'wss://mochi-friendzone.fly.dev'
+export const SERVER_URL = 'wss://api.mochi.edycu.dev'
 
 /**
  * Motion timings, in seconds unless noted.

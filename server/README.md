@@ -32,13 +32,14 @@ first run; there is no migration step and no setup script.
 ### Tests
 
 ```bash
-npm test             # builds, then runs node:test over dist/test
+npm test             # vitest over test/, with coverage thresholds
 ```
 
-82 tests across 16 suites. They cover hunger decay against its floor, the away-line query including
-every case where the honest answer is nothing, the rate limiter's sliding window, guest refusal at
-each write path, restart survival through a real file on disk, and an end-to-end pass over a real
-WebSocket.
+238 tests across 13 files, at 100% line, branch and function coverage of `src/` — the thresholds are
+enforced, so an uncovered line fails the run. They cover hunger decay against its floor, the
+away-line query including every case where the honest answer is nothing, the rate limiter's sliding
+window, guest refusal at each write path, restart survival through a real file on disk, and an
+end-to-end pass over a real WebSocket.
 
 ```bash
 npm run typecheck    # tsc --noEmit, strict
@@ -232,7 +233,7 @@ server/
 │   ├── ws.ts         the transport: WebSocket + health endpoints, none of the rules
 │   └── index.ts      entry point, graceful shutdown
 ├── scripts/seed-dev.ts   local fixture, DEV_ONLY_ rows, refuses NODE_ENV=production
-└── test/             node:test — hunger, away-line, rate limits, room rules, restart, transport
+└── test/             vitest — hunger, away-line, rate limits, room rules, restart, transport
 ```
 
 The split that matters is `game.ts` / `ws.ts`. The room talks to the outside world through a
@@ -274,9 +275,18 @@ Then confirm it is actually alive before pointing anything at it:
 curl https://<app>.fly.dev/health
 ```
 
-The scene connects over `wss://<app>.fly.dev`. Put that in the scene's
-`src/config.ts`. It must be `wss://` — the mobile client refuses a plaintext
-socket, and the failure looks exactly like the server being down.
+The scene connects over `wss://`. It must be `wss://` — the mobile client
+refuses a plaintext socket, and the failure looks exactly like the server
+being down.
+
+Put a domain you control in the scene's `src/config.ts`, not `<app>.fly.dev`.
+This deployment uses `api.mochi.edycu.dev`, a CNAME to the Fly app. The reason
+is that a scene has no environment variables, so whatever goes in `config.ts`
+is frozen into the deployed scene — and redeploying a scene to a World needs a
+permission the deployer may not hold. With a CNAME the host can be replaced by
+editing one DNS record; with the Fly hostname the scene is married to that app
+for as long as it is live. Keep the record's TTL low, or a host move takes the
+old TTL to reach the clients that need it.
 
 ### Three ways to lose the creature
 

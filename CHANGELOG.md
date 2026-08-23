@@ -3,6 +3,16 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.4.0](https://github.com/edycutjong/mochi/compare/v1.3.0...v1.4.0) (2026-08-23)
+
+### Features
+
+* **scene:** move every verb into the world and delete the thumb arc ([0d8fb1c](https://github.com/edycutjong/mochi/commit/0d8fb1cbde99ef51fbe53782df6050a8625adb09))
+
+### Fixes
+
+* **scene:** confirm a feeding actually happened ([4fa2e3e](https://github.com/edycutjong/mochi/commit/4fa2e3e3ece71382fcdbc725efad58e2fb051bdf))
+
 ## [1.3.0](https://github.com/edycutjong/mochi/compare/v1.2.5...v1.3.0) (2026-08-23)
 
 ### Features

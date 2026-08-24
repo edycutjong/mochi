@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.9.1](https://github.com/edycutjong/mochi/compare/v1.9.0...v1.9.1) (2026-08-24)
+
+### Fixes
+
+* **scene:** size the thumbnail wordmark for the size it is actually seen ([9257ac9](https://github.com/edycutjong/mochi/commit/9257ac9576a168d206589e2ae73a9ded454fc893))
+
 ## [1.9.0](https://github.com/edycutjong/mochi/compare/v1.8.1...v1.9.0) (2026-08-24)
 
 ### Features

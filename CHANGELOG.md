@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.5.5](https://github.com/edycutjong/mochi/compare/v1.5.4...v1.5.5) (2026-08-24)
+
+### Performance
+
+* **scene:** stop the creature waddling continuously at a moving visitor ([74786eb](https://github.com/edycutjong/mochi/commit/74786eb2ac81982cfb803e45cd7a57dc298fc2b3))
+
 ## [1.5.4](https://github.com/edycutjong/mochi/compare/v1.5.3...v1.5.4) (2026-08-24)
 
 ### Performance

@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.5.8](https://github.com/edycutjong/mochi/compare/v1.5.7...v1.5.8) (2026-08-24)
+
+### Fixes
+
+* **deck:** the pitch deck still said the World was not deployed ([a2ccab8](https://github.com/edycutjong/mochi/commit/a2ccab8bdb4e765cc19ca9a01102f5cdd12e91fc))
+
 ## [1.5.7](https://github.com/edycutjong/mochi/compare/v1.5.6...v1.5.7) (2026-08-24)
 
 ### Fixes

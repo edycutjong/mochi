@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.5.6](https://github.com/edycutjong/mochi/compare/v1.5.5...v1.5.6) (2026-08-24)
+
+### Fixes
+
+* **scene:** a guest who taps gets an answer instead of silence ([02361fa](https://github.com/edycutjong/mochi/commit/02361fad3c285e9e9ea34eb49362c91423098a0c))
+
 ## [1.5.5](https://github.com/edycutjong/mochi/compare/v1.5.4...v1.5.5) (2026-08-24)
 
 ### Performance

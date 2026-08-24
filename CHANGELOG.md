@@ -3,6 +3,16 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.4.2](https://github.com/edycutjong/mochi/compare/v1.4.1...v1.4.2) (2026-08-24)
+
+### Fixes
+
+* **deploy:** target the worlds content server, and stop shipping config ([1e36792](https://github.com/edycutjong/mochi/commit/1e36792fb8a15a21e91cde7bd74e560ef273be7b))
+
+### Documentation
+
+* the scene suite is 22 tests, not 18 ([6a99490](https://github.com/edycutjong/mochi/commit/6a99490d28f0b68d3ee64e15f4bbb515a6faf2da))
+
 ## [1.4.1](https://github.com/edycutjong/mochi/compare/v1.4.0...v1.4.1) (2026-08-23)
 
 ### Fixes

@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.5.1](https://github.com/edycutjong/mochi/compare/v1.5.0...v1.5.1) (2026-08-24)
+
+### Fixes
+
+* **scene:** actually pull the fidelity ladder on a struggling phone ([4f41b64](https://github.com/edycutjong/mochi/commit/4f41b64f34abd7314031af419f55d1cd115829d4))
+
 ## [1.5.0](https://github.com/edycutjong/mochi/compare/v1.4.2...v1.5.0) (2026-08-24)
 
 ### Features

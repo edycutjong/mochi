@@ -19,8 +19,15 @@ export const WORLD_URL: string | null =
   "https://decentraland.org/jump/?realm=wunderland.dcl.eth";
 export const WORLD_URL_PENDING = "«PENDING:world-url»";
 
-/** Scene performance score. Not yet measured on the target device. */
-export const PERF_SCORE: string | null = null;
+/**
+  * Scene performance score, from the client's own Scene Limits panel.
+  *
+  * Measured on a Galaxy S24 Ultra — a flagship, not the mid-spec Galaxy A54
+  * that Decentraland's guidance names as the device to test on. It is a
+  * ceiling rather than a promise, and the page says so rather than quoting the
+  * number bare.
+  */
+export const PERF_SCORE: string | null = "88–90%";
 export const PERF_SCORE_PENDING = "«PENDING:perf-score»";
 
 export const REPO_URL = "https://github.com/edycutjong/mochi";

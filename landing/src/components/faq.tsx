@@ -1,4 +1,5 @@
 import {
+  PERF_SCORE,
   PERF_SCORE_PENDING,
   WORLD_URL,
   WORLD_URL_PENDING,
@@ -130,12 +131,13 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
         6.6 MB against a 25 MB budget and keeps it under 250 entities against a
         4,800 soft limit. The ghost dancers degrade down a fidelity ladder — six
         avatars, then three, then floating nametags — and the chain, the credit
-        and the order survive at every rung. The measured perf score on the
-        target device is{" "}
+        and the order survive at every rung. The measured perf score is{" "}
         <code className="rounded bg-[#ffe8f1] px-1.5 py-0.5 font-mono text-[0.85em] text-[#b2436a]">
-          {PERF_SCORE_PENDING}
+          {PERF_SCORE ?? PERF_SCORE_PENDING}
         </code>{" "}
-        — not yet run.
+        on a Galaxy S24 Ultra at High — a flagship, so treat it as a ceiling.
+        Decentraland asks for a mid-spec device like the Galaxy A54 and that run
+        has not happened, which is exactly what the fidelity ladder is for.
       </p>
     ),
   },

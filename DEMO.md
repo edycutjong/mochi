@@ -318,19 +318,31 @@ A rebuild that genuinely has to happen while a performance is running is held
 until the performance ends, so the five seconds the whole design is built
 around are never interrupted by avatar instantiation.
 
-### Still needs a device: the in-client Scene Limits panel
+### Measured on a device: the in-client Scene Limits panel
 
-**«PENDING:perf-score»%** on the in-client Scene Limits panel — Samsung Galaxy
-A54, High graphics profile, Dynamic Graphics off.
+**88–90%** on the in-client Scene Limits panel — Samsung Galaxy S24 Ultra, High
+graphics profile, Dynamic Graphics off.
 
-This is the one performance number in this file that no script can produce. It
-is the Decentraland client's own reading of a deployed scene on real hardware,
-and it needs both a published World and the phone in hand. Everything above is
-measured here and reproducible from a clone; this one is not, and it is left
-unfilled rather than approximated from the numbers that are.
+This is the one performance number in this file that no script can produce: it
+is the Decentraland client's own reading, so it needs the phone in hand.
+Everything above is measured here and reproducible from a clone; this one needs
+a device.
 
-Reproduce it yourself once it is filled: In-Game Menu → Settings → Graphics →
-Dynamic Graphics off → High, then the monitor icon at the top right.
+**Read it as a ceiling.** The S24 Ultra is a flagship. Decentraland's guidance
+is to test on a *mid-spec* device like the Galaxy A54, and that measurement has
+not been taken — a mid-range phone will read lower, and by how much is not
+known. The fidelity ladder exists for exactly that gap: six avatars degrade to
+three, then to name-tags, when frame time stays over budget.
+
+It also started at 70%. The gap between those two numbers is five fixes found
+by testing on the device rather than reading the code — a collider rebuilt every
+frame by its own breathe tween, six avatar emotes restarting on one frame, and a
+creature that waddled continuously at a moving visitor, among them.
+
+Reproduce it: `npm run start:mobile`, scan the QR with the phone, then In-Game
+Menu → Settings → Graphics → Dynamic Graphics off → High, and the monitor icon
+at the top right. The panel is a preview feature — it does not appear in the
+deployed World.
 
 ## What is not finished
 

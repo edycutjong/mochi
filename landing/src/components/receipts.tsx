@@ -165,8 +165,8 @@ export function Receipts() {
                 delay: 160,
               },
               {
-                title: "The perf score is blank because it is unmeasured.",
-                body: `Every other number here is checked. This one is not yet, so it prints as ${PERF_SCORE_PENDING} rather than as an optimistic guess.`,
+                title: "The perf score names its phone, because the phone matters.",
+                body: `${PERF_SCORE ?? PERF_SCORE_PENDING} on a Galaxy S24 Ultra at High, Dynamic Graphics off. That is a flagship, and Decentraland's own guidance is to test on a mid-spec device like the Galaxy A54 — which has not been done. Read it as a ceiling, not a promise. It also started at 70%: the gap is five fixes found by testing on a real phone.`,
                 delay: 240,
               },
             ].map((item) => (

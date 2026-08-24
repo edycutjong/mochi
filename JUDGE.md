@@ -52,12 +52,22 @@ Every number below is measured and reproducible. Full detail in
 | Deployable payload | **6,820 KB** against the 25,000 KB gate CI enforces | `du -sk bin assets images main.crdt scene.json` |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain | — |
 | Runtime dependencies | **1** (`ws`) | `server/package.json` |
-| Scene performance | **«PENDING:perf-score»%**, Galaxy A54, High profile | **needs a phone — see below** |
+| Scene performance | **88–90%**, Galaxy S24 Ultra, High profile | **needs a phone — see below** |
 
-The last row is the only number here no command can produce. It is the
-Decentraland client's own Scene Limits reading of a deployed scene on real
-hardware, so it needs both a published World and the device in hand. It is left
-unfilled rather than approximated from the figures above.
+The last row is the only number here no command can produce: it is the
+Decentraland client's own Scene Limits reading, so it needs the device in hand.
+
+**Read it as a ceiling, not a guarantee.** It was measured on a Galaxy S24
+Ultra, which is a flagship. Decentraland's own guidance is to test on a
+*mid-spec* device like the Galaxy A54, and that measurement has not been taken —
+so a mid-range phone will score lower than 88–90% and by how much is unknown.
+The fidelity ladder in `src/mochi/fidelity-watchdog.ts` exists for that case: it
+drops the ghost ring from six avatars to three to name-tags when frame time
+stays over budget, so a slower device gets a plainer clearing rather than a
+stuttering one.
+
+The panel lives in the SDK preview, not in the deployed World — `npm run
+start:mobile`, scan the QR, then the monitor icon at the top right.
 
 ## Reproduce it
 

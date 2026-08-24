@@ -180,7 +180,7 @@ different entities, and why hunger is derived rather than ticked.
 | Scene budget | **32/200 entities · 14/20 materials · 0/10 textures**, 1 parcel |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain |
 | Deployable payload | **6,820 KB** against the 25,000 KB gate CI enforces |
-| Scene performance | **«PENDING:perf-score»%**, Galaxy A54, High profile |
+| Scene performance | **88–90%**, Galaxy S24 Ultra, High profile, Dynamic Graphics off |
 
 The exhaustive test sweeps every stored hunger value against every elapsed time
 against every configuration — including NaN, ±Infinity, negative values, values

@@ -153,7 +153,7 @@ which is the exact emptiness this project exists to answer.
 | `src/probe/` | 467 | day-one capability probe (see `docs/PROBE.md`) |
 | `server/src/` | 1,427 | protocol, rules, store, hunger, transport |
 | `server/test/` | 2,638 | 238 tests at 100% line/branch coverage, one exhaustive |
-| `test/` | 254 | 18 headless scene tests — the ring, and the parcel budget |
+| `test/` | 254 | 22 headless scene tests — the ring, and the parcel budget |
 | `server/scripts/bench.ts` | 432 | the protocol benchmark behind the latency table |
 | `scripts/scene_budget.ts` | 205 | the one-parcel budget audit |
 

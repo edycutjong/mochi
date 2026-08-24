@@ -38,7 +38,7 @@ Every number below is measured and reproducible. Full detail in
 
 | | | Regenerate with |
 |---|---|---|
-| Tests | **238** server across 13 files · **18** headless scene across 2 | `npm test` · `npm run test:scene` |
+| Tests | **238** server across 13 files · **22** headless scene across 2 | `npm test` · `npm run test:scene` |
 | Server coverage | **100%** — lines, branches, functions and statements | `npm run test:coverage` |
 | Exhaustive verification | **78,482 combinations** — no input produces a starving creature | `npm test` |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database | walkthrough in DEMO.md |

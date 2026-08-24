@@ -32,6 +32,31 @@ let mochi: Mochi | null = null
 let beat: Beat = 'idle'
 /** Seconds left before the current one-shot beat hands back to breathing. */
 let beatRemaining = 0
+/**
+ * Quiet period after a waddle, before the creature will consider another.
+ *
+ * A visitor walking around inside `greetRadius` used to produce a greet, a
+ * hand-back to idle, and then another greet on the very next frame the
+ * distance check passed — an unbroken chain of them for as long as they moved.
+ * Each one writes a fresh `Tween` and `TweenSequence` to both the root and the
+ * body, so the cost was paid over and over while the creature shuffled
+ * continuously toward a moving target. It showed up on a real phone as the
+ * frame rate dipping whenever Mochi was moving.
+ *
+ * A pause between waddles is also what the beat is supposed to look like. A
+ * creature that repositions itself every four hundred milliseconds does not
+ * read as attentive, it reads as nervous.
+ */
+let greetCooldown = 0
+
+/** Seconds of stillness between waddles. */
+const GREET_COOLDOWN_SECONDS = 2.5
+
+/**
+ * Ground worth covering. Below this the waddle is invisible to the visitor and
+ * is purely a tween nobody asked for.
+ */
+const GREET_MIN_STEP = 0.6
 /** Resting proportions, captured at setup so every beat is relative to it. */
 let rest: Vector3 = Vector3.One()
 
@@ -207,14 +232,19 @@ export function alivenessSystem(dt: number) {
   if (!mochi) return
 
   if (beatRemaining !== Infinity) beatRemaining -= dt
+  if (greetCooldown > 0) greetCooldown -= dt
 
   // A finished one-shot hands the body back to the idle loop.
   if (beat !== 'idle' && beatRemaining <= 0) {
+    const waddled = beat === 'greeting'
     beat = 'idle'
     breathe(mochi.body)
+    // Stand still for a moment afterwards rather than immediately considering
+    // the next waddle — see `greetCooldown`.
+    if (waddled) greetCooldown = GREET_COOLDOWN_SECONDS
   }
 
-  if (beat !== 'idle') return
+  if (beat !== 'idle' || greetCooldown > 0) return
 
   // Greet: only from rest, and only for someone who has come close enough to
   // be looking at the creature rather than passing by.
@@ -234,6 +264,9 @@ export function alivenessSystem(dt: number) {
   )
   const home = Vector3.create(MOCHI_HOME.x, MOCHI_HOME.y, MOCHI_HOME.z)
   if (flatDistance(want, home) > 3.5) return
+
+  // Not worth a tween the visitor cannot see — see `GREET_MIN_STEP`.
+  if (flatDistance(want, here) < GREET_MIN_STEP) return
 
   playGreet(want)
 }

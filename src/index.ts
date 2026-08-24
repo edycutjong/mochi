@@ -75,6 +75,7 @@ function worldTapSystem() {
     petLatched = false
     playPetUp()
     if (canWrite()) send({ t: 'pet' })
+    else say('sign in with a wallet to tend Mochi')
   }
 
   // FEED — the bowl of berries in front of the creature.
@@ -93,6 +94,8 @@ function worldTapSystem() {
     if (canWrite()) {
       send({ t: 'stamp' })
       say('your visit is in the guestbook')
+    } else {
+      say('sign in with a wallet to sign the guestbook')
     }
   }
 }
@@ -256,6 +259,15 @@ function scene() {
   // opened by the stage rather than by anything on screen.
   setupHud({
     onTeach: (emoteId) => {
+      // `teachFromPicker` resolves the teacher's identity and returns silently
+      // when there isn't one, which is every guest session. Picking a move and
+      // having the scene do nothing at all — no emote, no message — is the
+      // worst failure in here: the visitor cannot tell a broken scene from a
+      // permission they don't have. Answer before delegating.
+      if (!canWrite()) {
+        say('sign in with a wallet to teach a move')
+        return
+      }
       void teachFromPicker(emoteId)
     }
   })

@@ -27,7 +27,7 @@
  */
 
 /** Flip to true to calibrate on a phone. The readiness gate fails while it is. */
-export const SHOW_FPS = true
+export const SHOW_FPS = false
 
 /** Window over which frames are counted. Short enough to react, long to steady. */
 const SAMPLE_SECONDS = 0.5

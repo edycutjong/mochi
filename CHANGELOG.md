@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.5.4](https://github.com/edycutjong/mochi/compare/v1.5.3...v1.5.4) (2026-08-24)
+
+### Performance
+
+* **scene:** stagger the ghosts' emote restarts instead of firing them together ([888ad5b](https://github.com/edycutjong/mochi/commit/888ad5bdffcf53c4bda76491b7cddc81f3361b42))
+
 ## [1.5.3](https://github.com/edycutjong/mochi/compare/v1.5.2...v1.5.3) (2026-08-24)
 
 ### Fixes

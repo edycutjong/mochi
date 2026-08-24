@@ -77,6 +77,17 @@ let sinceRetrigger = 0
 let retriggerCount = 0
 /** Signature of the ring currently standing in the meadow. Null when empty. */
 let standing: string | null = null
+/**
+ * The last chain we were asked to draw, kept so a rung change can redraw
+ * immediately.
+ *
+ * Without it, dropping a rung only takes effect on the next server broadcast.
+ * That is the wrong moment: the watchdog drops a rung precisely because frames
+ * are being missed *now*, and a quiet clearing with nobody tending the creature
+ * can go minutes without a broadcast — so the relief would arrive long after
+ * the visitor who needed it had left.
+ */
+let lastChain: ChainEntry[] | null = null
 
 /**
  * A stable identity for a ring: the moves, their teachers, their clothes, in
@@ -193,6 +204,8 @@ export function setFidelity(next: Fidelity) {
   // The rung is part of what the ring is, so dropping down one has to redraw
   // even though the chain behind it has not moved.
   standing = null
+  // Redraw now rather than at the next broadcast — see `lastChain`.
+  if (lastChain !== null) setDancers(lastChain)
 }
 
 export function getFidelity(): Fidelity {
@@ -210,6 +223,7 @@ export function getFidelity(): Fidelity {
  * the ring it is asked for is the ring already standing there.
  */
 export function setDancers(chain: ChainEntry[]) {
+  lastChain = chain
   const signature = ringSignature(chain, fidelity)
   if (signature === standing) return
 

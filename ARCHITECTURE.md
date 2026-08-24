@@ -89,6 +89,27 @@ person stood. Chain, credit and order survive at every rung, so a frame-rate
 problem or a platform gap can make the clearing plainer but cannot take the
 mechanic away.
 
+`fidelity-watchdog.ts` is what pulls it. It watches an exponential moving
+average of frame time and drops one rung when that average stays worse than
+30 fps for five seconds. Smoothed and sustained, because teaching a move
+rebuilds the ring and costs a visible frame — a single expensive frame is not
+evidence that a phone cannot cope, and must not permanently degrade a scene for
+someone whose device is otherwise fine. The first eight seconds are ignored
+outright: scene load, wearable fetches and avatar instantiation all land there
+and none of them describe the steady state.
+
+It only ever goes down. Climbing back would thrash — every rung change destroys
+and rebuilds every dancer, so a device hovering near the threshold would pay
+that cost over and over and look broken while doing it, which is the exact cost
+the ladder exists to avoid.
+
+This was measured, not assumed: on a real phone the scene read about 90% on the
+Scene Limits panel with an empty clearing and fell to roughly 70% once the
+ghosts accumulated. Until 2026-08-24 the ladder was dead code — `setFidelity`
+was exported and tested but never called from `src`, so every device got six
+avatars regardless. The two paragraphs above used to describe a behaviour this
+scene did not have.
+
 The ring is also **idempotent**, which turned out to matter more than the
 ladder. The server broadcasts the whole world after every successful mutation,
 including a pet — ten a minute per wallet — and almost none of those change the
@@ -153,7 +174,7 @@ which is the exact emptiness this project exists to answer.
 | `src/probe/` | 467 | day-one capability probe (see `docs/PROBE.md`) |
 | `server/src/` | 1,427 | protocol, rules, store, hunger, transport |
 | `server/test/` | 2,638 | 238 tests at 100% line/branch coverage, one exhaustive |
-| `test/` | 254 | 22 headless scene tests — the ring, and the parcel budget |
+| `test/` | 475 | 32 headless scene tests — the ring, the fidelity ladder, the parcel budget |
 | `server/scripts/bench.ts` | 432 | the protocol benchmark behind the latency table |
 | `scripts/scene_budget.ts` | 205 | the one-parcel budget audit |
 

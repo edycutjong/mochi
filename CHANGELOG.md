@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.5.0](https://github.com/edycutjong/mochi/compare/v1.4.2...v1.5.0) (2026-08-24)
+
+### Features
+
+* the World is live — fill the URL everywhere it was pending ([1c62e44](https://github.com/edycutjong/mochi/commit/1c62e44eb266b98aaabd47c30042962ad9e4182b))
+
 ## [1.4.2](https://github.com/edycutjong/mochi/compare/v1.4.1...v1.4.2) (2026-08-24)
 
 ### Fixes

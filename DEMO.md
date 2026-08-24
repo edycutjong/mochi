@@ -135,7 +135,7 @@ The scene has a second, much smaller suite:
 npm run test:scene
 ```
 
-**32 tests across 3 files.** `@dcl/ecs`, the engine underneath `@dcl/sdk/ecs`,
+**36 tests across 3 files.** `@dcl/ecs`, the engine underneath `@dcl/sdk/ecs`,
 is ordinary TypeScript with no renderer attached, so entities, components and
 systems can be driven outside the Decentraland client. Nothing visual can be
 asserted that way and nothing here tries to — these tests exist to pin two

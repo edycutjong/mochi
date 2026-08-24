@@ -75,6 +75,8 @@ let dancers: Dancer[] = []
 let fidelity: Fidelity = 'avatars-6'
 let sinceRetrigger = 0
 let retriggerCount = 0
+/** Whose turn it is to have their emote restarted. See `danceLoopSystem`. */
+let cursor = 0
 /** Signature of the ring currently standing in the meadow. Null when empty. */
 let standing: string | null = null
 /**
@@ -242,20 +244,52 @@ export function setDancers(chain: ChainEntry[]) {
   standing = signature
 }
 
-/** Re-triggers each dancer's emote, because avatar animations play once. */
+/**
+ * Re-triggers each dancer's emote, because avatar animations play once.
+ *
+ * One dancer per turn, never the whole ring at once.
+ *
+ * This used to fire every dancer on the same frame: every LOOP_SECONDS, all six
+ * avatars restarted their animation together. That is a spike on a timer, and on
+ * a real phone it was visible as exactly that — the frame rate dipping every few
+ * seconds, in time with the ghosts. Six animation restarts is the same amount of
+ * work whether it lands in one frame or six; putting it in one frame is what
+ * made it a stutter.
+ *
+ * So the interval is divided by the number of avatars and each turn advances one
+ * step around the ring. Every dancer is still re-triggered once per
+ * LOOP_SECONDS, and no frame ever carries more than a single restart.
+ *
+ * It also looks better. Six strangers who all snap into motion on the same
+ * frame read as one puppet with six bodies; staggered, they read as six people
+ * who happen to be dancing.
+ */
 export function danceLoopSystem(dt: number) {
   if (dancers.length === 0) return
 
-  sinceRetrigger += dt
-  if (sinceRetrigger < LOOP_SECONDS) return
-  sinceRetrigger = 0
-  retriggerCount++
+  // Counted rather than filtered: this runs every frame, and a filter here
+  // would allocate an array sixty times a second to learn a number.
+  let avatarCount = 0
+  for (const d of dancers) if (d.isAvatar) avatarCount++
+  if (avatarCount === 0) return
 
-  for (const d of dancers) {
-    if (!d.isAvatar) continue
+  const slot = LOOP_SECONDS / avatarCount
+  sinceRetrigger += dt
+  if (sinceRetrigger < slot) return
+  // Subtract rather than zero, so the cadence does not drift late by whatever
+  // fraction of a frame it overshot by.
+  sinceRetrigger -= slot
+
+  for (let tried = 0; tried < dancers.length; tried++) {
+    cursor = (cursor + 1) % dancers.length
+    const d = dancers[cursor]
+    if (!d || !d.isAvatar) continue
     const shape = AvatarShape.getMutableOrNull(d.root)
-    if (!shape) continue
+    if (!shape) return
+    // Must differ from last time or the client does not replay the emote.
+    retriggerCount++
     shape.expressionTriggerId = d.emoteId
     shape.expressionTriggerTimestamp = retriggerCount
+    return
   }
 }

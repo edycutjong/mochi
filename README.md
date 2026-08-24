@@ -170,7 +170,7 @@ different entities, and why hunger is derived rather than ticked.
 
 | Metric | Value |
 |---|---|
-| Tests | **238** server across 13 files · **32** headless scene across 3 |
+| Tests | **238** server across 13 files · **36** headless scene across 3 |
 | Server coverage | **100%** lines · **100%** branches · **100%** functions |
 | Exhaustive verification | **78,482 combinations** |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |

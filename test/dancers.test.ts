@@ -20,7 +20,7 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { engine, AvatarShape, TextShape, Entity } from '@dcl/sdk/ecs'
 
-import { setDancers, clearDancers, setFidelity, type ChainEntry } from '../src/mochi/dancers'
+import { setDancers, clearDancers, setFidelity, danceLoopSystem, type ChainEntry } from '../src/mochi/dancers'
 
 /** One chain entry per name. Same move, same clothes — only the person differs. */
 function chain(...names: string[]): ChainEntry[] {
@@ -241,5 +241,79 @@ describe('the ring counts people, not moves', () => {
     // Still two people, but the ring changed, so it must have been rebuilt.
     expect(avatars()).toHaveLength(2)
     expect(avatars()).not.toEqual(twoPeople)
+  })
+})
+
+describe('the emote loop is staggered, not synchronised', () => {
+  /** Restart the ring's clock, so each test measures from a known point. */
+  function ring(size: number) {
+    const names = ['A', 'B', 'C', 'D', 'E', 'F'].slice(0, size)
+    setDancers(chain(...names))
+    return avatars()
+  }
+
+  /** Emote restarts observed across `seconds`, keyed by the entity they hit. */
+  function retriggersOver(seconds: number, dt: number) {
+    const seen = new Map<Entity, number>()
+    const stamps = new Map<Entity, number>()
+    for (const e of avatars()) stamps.set(e, AvatarShape.get(e).expressionTriggerTimestamp ?? 0)
+
+    const frames = Math.ceil(seconds / dt)
+    const perFrame: number[] = []
+    for (let i = 0; i < frames; i++) {
+      danceLoopSystem(dt)
+      let thisFrame = 0
+      for (const e of avatars()) {
+        const now = AvatarShape.get(e).expressionTriggerTimestamp ?? 0
+        if (now !== stamps.get(e)) {
+          stamps.set(e, now)
+          seen.set(e, (seen.get(e) ?? 0) + 1)
+          thisFrame++
+        }
+      }
+      perFrame.push(thisFrame)
+    }
+    return { seen, busiestFrame: Math.max(...perFrame) }
+  }
+
+  test('no single frame ever restarts more than one avatar', () => {
+    ring(6)
+
+    // The defect this guards: every dancer used to be re-triggered on the same
+    // frame, so a six-person clearing paid six animation restarts at once,
+    // every LOOP_SECONDS. On a phone that was a visible dip in time with the
+    // ghosts.
+    const { busiestFrame } = retriggersOver(30, 1 / 30)
+
+    expect(busiestFrame).toBe(1)
+  })
+
+  test('every dancer still gets its turn', () => {
+    const built = ring(6)
+
+    // Six seconds is one full LOOP_SECONDS, so one lap of the ring.
+    const { seen } = retriggersOver(6.5, 1 / 30)
+
+    expect(seen.size).toBe(built.length)
+    for (const entity of built) expect(seen.get(entity)).toBeGreaterThanOrEqual(1)
+  })
+
+  test('a lone dancer keeps the full interval to itself', () => {
+    ring(1)
+
+    const { seen } = retriggersOver(6.5, 1 / 30)
+
+    // One dancer, one slot, one restart per loop — not six times faster just
+    // because there is nobody to share the interval with.
+    expect([...seen.values()]).toEqual([1])
+  })
+
+  test('an empty ring does no work at all', () => {
+    clearDancers()
+
+    const { seen, busiestFrame } = retriggersOver(30, 1 / 30)
+
+    expect(seen.size).toBe(0)
+    expect(busiestFrame).toBe(0)
   })
 })

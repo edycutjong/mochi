@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.8.0](https://github.com/edycutjong/mochi/compare/v1.7.0...v1.8.0) (2026-08-24)
+
+### Features
+
+* **landing:** "Enter the meadow" opens the QR, the link and a copy button ([828ac7a](https://github.com/edycutjong/mochi/commit/828ac7aa24f332e55c5b578b723388fc4931e310))
+
 ## [1.7.0](https://github.com/edycutjong/mochi/compare/v1.6.0...v1.7.0) (2026-08-24)
 
 ### Features

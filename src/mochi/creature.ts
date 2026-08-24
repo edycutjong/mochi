@@ -27,6 +27,7 @@ import {
   Transform,
   MeshRenderer,
   MeshCollider,
+  ColliderLayer,
   Material,
   PointerEvents,
   PointerEventType,
@@ -99,7 +100,20 @@ export function createMochi(): Mochi {
   // PET is a hold directly on the body. The collider is what makes the whole
   // creature one big touch target — per the interaction spec, the hitbox is
   // deliberately the entire silhouette rather than a small button.
-  MeshCollider.setSphere(body)
+  //
+  // POINTER ONLY, deliberately. `setSphere` defaults to CL_POINTER | CL_PHYSICS,
+  // and the physics half was costing frames on a real phone: this body is
+  // rescaled every frame by the looping breathe tween and moved by the waddle,
+  // so a player walking into it made the client resolve avatar collision against
+  // a sphere whose shape had changed since the last frame, continuously. Frame
+  // rate dropped on contact, which is a bad thing to happen at the exact moment
+  // a visitor reaches the creature.
+  //
+  // Dropping CL_PHYSICS means you walk through Mochi rather than into it. That
+  // is the better reading anyway — it is a soft blob, and the alternative was a
+  // moving solid that shoves the player around while it waddles over to greet
+  // them. Tapping is unaffected: pointer events resolve on CL_POINTER.
+  MeshCollider.setSphere(body, ColliderLayer.CL_POINTER)
   PointerEvents.create(body, {
     pointerEvents: [
       {

@@ -116,8 +116,10 @@ function checkScaffolding() {
     )
   }
 
-  // The frame-rate overlay used to calibrate the fidelity watchdog. It draws a
-  // debug box over the creature, which is the first thing a judge sees.
+  // The frame-rate overlay used to calibrate the fidelity watchdog. Deleted
+  // once it had served its purpose, but it is one `git revert` away and it
+  // draws a debug box over the creature — the first thing a judge sees. The
+  // check stays so restoring it cannot quietly reach a submission.
   const readout = join(ROOT, 'src', 'ui', 'fps-readout.ts')
   if (existsSync(readout) && /export const SHOW_FPS\s*=\s*true/.test(readFileSync(readout, 'utf8'))) {
     fail('scaffolding', 'src/ui/fps-readout.ts still has SHOW_FPS = true — the debug overlay would ship')

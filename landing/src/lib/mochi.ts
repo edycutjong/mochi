@@ -33,8 +33,16 @@ export const REPO_URL = "https://github.com/edycutjong/mochi";
 export const JUDGE_URL = `${REPO_URL}/blob/main/JUDGE.md`;
 export const STATE_ENDPOINT = "https://api.mochi.edycu.dev/state";
 
-/** True once a real World exists — drives CTA copy and enabled/disabled state. */
-export const worldIsLive = WORLD_URL !== null;
+/**
+ * True once a real World exists — drives CTA copy and enabled/disabled state.
+ *
+ * `Boolean(...)` rather than `!== null`: WORLD_URL now holds a string literal,
+ * so CodeQL reads the null comparison as one that can never be false and flags
+ * it (js/comparison-between-incompatible-types). This also treats an empty
+ * string as not-live, which is the behaviour anyone blanking the constant to
+ * take the CTA down would expect.
+ */
+export const worldIsLive = Boolean(WORLD_URL);
 
 /* ============================================================================
    SCENE CONSTANTS — copied from build/src/config.ts and build/server/src/config.ts

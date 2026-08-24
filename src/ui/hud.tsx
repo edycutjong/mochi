@@ -48,7 +48,6 @@ import ReactEcs, { Label, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 import { isMobile } from '@dcl/sdk/platform'
 import { EmotePicker } from './emote-picker'
-import { SHOW_FPS, fpsLine } from './fps-readout'
 
 export type HudActions = {
   onTeach: (emoteId: string) => void
@@ -129,22 +128,6 @@ const hud = () => (
       client's own controls, and this scene deliberately places nothing over
       either of them.
     */}
-
-    {/*
-      Temporary calibration scaffolding — see ui/fps-readout.ts. Top-left, well
-      clear of the client's Scene Limits panel at top-right, so both numbers can
-      be read in one glance. The submission readiness gate fails while SHOW_FPS
-      is true, so this cannot reach a judge.
-    */}
-    {SHOW_FPS && (
-      <Label
-        value={fpsLine()}
-        fontSize={TYPE.bubble}
-        color={Color4.fromHexString('#FFFFFFff')}
-        uiTransform={{ position: { top: 8, left: 8 }, positionType: 'absolute', padding: 8 }}
-        uiBackground={{ color: Color4.fromHexString('#000000b0') }}
-      />
-    )}
 
     {pickerOpen && (
       <EmotePicker

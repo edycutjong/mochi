@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.7.0](https://github.com/edycutjong/mochi/compare/v1.6.0...v1.7.0) (2026-08-24)
+
+### Features
+
+* fill the performance score, and name the phone it came from ([3369290](https://github.com/edycutjong/mochi/commit/33692904013550697d2232b0a150be3a1abf1f49))
+
 ## [1.6.0](https://github.com/edycutjong/mochi/compare/v1.5.8...v1.6.0) (2026-08-24)
 
 ### Features

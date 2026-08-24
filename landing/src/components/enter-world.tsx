@@ -5,12 +5,13 @@ import { cn } from "@/lib/utils";
 /**
  * The "go to the world" call to action.
  *
- * The World does not exist yet — DCL Regenesis Labs has not granted it — so
- * this renders as an explicitly unresolved control carrying the literal
- * «PENDING:world-url» token rather than a link to nowhere or an invented URL.
+ * The World went live on 2026-08-24, so this now renders as a real link to
+ * wunderland.dcl.eth, driven by WORLD_URL in src/lib/mochi.ts.
  *
- * When the World is granted, set WORLD_URL in src/lib/mochi.ts and every
- * instance of this button across the page becomes a live link. One line.
+ * The unresolved branch below is kept deliberately. Before the grant landed it
+ * rendered an explicitly dead control carrying the literal «PENDING:world-url»
+ * token rather than a link to nowhere or an invented URL, and if WORLD_URL is
+ * ever nulled the page returns to saying so instead of lying.
  */
 export function EnterWorldButton({
   size = "lg",

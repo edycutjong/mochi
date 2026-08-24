@@ -17,8 +17,8 @@
  *             rotated off-axis. No three-column feature grid anywhere.
  *
  * HONESTY CONSTRAINTS baked into the structure:
- *   • No World URL exists → «PENDING:world-url», one-line fix in lib/mochi.ts
- *   • No perf score exists → «PENDING:perf-score», same file
+ *   • World URL is live since 2026-08-24 → WORLD_URL in lib/mochi.ts
+ *   • No perf score exists yet → «PENDING:perf-score», same file
  *   • No users exist → every count is read live from the real Fly.io server,
  *     and the testimonial slot is replaced by verifiable receipts.
  * ============================================================================

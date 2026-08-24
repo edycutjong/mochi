@@ -10,7 +10,8 @@ taught by a named stranger.
 
 ## The 30-second path
 
-1. Open **«PENDING:world-url»** in the Decentraland mobile app.
+1. Open **https://decentraland.org/jump/?realm=wunderland.dcl.eth** in the
+   Decentraland mobile app.
 2. You arrive facing the creature. Wait two seconds — it notices you and
    waddles over. Nothing to press yet.
 3. Two low props flank the path in front of the creature, each with a word
@@ -102,7 +103,7 @@ and a few hundred carers. It does not shard, and it is not built to.
 
 ## Links
 
-- **Live World** — «PENDING:world-url»
+- **Live World** — https://decentraland.org/jump/?realm=wunderland.dcl.eth
 - **Repository** — https://github.com/edycutjong/mochi
 - **Architecture** — [ARCHITECTURE.md](ARCHITECTURE.md)
 - **Full demo walkthrough** — [DEMO.md](DEMO.md)

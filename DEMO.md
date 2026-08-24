@@ -9,7 +9,7 @@ same server, the same schema and the same protocol as the deployed one.
 
 ## The live World
 
-**«PENDING:world-url»**
+**https://decentraland.org/jump/?realm=wunderland.dcl.eth**
 
 Open it in the Decentraland mobile app. The creature is whatever everyone has
 made it by the time you arrive.

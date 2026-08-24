@@ -274,7 +274,7 @@ messages — nothing is bumped by hand.
 
 | | |
 |---|---|
-| 🫧 **Live World** | «PENDING:world-url» — open in the Decentraland mobile app |
+| 🫧 **Live World** | **[wunderland.dcl.eth](https://decentraland.org/jump/?realm=wunderland.dcl.eth)** — open in the Decentraland mobile app |
 | 🌐 **Landing page** | **[mochi.edycu.dev](https://mochi.edycu.dev/)** — the creature on the page is sized by the real feed count |
 | 🎞️ **Pitch deck** | **[mochi.edycu.dev/deck](https://mochi.edycu.dev/deck/)** — 12 slides, works offline |
 | 🎥 **Demo video** | «PENDING:video-url» |
@@ -287,7 +287,7 @@ neither can drift ahead of a green build.
 
 ## ⛓️ Live Deployment
 
-**World:** «PENDING:world-url»
+**World:** https://decentraland.org/jump/?realm=wunderland.dcl.eth
 
 Deployed to a Decentraland World and publicly accessible throughout judging.
 

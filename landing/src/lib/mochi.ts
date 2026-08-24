@@ -14,8 +14,9 @@
    no component needs touching.
    ============================================================================ */
 
-/** The Decentraland World URL. Null until DCL Regenesis Labs grants the World. */
-export const WORLD_URL: string | null = null;
+/** The Decentraland World URL. Live since 2026-08-24. */
+export const WORLD_URL: string | null =
+  "https://decentraland.org/jump/?realm=wunderland.dcl.eth";
 export const WORLD_URL_PENDING = "«PENDING:world-url»";
 
 /** Scene performance score. Not yet measured on the target device. */

@@ -1,4 +1,9 @@
-import { PERF_SCORE_PENDING, WORLD_URL_PENDING } from "@/lib/mochi";
+import {
+  PERF_SCORE_PENDING,
+  WORLD_URL,
+  WORLD_URL_PENDING,
+  worldIsLive,
+} from "@/lib/mochi";
 
 /**
  * ELEMENT 9 — FAQ.
@@ -13,34 +18,54 @@ import { PERF_SCORE_PENDING, WORLD_URL_PENDING } from "@/lib/mochi";
 const FAQS: { q: string; a: React.ReactNode }[] = [
   {
     q: "Can I go and see it right now?",
-    a: (
-      <>
-        <p>
-          Not yet. Mochi is a Decentraland World, and the World has not been
-          granted to DCL Regenesis Labs at the time of writing — so there is
-          genuinely no URL to give you, and we would rather say that than
-          invent one. The placeholder on this page is literally{" "}
-          <code className="rounded bg-[#ffe8f1] px-1.5 py-0.5 font-mono text-[0.85em] text-[#b2436a]">
-            {WORLD_URL_PENDING}
-          </code>
-          .
-        </p>
-        <p>
-          What you <em>can</em> do today is watch the real creature. The
-          authoritative server is live, and the numbers on this page are read
-          from it.
-        </p>
-      </>
-    ),
+    a:
+      worldIsLive && WORLD_URL ? (
+        <>
+          <p>
+            Yes. Mochi has been live in a Decentraland World since 24 August
+            2026, at{" "}
+            <a
+              href={WORLD_URL}
+              className="font-bold text-[#b2436a] underline underline-offset-4"
+            >
+              wunderland.dcl.eth
+            </a>
+            . Open it in the Decentraland mobile app — it is built for a phone,
+            and that is how it is meant to be seen.
+          </p>
+          <p>
+            Whatever state you find it in is the real one. The creature is
+            whatever everybody has made it by the time you arrive.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Not yet. Mochi is a Decentraland World and the World has not been
+            granted — so there is genuinely no URL to give you, and we would
+            rather say that than invent one. The placeholder on this page is
+            literally{" "}
+            <code className="rounded bg-[#ffe8f1] px-1.5 py-0.5 font-mono text-[0.85em] text-[#b2436a]">
+              {WORLD_URL_PENDING}
+            </code>
+            .
+          </p>
+          <p>
+            What you <em>can</em> do today is watch the real creature. The
+            authoritative server is live, and the numbers on this page are read
+            from it.
+          </p>
+        </>
+      ),
   },
   {
     q: "How many people have actually used it?",
     a: (
       <p>
-        One. The counters on this page read the live server, so they show the
-        real figure rather than a flattering one, and they will update
-        themselves the moment more people arrive. Seeding real carers is
-        blocked on the same World grant.
+        Fewer than we would like, and the counters on this page read the live
+        server, so they show the real figure rather than a flattering one. The
+        World only went live on 24 August 2026, so the carer drive starts from
+        there. Every number updates itself the moment more people arrive.
       </p>
     ),
   },

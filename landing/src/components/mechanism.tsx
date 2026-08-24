@@ -3,9 +3,9 @@ import { GROWTH } from "@/lib/mochi";
 /**
  * ELEMENT 6 — the visual demonstration.
  *
- * No in-world screenshots exist yet (the World has not been granted), and the
- * brief forbids placeholder imagery. So rather than grey boxes, each of the
- * four mechanics is drawn as a purpose-built diagram of the actual mechanism.
+ * Written before any in-world screenshots existed, and kept on purpose. Rather
+ * than grey boxes, each of the four mechanics is drawn as a purpose-built
+ * diagram of the actual mechanism.
  * These are illustrations of real behaviour, not stand-ins for a screenshot.
  *
  * Layout is a deliberate 7/5 · 5/7 bento rather than a four-across grid, so the

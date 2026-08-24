@@ -2,6 +2,7 @@
 
 import { MochiBlob } from "@/components/mochi-blob";
 import { EnterWorldButton } from "@/components/enter-world";
+import { WorldQr } from "@/components/world-qr";
 import { useLiveMochi } from "@/components/live-state-provider";
 import { HUNGER, REPO_URL } from "@/lib/mochi";
 
@@ -84,6 +85,14 @@ export function FinalCTA() {
                 →
               </span>
             </a>
+          </div>
+
+          {/* Most people read this on a laptop. The scene runs there too, but
+              it was designed for a thumb and the judging happens in the mobile
+              app — so the useful thing to offer is a way onto the phone that
+              is not "retype this URL". */}
+          <div className="mx-auto mt-10 max-w-xl">
+            <WorldQr />
           </div>
 
           {/* Section background gradients toward meadow green at the bottom

@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.5.7](https://github.com/edycutjong/mochi/compare/v1.5.6...v1.5.7) (2026-08-24)
+
+### Fixes
+
+* **scene:** replace the stock template thumbnail with Mochi ([5aa8aff](https://github.com/edycutjong/mochi/commit/5aa8affd17bb13157de09da634cd1331ff84f783))
+
 ## [1.5.6](https://github.com/edycutjong/mochi/compare/v1.5.5...v1.5.6) (2026-08-24)
 
 ### Fixes

@@ -44,6 +44,7 @@ import {
   Transform,
   MeshRenderer,
   MeshCollider,
+  ColliderLayer,
   Material,
   TextShape,
   Billboard,
@@ -137,7 +138,8 @@ function label(text: string, position: Vector3): Entity {
 function bush(): Entity {
   const e = engine.addEntity()
   MeshRenderer.setSphere(e)
-  MeshCollider.setSphere(e)
+  // No collider. Nothing taps it and nothing should walk into it — see the
+  // note on REACH about props that can only cost a visitor movement.
   Transform.create(e, {
     position: Vector3.create(11.6, 0.45, 6.6),
     scale: Vector3.create(1.1, 0.9, 1.1)
@@ -168,7 +170,7 @@ function bush(): Entity {
 function plaque(): Entity {
   const e = engine.addEntity()
   MeshRenderer.setBox(e)
-  MeshCollider.setBox(e)
+  // No collider: it is a surface to read, not a thing to touch or bump.
   Transform.create(e, {
     position: Vector3.create(5.0, 0.62, 6.4),
     rotation: Quaternion.fromEulerDegrees(-18, 22, 0),
@@ -182,7 +184,7 @@ function plaque(): Entity {
 function totem(): Entity {
   const e = engine.addEntity()
   MeshRenderer.setCylinder(e, 0.28, 0.34)
-  MeshCollider.setCylinder(e, 0.28, 0.34)
+  MeshCollider.setCylinder(e, 0.28, 0.34, ColliderLayer.CL_POINTER)
   Transform.create(e, {
     position: Vector3.create(10.2, 0.55, 10.4),
     scale: Vector3.create(1, 1.1, 1)
@@ -222,7 +224,7 @@ function bowl(): Entity {
 
   const e = engine.addEntity()
   MeshRenderer.setCylinder(e, 0.42, 0.3)
-  MeshCollider.setCylinder(e, 0.42, 0.3)
+  MeshCollider.setCylinder(e, 0.42, 0.3, ColliderLayer.CL_POINTER)
   Transform.create(e, {
     position: Vector3.create(at.x, 0.15, at.z),
     scale: Vector3.create(1, 0.3, 1)
@@ -269,7 +271,7 @@ function stage(): Entity {
 
   const e = engine.addEntity()
   MeshRenderer.setCylinder(e, 0.46, 0.62)
-  MeshCollider.setCylinder(e, 0.46, 0.62)
+  MeshCollider.setCylinder(e, 0.46, 0.62, ColliderLayer.CL_POINTER)
   Transform.create(e, {
     position: Vector3.create(at.x, 0.11, at.z),
     scale: Vector3.create(1, 0.22, 1)

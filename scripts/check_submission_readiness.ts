@@ -115,6 +115,14 @@ function checkScaffolding() {
       'local feed/chain counters are still present — size and the chain must come from the server'
     )
   }
+
+  // The frame-rate overlay used to calibrate the fidelity watchdog. It draws a
+  // debug box over the creature, which is the first thing a judge sees.
+  const readout = join(ROOT, 'src', 'ui', 'fps-readout.ts')
+  if (existsSync(readout) && /export const SHOW_FPS\s*=\s*true/.test(readFileSync(readout, 'utf8'))) {
+    fail('scaffolding', 'src/ui/fps-readout.ts still has SHOW_FPS = true — the debug overlay would ship')
+  }
+
   if (!failures.some((f) => f.check === 'scaffolding')) pass('no development scaffolding in the scene entry')
 }
 

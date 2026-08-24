@@ -8,6 +8,7 @@ import { createPlaque, renderPlaque, ago } from './mochi/plaque'
 import { emoteObserverSystem, onTaught, teachFromPicker, sessionIdentity } from './mochi/teach'
 import { setDancers, danceLoopSystem, ChainEntry } from './mochi/dancers'
 import { fidelityWatchdogSystem } from './mochi/fidelity-watchdog'
+import { fpsReadoutSystem } from './ui/fps-readout'
 import { setupReplay, startReplay, replaySystem, isReplaying } from './mochi/replay'
 import { setupHud, hudSystem, say, openPicker } from './ui/hud'
 import { setupTouchControls } from './ui/controls'
@@ -267,6 +268,7 @@ function scene() {
   engine.addSystem(replaySystem)
   engine.addSystem(ringSystem)
   engine.addSystem(fidelityWatchdogSystem)
+  engine.addSystem(fpsReadoutSystem)
 }
 
 function probe() {

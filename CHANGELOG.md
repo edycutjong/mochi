@@ -3,6 +3,16 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.6.0](https://github.com/edycutjong/mochi/compare/v1.5.8...v1.6.0) (2026-08-24)
+
+### Features
+
+* **landing:** a QR and a copy button for the World address ([8061d20](https://github.com/edycutjong/mochi/commit/8061d205f8b4a4a9692d9e84bab30121864b2b92))
+
+### Fixes
+
+* close both open code-scanning alerts ([ef8129f](https://github.com/edycutjong/mochi/commit/ef8129f09c6b026855fa48dd6201ec1515b87a6a))
+
 ## [1.5.8](https://github.com/edycutjong/mochi/compare/v1.5.7...v1.5.8) (2026-08-24)
 
 ### Fixes

@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.9.0](https://github.com/edycutjong/mochi/compare/v1.8.1...v1.9.0) (2026-08-24)
+
+### Features
+
+* **scene:** a real thumbnail for the Places card ([75e484e](https://github.com/edycutjong/mochi/commit/75e484eb8e39b01f6578c4d3d2d88743f8cddf83))
+
 ## [1.8.1](https://github.com/edycutjong/mochi/compare/v1.8.0...v1.8.1) (2026-08-24)
 
 ### Fixes

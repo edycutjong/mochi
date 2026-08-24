@@ -2,26 +2,23 @@
 
 import { useState } from "react";
 
-import { WORLD_URL, worldIsLive } from "@/lib/mochi";
+import { WORLD_URL } from "@/lib/mochi";
 
 /**
- * The World address, in the two forms a visitor on a laptop actually needs.
+ * The World address, in the forms a visitor actually needs.
  *
- * Decentraland runs this scene on the desktop client and the web as well as on
- * phones, so the link is not mobile-only — but Mochi was designed for a thumb,
- * and the judging happens in the mobile app. Somebody reading this page on a
- * laptop therefore wants to get the address onto their phone, and "type this
- * long URL by hand" is where that intent goes to die.
- *
- * So: a QR to scan, and a button to copy. Nothing else.
+ * `https://decentraland.org/jump/?realm=<name>.dcl.eth` is Decentraland's own
+ * documented way to open a World, and it behaves as a deep link: on a phone
+ * with the app installed it hands straight to the app rather than to a web
+ * page. So the same string works as a QR to scan, as a link to tap, and as
+ * something to paste into a chat — which is why there is only one of it.
  *
  * The QR is a static inline path rather than a runtime library. The URL is a
  * constant, so generating it in the browser would ship a QR encoder to every
  * visitor to redraw the same 33x33 grid every time. It is also the only form
- * that still works with no network, which is the situation of anyone reading
- * this page on conference wifi.
+ * that still works with no network.
  *
- * Regenerate with (matches WORLD_URL exactly):
+ * Regenerate if WORLD_URL ever changes:
  *   python3 -c "import segno; print(segno.make('<WORLD_URL>', error='m').matrix)"
  */
 const QR_PATH =
@@ -30,13 +27,27 @@ const QR_PATH =
 /** Quiet zone included: 33 modules of code, 2 modules of margin each side. */
 const QR_VIEWBOX = 37;
 
-export function WorldQr() {
-  const [copied, setCopied] = useState(false);
+export function WorldQrCode({ className = "h-[168px] w-[168px]" }: { className?: string }) {
+  return (
+    <div className="rounded-2xl bg-white p-3 text-[#3b2a44] shadow-[0_8px_24px_rgba(122,81,101,0.14)]">
+      <svg
+        viewBox={`0 0 ${QR_VIEWBOX} ${QR_VIEWBOX}`}
+        shapeRendering="crispEdges"
+        role="img"
+        aria-label="QR code that opens the Mochi world in Decentraland"
+        className={className}
+      >
+        <path fill="currentColor" d={QR_PATH} />
+      </svg>
+    </div>
+  );
+}
 
-  // Captured locally: an imported binding cannot be narrowed across a closure,
-  // so the `copy` handler below would still see `string | null`.
+export function CopyLinkButton({ className = "" }: { className?: string }) {
+  const [copied, setCopied] = useState(false);
   const url = WORLD_URL;
-  if (!worldIsLive || !url) return null;
+
+  if (!url) return null;
 
   const copy = async () => {
     try {
@@ -46,50 +57,25 @@ export function WorldQr() {
     } catch {
       // Clipboard access can be refused outright — insecure context, Safari
       // being particular about user gestures, a hardened profile. The address
-      // is rendered as selectable text below for exactly this reason, so the
-      // honest move is to leave the button unchanged rather than claim a copy
-      // that did not happen.
+      // is rendered as selectable text alongside for exactly this reason, so
+      // the honest move is to leave the button unchanged rather than claim a
+      // copy that did not happen.
       setCopied(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center gap-5 rounded-[1.75rem] border border-[#7a5165]/12 bg-[#fff1e0]/75 p-6 backdrop-blur-sm sm:flex-row sm:items-center sm:gap-7 sm:p-7">
-      <div className="rounded-2xl bg-white p-3 text-[#3b2a44] shadow-[0_8px_24px_rgba(122,81,101,0.14)]">
-        <svg
-          viewBox={`0 0 ${QR_VIEWBOX} ${QR_VIEWBOX}`}
-          shapeRendering="crispEdges"
-          role="img"
-          aria-label="QR code that opens the Mochi world in Decentraland"
-          className="h-[132px] w-[132px]"
-        >
-          <path fill="currentColor" d={QR_PATH} />
-        </svg>
-      </div>
-
-      <div className="flex min-w-0 flex-col items-center gap-3 text-center sm:items-start sm:text-left">
-        <div>
-          <p className="font-sans text-lg font-black text-[#3b2a44]">Open it on your phone</p>
-          <p className="mt-1 text-sm text-[#5e4666]">
-            Scan with your camera. Mochi is built for a thumb — it is worth seeing there.
-          </p>
-        </div>
-
-        <code className="max-w-full truncate rounded-lg bg-[#ffe8f1] px-3 py-1.5 font-mono text-[0.78rem] text-[#b2436a]">
-          wunderland.dcl.eth
-        </code>
-
-        <button
-          type="button"
-          onClick={copy}
-          className="rounded-full border-2 border-[#b2436a]/35 px-5 py-2 font-sans text-sm font-extrabold text-[#b2436a] transition-colors duration-300 hover:border-[#b2436a] hover:bg-[#ffe8f1] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b2436a]"
-        >
-          {copied ? "Copied" : "Copy link"}
-        </button>
-        <span aria-live="polite" className="sr-only">
-          {copied ? "World address copied to clipboard" : ""}
-        </span>
-      </div>
-    </div>
+    <>
+      <button
+        type="button"
+        onClick={copy}
+        className={`rounded-full border-2 border-[#b2436a]/35 px-5 py-2.5 font-sans text-sm font-extrabold text-[#b2436a] transition-colors duration-300 hover:border-[#b2436a] hover:bg-[#ffe8f1] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b2436a] ${className}`}
+      >
+        {copied ? "Copied" : "Copy link"}
+      </button>
+      <span aria-live="polite" className="sr-only">
+        {copied ? "World address copied to clipboard" : ""}
+      </span>
+    </>
   );
 }

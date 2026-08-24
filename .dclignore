@@ -6,6 +6,8 @@ build.json
 export
 tsconfig.json
 tslint.json
+eslint.config.mjs
+vitest.config.ts
 node_modules
 *.ts
 *.tsx

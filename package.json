@@ -5,7 +5,7 @@
   "scripts": {
     "start": "sdk-commands start",
     "start:mobile": "sdk-commands start --mobile",
-    "deploy": "sdk-commands deploy",
+    "deploy": "sdk-commands deploy --target-content https://worlds-content-server.decentraland.org",
     "build": "sdk-commands build",
     "test": "npm --prefix server test",
     "test:watch": "npm --prefix server run test:watch",

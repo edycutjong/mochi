@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.5.2](https://github.com/edycutjong/mochi/compare/v1.5.1...v1.5.2) (2026-08-24)
+
+### Performance
+
+* **scene:** take the creature off the physics layer ([b8c922a](https://github.com/edycutjong/mochi/commit/b8c922a7ad638dc9d0bff740036c219b2ab2753c))
+
 ## [1.5.1](https://github.com/edycutjong/mochi/compare/v1.5.0...v1.5.1) (2026-08-24)
 
 ### Fixes

@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.5.3](https://github.com/edycutjong/mochi/compare/v1.5.2...v1.5.3) (2026-08-24)
+
+### Fixes
+
+* **scene:** props you tap should not body-block a thumb-driven player ([0ac2bf7](https://github.com/edycutjong/mochi/commit/0ac2bf77c08ddf24ea6eb4a3bc85e514966ef144))
+
 ## [1.5.2](https://github.com/edycutjong/mochi/compare/v1.5.1...v1.5.2) (2026-08-24)
 
 ### Performance

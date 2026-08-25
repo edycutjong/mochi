@@ -269,16 +269,16 @@ du -sk bin assets images main.crdt scene.json
 ```
 
 ```
-6660  bin
+6696  bin
   36  assets
- 104  images
+ 136  images
   16  main.crdt
    4  scene.json
 ────
-6820  KB total
+6888  KB total
 ```
 
-**6,820 KB** against the 25,000 KB gate CI enforces at Stage 3, and against the
+**6,888 KB** against the 25,000 KB gate CI enforces at Stage 3, and against the
 36 MB an ENS-granted World allows. The mobile client has no asset preloading,
 so this figure is first-load time. It is what it is because nothing in the
 scene loads a texture — see the zero in the budget table above, which is

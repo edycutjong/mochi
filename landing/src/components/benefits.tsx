@@ -97,7 +97,7 @@ const BENEFITS = [
   {
     icon: <IconPhone />,
     title: "Built thumb-first",
-    body: "A 6.6 MB payload against a 25 MB budget, under 250 entities against a 4,800 soft limit, and zero imported models — every shape is a procedural SDK7 primitive.",
+    body: "A 6.7 MB payload against a 25 MB budget, under 250 entities against a 4,800 soft limit, and zero imported models — every shape is a procedural SDK7 primitive.",
     wide: false,
   },
   {

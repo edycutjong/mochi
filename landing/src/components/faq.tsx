@@ -128,7 +128,7 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
       <p>
         That is the whole target. The scene is procedural SDK7 primitives with
         zero imported GLB or GLTF models, which puts the deployable payload at
-        6.6 MB against a 25 MB budget and keeps it under 250 entities against a
+        6.7 MB against a 25 MB budget and keeps it under 250 entities against a
         4,800 soft limit. The ghost dancers degrade down a fidelity ladder — six
         avatars, then three, then floating nametags — and the chain, the credit
         and the order survive at every rung. The measured perf score is{" "}

@@ -59,7 +59,7 @@ Every number below is measured and reproducible. Full detail in
 | Throughput | **425 intents/s** from 24 concurrent wallets, 12,120 frames fanned out | `npm run bench` |
 | Scene budget, 1 parcel | **32/200 entities · 14/20 materials · 0/10 textures** | `npm run budget:scene` |
 | Ring rebuilds per busy minute | **18 avatar entities, down from 120** | `npm run test:scene` |
-| Deployable payload | **6,820 KB** against the 25,000 KB gate CI enforces | `du -sk bin assets images main.crdt scene.json` |
+| Deployable payload | **6,888 KB** against the 25,000 KB gate CI enforces | `du -sk bin assets images main.crdt scene.json` |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain | — |
 | Runtime dependencies | **1** (`ws`) | `server/package.json` |
 | Scene performance | **88–90%**, Galaxy S24 Ultra, High profile | **needs a phone — see below** |

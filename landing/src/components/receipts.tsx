@@ -38,7 +38,7 @@ const LINES: Line[] = [
   { label: "AI models", value: "0" },
   { label: "On-chain contracts", value: "0" },
   { label: "Imported GLB/GLTF models", value: "0" },
-  { label: "Deployable payload", value: "6.6 MB / 25 MB" },
+  { label: "Deployable payload", value: "6.7 MB / 25 MB" },
   { label: "Scene entities", value: "<250 / 4,800" },
   { label: "Scene perf score", value: PERF_SCORE ?? PERF_SCORE_PENDING, pending: !PERF_SCORE },
   { label: "Licence", value: "MIT" },
@@ -156,7 +156,7 @@ export function Receipts() {
               },
               {
                 title: "The whole scene is procedural.",
-                body: "Zero imported GLB or GLTF models. The creature is a sphere under squash, the eyes are two planes, the chain is a row of beads. Every shape is an SDK7 primitive, which is why the payload is 6.6 MB and why it runs on a phone.",
+                body: "Zero imported GLB or GLTF models. The creature is a sphere under squash, the eyes are two planes, the chain is a row of beads. Every shape is an SDK7 primitive, which is why the payload is 6.7 MB and why it runs on a phone.",
                 delay: 80,
               },
               {

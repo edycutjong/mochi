@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.12.0](https://github.com/edycutjong/mochi/compare/v1.11.0...v1.12.0) (2026-08-25)
+
+### Features
+
+* **docs:** an Enter-the-World badge, and a QR for the phone ([ace2227](https://github.com/edycutjong/mochi/commit/ace22273967f9d842c0cc585431bc724d67ef181))
+
 ## [1.11.0](https://github.com/edycutjong/mochi/compare/v1.10.0...v1.11.0) (2026-08-25)
 
 ### Features

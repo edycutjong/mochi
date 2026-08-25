@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.11.0](https://github.com/edycutjong/mochi/compare/v1.10.0...v1.11.0) (2026-08-25)
+
+### Features
+
+* **deck:** give the pitch deck a social card ([53d4b2f](https://github.com/edycutjong/mochi/commit/53d4b2f74bd85ae01a123412384751d99b40c9bd))
+
 ## [1.10.0](https://github.com/edycutjong/mochi/compare/v1.9.1...v1.10.0) (2026-08-25)
 
 ### Features

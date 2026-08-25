@@ -235,7 +235,7 @@ people — in **[DEMO.md](DEMO.md)**.
 ```bash
 npm test               # 238 server tests, 13 files
 npm run test:coverage  # the same, plus the coverage table
-npm run test:scene     # 18 headless scene tests, 2 files
+npm run test:scene     # 36 headless scene tests, 3 files
 npm run budget:scene   # the one-parcel budget audit
 npm run bench          # the protocol benchmark — p50/p95/p99, ~30 seconds
 npm run lint           # type-aware ESLint

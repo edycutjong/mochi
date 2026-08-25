@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.12.5](https://github.com/edycutjong/mochi/compare/v1.12.4...v1.12.5) (2026-08-25)
+
+### Fixes
+
+* **deck:** the World was named in three places and linked from none ([11143fe](https://github.com/edycutjong/mochi/commit/11143fe3735272d1ea0c0171cbcacb49d2f7d9af))
+
 ## [1.12.4](https://github.com/edycutjong/mochi/compare/v1.12.3...v1.12.4) (2026-08-25)
 
 ### Fixes

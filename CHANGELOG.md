@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.12.1](https://github.com/edycutjong/mochi/compare/v1.12.0...v1.12.1) (2026-08-25)
+
+### Fixes
+
+* **docs:** the credited ring no longer sits on top of the caption ([03b999e](https://github.com/edycutjong/mochi/commit/03b999e80bf27971d8b905405b067d25e4b6fa44))
+
 ## [1.12.0](https://github.com/edycutjong/mochi/compare/v1.11.0...v1.12.0) (2026-08-25)
 
 ### Features

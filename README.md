@@ -12,6 +12,17 @@
 
   <br/>
 
+  [![Enter the World](https://img.shields.io/badge/🍡_Enter_the_World-wunderland.dcl.eth-FF2D55?style=for-the-badge)](https://decentraland.org/jump/?realm=wunderland.dcl.eth)
+
+  <details>
+  <summary><strong>📱 Or scan to open it on your phone</strong> — it was built for a thumb</summary>
+  <br/>
+  <img src="docs/assets/world-qr.png" alt="QR code that opens wunderland.dcl.eth in Decentraland" width="180">
+  <p><code>https://decentraland.org/jump/?realm=wunderland.dcl.eth</code></p>
+  </details>
+
+  <br/>
+
   [![Live site](https://img.shields.io/badge/🫧_Live-mochi.edycu.dev-ff6fa5?style=for-the-badge)](https://mochi.edycu.dev)
   [![For Judges](https://img.shields.io/badge/📋_For-Judges-06b6d4?style=for-the-badge)](JUDGE.md)
 

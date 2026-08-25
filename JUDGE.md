@@ -12,6 +12,16 @@ taught by a named stranger.
 
 1. Open **https://decentraland.org/jump/?realm=wunderland.dcl.eth** in the
    Decentraland mobile app.
+
+   <details>
+   <summary>📱 Scan instead of retyping it</summary>
+   <br/>
+   <img src="docs/assets/world-qr.png" alt="QR code that opens wunderland.dcl.eth in Decentraland" width="180">
+   <br/>
+   <em>The scene runs on desktop and the web too, but it was designed for a
+   thumb and every judging criterion here is a mobile one — so the phone is the
+   honest place to test it.</em>
+   </details>
 2. You arrive facing the creature. Wait two seconds — it notices you and
    waddles over. Nothing to press yet.
 3. Two low props flank the path in front of the creature, each with a word

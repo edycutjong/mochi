@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.10.0](https://github.com/edycutjong/mochi/compare/v1.9.1...v1.10.0) (2026-08-25)
+
+### Features
+
+* **landing:** six pet reactions, and stop fast presses from cutting them short ([56af526](https://github.com/edycutjong/mochi/commit/56af5265e9eeaba13448a2a55a533240a2118a11))
+
 ## [1.9.1](https://github.com/edycutjong/mochi/compare/v1.9.0...v1.9.1) (2026-08-24)
 
 ### Fixes

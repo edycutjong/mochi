@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.12.2](https://github.com/edycutjong/mochi/compare/v1.12.1...v1.12.2) (2026-08-25)
+
+### Fixes
+
+* **landing:** link the pitch deck from the page it shares a domain with ([bed3d63](https://github.com/edycutjong/mochi/commit/bed3d633f5224ba63770bfc06c7f55c5ad249fce))
+
 ## [1.12.1](https://github.com/edycutjong/mochi/compare/v1.12.0...v1.12.1) (2026-08-25)
 
 ### Fixes

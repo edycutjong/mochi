@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.12.3](https://github.com/edycutjong/mochi/compare/v1.12.2...v1.12.3) (2026-08-25)
+
+### Fixes
+
+* **docs:** correct the deployable payload figure everywhere it is stated ([4a11b35](https://github.com/edycutjong/mochi/commit/4a11b3583ff03a672c1ffcc41151d7b80b4b5b6f))
+
 ## [1.12.2](https://github.com/edycutjong/mochi/compare/v1.12.1...v1.12.2) (2026-08-25)
 
 ### Fixes

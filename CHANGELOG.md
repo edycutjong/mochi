@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.12.4](https://github.com/edycutjong/mochi/compare/v1.12.3...v1.12.4) (2026-08-25)
+
+### Fixes
+
+* **docs:** the scene test count in the runnable commands said 18, not 36 ([293750b](https://github.com/edycutjong/mochi/commit/293750b87a6b2e724db50e82794e7bba4857c6db))
+
 ## [1.12.3](https://github.com/edycutjong/mochi/compare/v1.12.2...v1.12.3) (2026-08-25)
 
 ### Fixes

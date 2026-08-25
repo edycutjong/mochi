@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { GROWTH, HUNGER, scaleForFeedCount } from "@/lib/mochi";
 
 /**
@@ -29,6 +29,26 @@ interface MochiBlobProps {
   onPet?: () => void;
 }
 
+/**
+ * How the creature answers a pet.
+ *
+ * Six of them, because one was a button and six is a creature. Durations are
+ * carried here rather than assumed, since the timer that hands the body back to
+ * the breathing loop has to match the animation that is actually playing — a
+ * shared constant would cut the spin off a third of the way through.
+ */
+const REACTIONS = [
+  { cls: "react-squash", ms: 620 },
+  { cls: "react-lean-left", ms: 700 },
+  { cls: "react-lean-right", ms: 700 },
+  { cls: "react-spin", ms: 900 },
+  { cls: "react-hop", ms: 760 },
+  { cls: "react-wobble", ms: 820 },
+] as const;
+
+/** Rings are cheap, but a held-down thumb should not spawn them without limit. */
+const MAX_RINGS = 5;
+
 /** creature.ts body gradient stops, from assets/_tokens.css. */
 const BODY_LIGHT = { r: 0xff, g: 0xd9, b: 0xe8 }; // --primary-soft
 const BODY_DEEP = { r: 0xff, g: 0xc2, b: 0xdc }; // --primary
@@ -51,9 +71,28 @@ export function MochiBlob({
   onPet,
 }: MochiBlobProps) {
   const uid = useId().replace(/:/g, "");
-  const [squashing, setSquashing] = useState(false);
+  /**
+   * `nonce` exists to restart the animation, not to describe it.
+   *
+   * Re-applying the same class does not replay a CSS animation, so pressing
+   * twice and drawing the same reaction would have looked like the press did
+   * nothing. Keying the animated group on the nonce remounts it, which is the
+   * one restart that is guaranteed regardless of which reaction came up.
+   */
+  const [reaction, setReaction] = useState<{ cls: string; nonce: number } | null>(null);
   const [rings, setRings] = useState<number[]>([]);
   const ringSeq = useRef(0);
+  const nonceSeq = useRef(0);
+  const lastReaction = useRef(-1);
+  /**
+   * The timer that ends the current reaction.
+   *
+   * Held in a ref and cancelled on every press. Without that, a press at 300ms
+   * inherited the previous press's 620ms timer, which then stripped the class
+   * off a third of the way through the new animation — so pressing quickly made
+   * the creature twitch and snap rather than react.
+   */
+  const endTimer = useRef<number | null>(null);
 
   // fed: 1.0 is a full belly, HUNGER.floor is as empty as it is allowed to get.
   const fed = Math.max(HUNGER.floor, Math.min(1, hunger));
@@ -63,16 +102,38 @@ export function MochiBlob({
 
   const pet = useCallback(() => {
     if (!interactive) return;
-    setSquashing(true);
+
+    // Never the same reaction twice running: a repeat reads as a stuck
+    // animation rather than as a second answer.
+    let index = Math.floor(Math.random() * REACTIONS.length);
+    if (index === lastReaction.current) index = (index + 1) % REACTIONS.length;
+    lastReaction.current = index;
+    const picked = REACTIONS[index]!;
+
+    if (endTimer.current !== null) window.clearTimeout(endTimer.current);
+    setReaction({ cls: picked.cls, nonce: nonceSeq.current++ });
+    endTimer.current = window.setTimeout(() => {
+      setReaction(null);
+      endTimer.current = null;
+    }, picked.ms);
+
     const id = ringSeq.current++;
-    setRings((r) => [...r, id]);
-    window.setTimeout(() => setSquashing(false), 620);
+    setRings((r) => [...r, id].slice(-MAX_RINGS));
     window.setTimeout(
       () => setRings((r) => r.filter((existing) => existing !== id)),
       900,
     );
     onPet?.();
   }, [interactive, onPet]);
+
+  // A creature mid-hop when the section unmounts should not leave a timer
+  // behind trying to set state on it.
+  useEffect(
+    () => () => {
+      if (endTimer.current !== null) window.clearTimeout(endTimer.current);
+    },
+    [],
+  );
 
   const handleKey = useCallback(
     (event: React.KeyboardEvent) => {
@@ -146,7 +207,10 @@ export function MochiBlob({
         {/* ROOT — carries growth only, never tweened. Mirrors the scene's split. */}
         <g transform={`translate(210 318) scale(${scale}) translate(-210 -318)`}>
           {/* BODY — carries all animation, never scaled by growth. */}
-          <g className={squashing ? "squashing" : "breathing"}>
+          <g
+            key={reaction?.nonce ?? "idle"}
+            className={reaction ? `reacting ${reaction.cls}` : "breathing"}
+          >
             <ellipse
               cx="210"
               cy="212"

@@ -382,10 +382,90 @@
   transform-origin: 50% 92%;
 }
 
-.squashing {
-  animation: mochi-squash 0.62s var(--ease-squish);
+/* PET REACTIONS
+   --------------------------------------------------------------------------
+   One reaction was never right. In-world the creature answers a pet with a
+   whole squash-and-stretch beat, and repeating the identical beat on a page
+   where people press it over and over reads as a button, not a creature. So
+   there are six, chosen at random with no immediate repeat.
+
+   Every one of them starts and ends at the identity transform, which is what
+   lets the breathing loop resume without a seam. They keep volume roughly
+   constant — widen and it flattens, stretch and it narrows — because that is
+   what makes a soft thing read as soft rather than as a scaling rectangle.
+
+   The global prefers-reduced-motion rule below flattens all of these to ~0ms,
+   so none of this needs its own opt-out. */
+.reacting {
   transform-box: fill-box;
   transform-origin: 50% 92%;
+}
+
+.react-squash {
+  animation: mochi-squash 0.62s var(--ease-squish);
+}
+
+.react-lean-left {
+  animation: mochi-lean-left 0.7s var(--ease-squish);
+}
+
+.react-lean-right {
+  animation: mochi-lean-right 0.7s var(--ease-squish);
+}
+
+/* Spin and hop pivot nearer the middle. Pivoting at the base makes a spin look
+   like a hinge swinging, and a hop look like a heel lifting. */
+.react-spin {
+  animation: mochi-spin 0.9s cubic-bezier(0.5, 0, 0.3, 1);
+  transform-origin: 50% 68%;
+}
+
+.react-hop {
+  animation: mochi-hop 0.76s var(--ease-squish);
+}
+
+.react-wobble {
+  animation: mochi-wobble 0.82s ease-in-out;
+  transform-origin: 50% 88%;
+}
+
+@keyframes mochi-lean-left {
+  0% { transform: rotate(0deg) scale(1, 1); }
+  26% { transform: rotate(-10deg) translateX(-4%) scale(1.07, 0.94); }
+  58% { transform: rotate(5deg) translateX(2%) scale(0.96, 1.05); }
+  100% { transform: rotate(0deg) scale(1, 1); }
+}
+
+@keyframes mochi-lean-right {
+  0% { transform: rotate(0deg) scale(1, 1); }
+  26% { transform: rotate(10deg) translateX(4%) scale(1.07, 0.94); }
+  58% { transform: rotate(-5deg) translateX(-2%) scale(0.96, 1.05); }
+  100% { transform: rotate(0deg) scale(1, 1); }
+}
+
+/* Winds up against the turn before going, so the spin has an intention. */
+@keyframes mochi-spin {
+  0% { transform: rotate(0deg) scale(1, 1); }
+  14% { transform: rotate(-16deg) scale(1.1, 0.9); }
+  76% { transform: rotate(344deg) scale(0.95, 1.06); }
+  100% { transform: rotate(360deg) scale(1, 1); }
+}
+
+/* Crouch, launch, land, settle — the landing is what sells the weight. */
+@keyframes mochi-hop {
+  0% { transform: translateY(0) scale(1, 1); }
+  18% { transform: translateY(3%) scale(1.13, 0.87); }
+  52% { transform: translateY(-13%) scale(0.91, 1.12); }
+  78% { transform: translateY(1%) scale(1.08, 0.94); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+
+@keyframes mochi-wobble {
+  0%, 100% { transform: rotate(0deg) scale(1, 1); }
+  16% { transform: rotate(-8deg) scale(1.04, 0.97); }
+  38% { transform: rotate(7deg) scale(0.98, 1.03); }
+  60% { transform: rotate(-4deg) scale(1.02, 0.99); }
+  82% { transform: rotate(2deg) scale(1, 1); }
 }
 
 .blinking {

@@ -212,45 +212,45 @@
       </g>
 
       <!-- the chain: ordered, left to right. Never an orbit — "last" is the point. -->
-      <line x1="676" y1="262" x2="1120" y2="262" stroke="#7A5165" stroke-width="3" opacity="0.2"/>
+      <line x1="676" y1="248" x2="1120" y2="248" stroke="#7A5165" stroke-width="3" opacity="0.2"/>
       <g fill="#FFC2DC" stroke="#7A5165" stroke-width="5">
-        <circle cx="690"  cy="262" r="11"/>
-        <circle cx="742"  cy="262" r="11"/>
-        <circle cx="794"  cy="262" r="11"/>
-        <circle cx="846"  cy="262" r="11"/>
-        <circle cx="898"  cy="262" r="11"/>
-        <circle cx="950"  cy="262" r="11"/>
-        <circle cx="1002" cy="262" r="11"/>
-        <circle cx="1054" cy="262" r="11"/>
+        <circle cx="690"  cy="248" r="11"/>
+        <circle cx="742"  cy="248" r="11"/>
+        <circle cx="794"  cy="248" r="11"/>
+        <circle cx="846"  cy="248" r="11"/>
+        <circle cx="898"  cy="248" r="11"/>
+        <circle cx="950"  cy="248" r="11"/>
+        <circle cx="1002" cy="248" r="11"/>
+        <circle cx="1054" cy="248" r="11"/>
       </g>
 
       <!-- the empty slot, vacated when the move lands -->
-      <circle cx="1106" cy="262" r="11" fill="none" stroke="#7A5165" stroke-width="4"
+      <circle cx="1106" cy="248" r="11" fill="none" stroke="#7A5165" stroke-width="4"
               stroke-dasharray="5 6" opacity="0.55">
         <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
                  keyTimes="0;0.18;0.26;0.98;1" values="0.55;0.55;0;0;0.55"/>
       </circle>
 
       <!-- the arriving move -->
-      <circle data-story="beat-2" cx="1106" cy="262" r="11" fill="#FF8FB1" stroke="#B2436A"
+      <circle data-story="beat-2" cx="1106" cy="248" r="11" fill="#FF8FB1" stroke="#B2436A"
               stroke-width="5" opacity="0">
         <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
                  keyTimes="0;0.10;0.22;0.94;0.98;1" values="0;0;1;1;0;0"/>
         <animate attributeName="cy" dur="8s" repeatCount="indefinite"
-                 keyTimes="0;0.10;0.22;0.94;0.98;1" values="212;212;262;262;262;262"/>
+                 keyTimes="0;0.10;0.22;0.94;0.98;1" values="198;198;248;248;248;248"/>
         <animate attributeName="r" dur="8s" repeatCount="indefinite"
                  keyTimes="0;0.10;0.22;0.34;0.94;1" values="8;8;11;16;16;16"/>
       </circle>
 
       <!-- the credited ring seals shut and stays sealed -->
-      <circle data-story="beat-3" cx="1106" cy="262" r="25" fill="none" stroke="#B2436A"
+      <circle data-story="beat-3" cx="1106" cy="248" r="25" fill="none" stroke="#B2436A"
               stroke-width="4" opacity="0.6" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100">
         <animate attributeName="stroke-dashoffset" dur="8s" repeatCount="indefinite"
                  keyTimes="0;0.26;0.46;0.94;0.98;1" values="100;100;0;0;0;100"/>
       </circle>
 
       <!-- one ripple at the instant of the append -->
-      <circle data-story="beat-4" cx="1106" cy="262" r="16" fill="none" stroke="#FF8FB1"
+      <circle data-story="beat-4" cx="1106" cy="248" r="16" fill="none" stroke="#FF8FB1"
               stroke-width="4" opacity="0">
         <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
                  keyTimes="0;0.30;0.36;0.54;1" values="0;0;0.75;0;0"/>
@@ -265,9 +265,9 @@
         <animateTransform attributeName="transform" type="translate" dur="8s" repeatCount="indefinite"
                           keyTimes="0;0.10;0.24;0.94;0.98;1"
                           values="0 -150;0 -150;0 0;0 0;0 0;0 0"/>
-        <rect x="1010" y="190" width="192" height="34" rx="10" fill="#FFFFFF"
+        <rect x="1010" y="180" width="192" height="34" rx="10" fill="#FFFFFF"
               stroke="#B2436A" stroke-opacity="0.5" stroke-width="1.5"/>
-        <text x="1024" y="212" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+        <text x="1024" y="202" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
               font-size="13" fill="#3B2A44">move #26 &#183; <tspan fill="#B2436A">@kito</tspan></text>
       </g>
 

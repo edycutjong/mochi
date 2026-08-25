@@ -38,6 +38,15 @@ export const REPO_URL = "https://github.com/edycutjong/mochi";
  * which is the opposite of the point.
  */
 export const JUDGE_URL = `${REPO_URL}/blob/main/JUDGE.md`;
+
+/**
+ * The pitch deck, twelve slides, same domain.
+ *
+ * It had no link from this page at all — the README pointed at it and the BUIDL
+ * pointed at it, but the one public surface most people actually land on did
+ * not, so nobody arriving here could find it.
+ */
+export const DECK_URL = "https://mochi.edycu.dev/deck/";
 export const STATE_ENDPOINT = "https://api.mochi.edycu.dev/state";
 
 /**

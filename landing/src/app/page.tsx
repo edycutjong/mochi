@@ -51,7 +51,11 @@ const JSON_LD = {
   operatingSystem: "Decentraland (Web, iOS, Android)",
   description:
     "A giant pastel blob co-parented by every stranger who visits a Decentraland world. Its size is the literal sum of every feeding and its dance is a chain where each move was taught by a named stranger.",
-  author: { "@type": "Organization", name: "DCL Regenesis Labs" },
+  // Edy Cu built this; DCL Regenesis Labs runs the buildathon it was built for.
+  // Same reasoning as the `authors` field in layout.tsx — this one feeds rich
+  // results, so crediting the organiser here is wrong in the same machine-
+  // readable way, just in a second place.
+  author: { "@type": "Person", name: "Edy Cu", url: "https://github.com/edycutjong" },
   license: "https://opensource.org/licenses/MIT",
   codeRepository: REPO_URL,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },

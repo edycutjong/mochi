@@ -37,7 +37,7 @@ const COLUMNS: {
   {
     heading: "Built with",
     links: [
-      { label: "Decentraland SDK7", href: "https://docs.decentraland.org/creator/development-guide/sdk7/sdk7-overview/", external: true },
+      { label: "Decentraland SDK7", href: "https://docs.decentraland.org/creator/scenes-sdk7", external: true },
       { label: "Node 22.5 · ws · node:sqlite", note: "1 runtime dependency" },
       { label: "Fly.io", href: "https://fly.io", external: true },
     ],

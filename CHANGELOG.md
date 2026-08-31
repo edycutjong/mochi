@@ -3,6 +3,18 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.13.0](https://github.com/edycutjong/mochi/compare/v1.12.5...v1.13.0) (2026-08-31)
+
+### Features
+
+* **landing:** serve a real 404 instead of the stock Pages page ([4409486](https://github.com/edycutjong/mochi/commit/44094863c857c5c6271420e62f0d5054e74b6e45))
+
+### Fixes
+
+* **landing:** JSON-LD credited the buildathon organiser as the author ([876ffb9](https://github.com/edycutjong/mochi/commit/876ffb99d7ee0c7993f721a699c8bc85a994a560))
+* **landing:** name the author on the X card via twitter:creator ([775665a](https://github.com/edycutjong/mochi/commit/775665ae13cbccafb08ff4985ad5d41359c83c74))
+* **landing:** the SDK7 footer link 404s — docs moved to /creator/scenes-sdk7 ([4c6530e](https://github.com/edycutjong/mochi/commit/4c6530e64d5e7938720b71394bbd98f415602318))
+
 ## [1.12.5](https://github.com/edycutjong/mochi/compare/v1.12.4...v1.12.5) (2026-08-25)
 
 ### Fixes

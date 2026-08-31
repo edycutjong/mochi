@@ -87,6 +87,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    // Edy Cu built this and posted the Mochi thread from @edycutjong. Without
+    // a creator handle X renders the card unattributed, and the "from" credit
+    // on every reshare goes to nobody.
+    creator: "@edycutjong",
+    site: "@edycutjong",
     title: "Mochi — the creature Decentraland is raising together",
     // 113 characters — X clips the card description early on mobile.
     description:

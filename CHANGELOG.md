@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.14.1](https://github.com/edycutjong/mochi/compare/v1.14.0...v1.14.1) (2026-09-02)
+
+### Fixes
+
+* **ci:** the published site would sit one release behind for ever ([c992b98](https://github.com/edycutjong/mochi/commit/c992b9866d5598981c53be589a1b7bf8f17792c7))
+
 ## [1.14.0](https://github.com/edycutjong/mochi/compare/v1.13.0...v1.14.0) (2026-09-02)
 
 ### Features

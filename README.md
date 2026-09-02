@@ -38,6 +38,7 @@
   ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
   [![License](https://img.shields.io/badge/License-MIT-yellow)](https://opensource.org/licenses/MIT)
   [![CI](https://github.com/edycutjong/mochi/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/mochi/actions/workflows/ci.yml)
+  [![Release](https://img.shields.io/github/v/release/edycutjong/mochi?style=flat&label=release&color=ff6fa5)](https://github.com/edycutjong/mochi/releases/latest)
 
 </div>
 

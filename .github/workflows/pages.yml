@@ -60,10 +60,32 @@ jobs:
         working-directory: landing
         run: npm run build
 
-      - name: Add the pitch deck at /deck/
+      # The deck is a single self-contained file with no build step, so its
+      # version chip is a literal in the source. Rewriting it here from the root
+      # package.json — the file semantic-release bumps — means the published
+      # deck always carries the newest release tag without anyone having to
+      # remember. The landing page gets the same number through next.config.ts;
+      # both read the same source of truth.
+      - name: Add the pitch deck at /deck/, stamped with the release
         run: |
           mkdir -p landing/out/deck
           cp deck/index.html landing/out/deck/index.html
+          version="$(node -p "require('./package.json').version")"
+          node - "$version" <<'NODE'
+          const { readFileSync, writeFileSync } = require('node:fs')
+          const [version] = process.argv.slice(2)
+          const path = 'landing/out/deck/index.html'
+          const html = readFileSync(path, 'utf8')
+          // Anchored on the id so it cannot match anything else in the file,
+          // and idempotent: it replaces whatever version is there, including a
+          // stale one, rather than assuming the source literal is current.
+          const pattern = /(<a id="deck-version"[\s\S]*?>)[^<]*(<\/a>)/
+          if (!pattern.test(html)) {
+            throw new Error('deck version chip not found — did #deck-version move?')
+          }
+          writeFileSync(path, html.replace(pattern, `$1v${version}$2`))
+          console.log(`deck stamped v${version}`)
+          NODE
 
       # GitHub Pages serves _next/ fine, but Jekyll — which Pages runs by
       # default — ignores any directory beginning with an underscore. Without

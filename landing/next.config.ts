@@ -1,6 +1,25 @@
 import type { NextConfig } from "next";
+import { readFileSync } from "node:fs";
+
+/**
+ * The released version, read from the repository root's package.json at build
+ * time.
+ *
+ * That file is the one semantic-release bumps, so it is always the same number
+ * as the newest GitHub release tag — reading it here means the footer chip
+ * cannot drift from the release the site was actually built from. Deliberately
+ * NOT a shields.io badge: this page ships no remote images, and a version
+ * number is not worth becoming the first one.
+ */
+const { version } = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+) as { version: string };
 
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_APP_VERSION: version,
+  },
+
   /**
    * Next 16 writes an AGENTS.md and a CLAUDE.md into the project root on every
    * `next dev`. Both are forbidden here: the Hackathon tree contract allows

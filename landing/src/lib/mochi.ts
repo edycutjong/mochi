@@ -50,6 +50,20 @@ export const DECK_URL = "https://mochi.edycu.dev/deck/";
 export const STATE_ENDPOINT = "https://api.mochi.edycu.dev/state";
 
 /**
+ * The release this build came from.
+ *
+ * `next.config.ts` reads it from the repository root's package.json — the file
+ * semantic-release bumps — so it is always the newest release tag rather than a
+ * number somebody remembered to update. The fallback exists only so a `next
+ * dev` run outside the repo does not render the word "undefined"; in every real
+ * build the env var is set.
+ */
+export const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "dev";
+
+/** The GitHub release the version chip points at. */
+export const RELEASES_URL = `${REPO_URL}/releases`;
+
+/**
  * True once a real World exists — drives CTA copy and enabled/disabled state.
  *
  * `Boolean(...)` rather than `!== null`: WORLD_URL now holds a string literal,

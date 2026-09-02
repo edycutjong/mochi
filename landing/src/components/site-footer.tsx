@@ -1,6 +1,6 @@
 import { Wordmark } from "@/components/wordmark";
 import { PendingWorldNote } from "@/components/enter-world";
-import { DECK_URL, JUDGE_URL, REPO_URL, STATE_ENDPOINT, worldIsLive, WORLD_URL } from "@/lib/mochi";
+import { APP_VERSION, DECK_URL, JUDGE_URL, RELEASES_URL, REPO_URL, STATE_ENDPOINT, worldIsLive, WORLD_URL } from "@/lib/mochi";
 
 /**
  * ELEMENT 11 — footer.
@@ -133,10 +133,28 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col gap-4 border-t border-[#7a5165]/12 pt-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-[#5e4666]">
-            © {new Date().getFullYear()} DCL Regenesis Labs · Released under the
-            MIT Licence
-          </p>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <p className="text-xs text-[#5e4666]">
+              © {new Date().getFullYear()} DCL Regenesis Labs · Released under the
+              MIT Licence
+            </p>
+            {/*
+              The build's release tag. Baked in at build time from the root
+              package.json rather than fetched as a badge image — this page
+              ships no remote assets and a version number is not worth being
+              the first one. Links to the release notes, which is the thing
+              somebody reading a version number actually wants next.
+            */}
+            <a
+              href={RELEASES_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center rounded-full border border-[#7a5165]/25 px-2.5 py-0.5 font-mono text-[11px] text-[#776384] transition-colors hover:border-[#ff6fa5]/60 hover:text-[#ff6fa5] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff6fa5]"
+              aria-label={`Release ${APP_VERSION} — view the release notes on GitHub`}
+            >
+              v{APP_VERSION}
+            </a>
+          </div>
           <p className="text-xs text-[#776384]">
             Built for the DoraHacks Friendzone Buildathon. Not affiliated with
             Decentraland Foundation.

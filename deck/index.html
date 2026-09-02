@@ -1718,6 +1718,23 @@ body.overview-on #counter,body.overview-on #hint,body.overview-on #brandmark
     </g>
   </svg>
   <span class="mono" style="font-size:16px;letter-spacing:.1em">FRIENDZONE 2026</span>
+  <!--
+    The release this deck was published from.
+
+    The text inside #deck-version is rewritten by .github/workflows/pages.yml
+    at deploy time, from the repository root's package.json — the file
+    semantic-release bumps, so the published deck always carries the newest
+    release tag. The literal below is what you see opening this file straight
+    from the repo, which is why it is a real version and not a placeholder.
+
+    Deliberately not a shields.io image: this deck loads no remote assets at
+    all, and it has to render in a room with bad wifi.
+  -->
+  <a id="deck-version" class="mono" href="https://github.com/edycutjong/mochi/releases"
+     target="_blank" rel="noreferrer"
+     style="font-size:14px;letter-spacing:.06em;color:var(--text-low);text-decoration:none;
+            border:1px solid currentColor;border-radius:999px;padding:1px 8px;opacity:.75"
+     aria-label="Release version — opens the GitHub release notes">v1.13.0</a>
 </div>
 <div id="counter"><b id="cur">01</b> / <span id="tot">12</span></div>
 <div id="hint">← → navigate · ESC overview · P presenter · C contrast · F feed (slide 04)</div>

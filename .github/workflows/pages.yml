@@ -18,16 +18,6 @@ on:
     types: [completed]
     branches: [main]
 
-  # Both surfaces print the released version, read from package.json — and
-  # semantic-release commits that bump as `chore(release): x.y.z [skip ci]`.
-  # `[skip ci]` is the point of that marker and is correct, but it means the CI
-  # pipeline never runs on the bump, so the trigger above never fires for it and
-  # the published site would sit one release behind for ever. Rebuilding when a
-  # release is published closes that gap; the checkout below resolves to the tag,
-  # which is the commit carrying the new version.
-  release:
-    types: [published]
-
   workflow_dispatch:
 
 permissions:
@@ -46,7 +36,6 @@ jobs:
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'release' ||
       github.event.workflow_run.conclusion == 'success'
     steps:
       - uses: actions/checkout@v4
@@ -59,6 +48,38 @@ jobs:
           cache: npm
           cache-dependency-path: landing/package-lock.json
 
+      # Both surfaces print the released version, and it must come from the
+      # GitHub API rather than from package.json.
+      #
+      # The ordering makes package.json structurally wrong here: this workflow
+      # runs off the CI pipeline completing, which happens on the FEATURE commit
+      # — before semantic-release has bumped anything. So the file on disk at
+      # this moment is always the previous release, and the site would sit a
+      # version behind for ever. That is not hypothetical; the deck and the
+      # landing page both served v1.13.0 while v1.14.0 was the latest release.
+      #
+      # Rebuilding on `release: published` looks like the obvious fix and is
+      # not one: semantic-release authenticates with the default GITHUB_TOKEN,
+      # and GitHub deliberately does not trigger workflow runs from events that
+      # token creates. The trigger would never fire.
+      #
+      # Asking the API removes the ordering problem instead of racing it, and
+      # it is the same source the README's shields.io badge reads — which is
+      # why that badge was never wrong. Falls back to package.json if the
+      # repository has no releases yet.
+      - name: Resolve the released version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version="$(gh api "repos/${{ github.repository }}/releases/latest" \
+            --jq '.tag_name' 2>/dev/null | sed 's/^v//')"
+          if [ -z "$version" ]; then
+            version="$(node -p "require('./package.json').version")"
+            echo "no release found — falling back to package.json ($version)"
+          fi
+          echo "APP_VERSION=$version" >> "$GITHUB_ENV"
+          echo "building both surfaces as v$version"
+
       - name: Install landing dependencies
         working-directory: landing
         run: npm ci
@@ -70,20 +91,21 @@ jobs:
       # Fly.io being up at that exact minute.
       - name: Build landing page
         working-directory: landing
+        env:
+          NEXT_PUBLIC_APP_VERSION: ${{ env.APP_VERSION }}
         run: npm run build
 
       # The deck is a single self-contained file with no build step, so its
-      # version chip is a literal in the source. Rewriting it here from the root
-      # package.json — the file semantic-release bumps — means the published
-      # deck always carries the newest release tag without anyone having to
-      # remember. The landing page gets the same number through next.config.ts;
-      # both read the same source of truth.
+      # version chip is a literal in the source. Rewriting it here with the
+      # version resolved above means the published deck always carries the
+      # newest release tag without anyone having to remember. The landing page
+      # gets the same number through NEXT_PUBLIC_APP_VERSION; both surfaces are
+      # stamped from one resolution, so they cannot disagree with each other.
       - name: Add the pitch deck at /deck/, stamped with the release
         run: |
           mkdir -p landing/out/deck
           cp deck/index.html landing/out/deck/index.html
-          version="$(node -p "require('./package.json').version")"
-          node - "$version" <<'NODE'
+          node - "$APP_VERSION" <<'NODE'
           const { readFileSync, writeFileSync } = require('node:fs')
           const [version] = process.argv.slice(2)
           const path = 'landing/out/deck/index.html'
@@ -112,9 +134,17 @@ jobs:
           test -f landing/out/deck/index.html || { echo "::error::no deck index.html"; exit 1; }
           test -f landing/out/CNAME           || { echo "::error::no CNAME — custom domain would reset"; exit 1; }
           test -f landing/out/.nojekyll       || { echo "::error::no .nojekyll"; exit 1; }
-          echo "domain: $(cat landing/out/CNAME)"
-          echo "size:   $(du -sh landing/out | cut -f1)"
-          echo "files:  $(find landing/out -type f | wc -l)"
+          # Both surfaces claim a version. A chip that silently renders empty,
+          # or "dev", or last month's tag is worse than no chip at all, so the
+          # deploy refuses rather than publishing a wrong number.
+          grep -q "v${APP_VERSION}<" landing/out/deck/index.html \
+            || { echo "::error::deck is not stamped v${APP_VERSION}"; exit 1; }
+          grep -q "Release ${APP_VERSION}" landing/out/index.html \
+            || { echo "::error::landing is not stamped ${APP_VERSION}"; exit 1; }
+          echo "domain:  $(cat landing/out/CNAME)"
+          echo "version: v${APP_VERSION} on both surfaces"
+          echo "size:    $(du -sh landing/out | cut -f1)"
+          echo "files:   $(find landing/out -type f | wc -l)"
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

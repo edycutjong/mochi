@@ -2,18 +2,25 @@ import type { NextConfig } from "next";
 import { readFileSync } from "node:fs";
 
 /**
- * The released version, read from the repository root's package.json at build
- * time.
+ * The released version shown in the footer.
  *
- * That file is the one semantic-release bumps, so it is always the same number
- * as the newest GitHub release tag — reading it here means the footer chip
- * cannot drift from the release the site was actually built from. Deliberately
- * NOT a shields.io badge: this page ships no remote images, and a version
- * number is not worth becoming the first one.
+ * In CI, `.github/workflows/pages.yml` resolves the newest release tag from the
+ * GitHub API and passes it in. It has to come from the API rather than from
+ * package.json: Pages builds off the CI run for the FEATURE commit, which is
+ * before semantic-release has bumped anything, so the file on disk at build
+ * time is always the previous release and the site would sit a version behind.
+ *
+ * The package.json read below is the local-development fallback only — running
+ * `next dev` should show something honest rather than "undefined".
+ *
+ * Deliberately not a shields.io badge: this page ships no remote images, and a
+ * version number is not worth becoming the first one.
  */
-const { version } = JSON.parse(
+const { version: localVersion } = JSON.parse(
   readFileSync(new URL("../package.json", import.meta.url), "utf8"),
 ) as { version: string };
+
+const version = process.env.NEXT_PUBLIC_APP_VERSION || localVersion;
 
 const nextConfig: NextConfig = {
   env: {

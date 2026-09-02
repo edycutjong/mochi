@@ -17,6 +17,17 @@ on:
     workflows: ["CI/CD Pipeline"]
     types: [completed]
     branches: [main]
+
+  # Both surfaces print the released version, read from package.json — and
+  # semantic-release commits that bump as `chore(release): x.y.z [skip ci]`.
+  # `[skip ci]` is the point of that marker and is correct, but it means the CI
+  # pipeline never runs on the bump, so the trigger above never fires for it and
+  # the published site would sit one release behind for ever. Rebuilding when a
+  # release is published closes that gap; the checkout below resolves to the tag,
+  # which is the commit carrying the new version.
+  release:
+    types: [published]
+
   workflow_dispatch:
 
 permissions:
@@ -35,6 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'release' ||
       github.event.workflow_run.conclusion == 'success'
     steps:
       - uses: actions/checkout@v4

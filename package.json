@@ -1,6 +1,6 @@
 {
   "name": "mochi",
-  "version": "1.14.2",
+  "version": "1.14.3",
   "description": "A giant pastel blob co-parented by the whole server. Decentraland SDK7, built for mobile.",
   "scripts": {
     "start": "sdk-commands start",

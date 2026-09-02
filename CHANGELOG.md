@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.14.3](https://github.com/edycutjong/mochi/compare/v1.14.2...v1.14.3) (2026-09-02)
+
+### Fixes
+
+* **ci:** Pages raced Release for the tag it was supposed to publish ([815e3f8](https://github.com/edycutjong/mochi/commit/815e3f806a272d229dbc97706afb79b66381c2f3))
+
 ## [1.14.2](https://github.com/edycutjong/mochi/compare/v1.14.1...v1.14.2) (2026-09-02)
 
 ### Fixes

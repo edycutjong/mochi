@@ -3,6 +3,16 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.14.0](https://github.com/edycutjong/mochi/compare/v1.13.0...v1.14.0) (2026-09-02)
+
+### Features
+
+* **docs:** surface the release version on all three public surfaces ([e8f88e3](https://github.com/edycutjong/mochi/commit/e8f88e37371e84970c97027593d0ebc0e2c3ef4b))
+
+### Fixes
+
+* **ui:** the TEACH picker rendered under the client's own controls ([f8ed6d5](https://github.com/edycutjong/mochi/commit/f8ed6d584b8b9c93462ab109315adc06fa6fb8bb))
+
 ## [1.13.0](https://github.com/edycutjong/mochi/compare/v1.12.5...v1.13.0) (2026-08-31)
 
 ### Features

@@ -5,16 +5,27 @@ name: Pages
 #   /        the landing page  — Next.js static export from landing/
 #   /deck/   the pitch deck    — one self-contained HTML file from deck/
 #
-# Gated on the CI pipeline, for the same reason the release workflow is: what
-# is on the domain should be a commit whose tests passed. A landing page that
+# Gated on the RELEASE workflow, which is itself gated on the CI pipeline. What
+# is on the domain should be a commit whose tests passed — a landing page that
 # quotes "100% coverage" while the suite is red would be the exact kind of
-# unverifiable claim the rest of this repo goes out of its way to avoid.
+# unverifiable claim the rest of this repo goes out of its way to avoid — and
+# chaining through Release preserves that transitively.
+#
+# Why not hang directly off the CI pipeline, which is what this used to do:
+# both surfaces print the newest release tag, and Pages and Release both fired
+# on CI completing, in parallel. Pages therefore asked the API for the tag
+# before semantic-release had cut it, and published a version behind on every
+# commit that produced a release. Running after Release removes the race
+# instead of narrowing it.
+#
+# Release completes successfully even when it decides there is nothing to
+# publish, so a docs-only commit still redeploys.
 #
 # Neither surface reaches the Decentraland World — .dclignore excludes landing/
 # and deck/, so the scene payload is unchanged by anything here.
 on:
   workflow_run:
-    workflows: ["CI/CD Pipeline"]
+    workflows: ["Release"]
     types: [completed]
     branches: [main]
 

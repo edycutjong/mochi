@@ -48,6 +48,7 @@ import ReactEcs, { Label, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 import { isMobile } from '@dcl/sdk/platform'
 import { EmotePicker } from './emote-picker'
+import { VIRTUAL } from './picker-layout'
 
 export type HudActions = {
   onTeach: (emoteId: string) => void
@@ -144,6 +145,13 @@ const hud = () => (
 export function setupHud(a: HudActions) {
   actions = a
   // Virtual scale rather than raw pixels, per the mobile UI guidance. The
-  // renderer keeps the UI inside the device safe area by default.
-  ReactEcsRenderer.setUiRenderer(hud, { virtualWidth: 1280, virtualHeight: 720 })
+  // renderer keeps the UI inside the device safe area by default — but the
+  // safe area is about notches and status bars, not about the client's own
+  // joystick and jump control, which is why the picker does its own dodging.
+  // These are the same numbers `picker-layout.ts` does its fit arithmetic
+  // against, so they are defined once and imported rather than typed twice.
+  ReactEcsRenderer.setUiRenderer(hud, {
+    virtualWidth: VIRTUAL.width,
+    virtualHeight: VIRTUAL.height
+  })
 }

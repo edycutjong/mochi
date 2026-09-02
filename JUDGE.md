@@ -96,7 +96,7 @@ the deployed World.
 
 ```bash
 npm test               # 238 server tests, 100% coverage
-npm run test:scene     # 36 headless scene tests + the one-parcel budget audit
+npm run test:scene     # 41 headless scene tests + the one-parcel budget audit
 npm run bench          # the latency and throughput table, ~30 seconds
 npm run ci             # all of it, the way CI runs it
 ```

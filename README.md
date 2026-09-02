@@ -71,7 +71,10 @@ no schedule.
 
 ## 📱 Designed and Optimised for Mobile
 
-Portrait, one-handed, **zero typing anywhere**.
+Landscape, thumb-driven, **zero typing anywhere**. The Decentraland mobile
+client renders the world in landscape at the device's full aspect — measured at
+2.18:1 on a Galaxy S24 Ultra — so that is the shape this scene is designed and
+tested for.
 
 **No buttons at all.** Every verb is a tap on something in the meadow: FEED is
 the bowl of berries in front of the creature, TEACH is the pale stage beside
@@ -235,7 +238,7 @@ people — in **[DEMO.md](DEMO.md)**.
 ```bash
 npm test               # 238 server tests, 13 files
 npm run test:coverage  # the same, plus the coverage table
-npm run test:scene     # 36 headless scene tests, 3 files
+npm run test:scene     # 41 headless scene tests, 4 files
 npm run budget:scene   # the one-parcel budget audit
 npm run bench          # the protocol benchmark — p50/p95/p99, ~30 seconds
 npm run lint           # type-aware ESLint

@@ -1,9 +1,16 @@
 /**
  * The TEACH picker.
  *
- * Centre-screen, because the mobile UI guidance places actionable dialogs
- * there — anywhere the visitor has to read something and respond. Status goes
- * top, actions go bottom, decisions go centre.
+ * Centre-screen on desktop, because the mobile UI guidance places actionable
+ * dialogs there. Inset on mobile, because on a real phone "centre-screen" put
+ * this grid underneath the client's own F, E, jump and + buttons and a tap
+ * meant for `tik` landed on jump.
+ *
+ * All of the geometry — where the client's controls are, where the panel is
+ * allowed to sit, and whether the grid actually fits inside it — lives in
+ * `picker-layout.ts`, which has no SDK import so the headless suite can assert
+ * on it. `test/emote-picker.test.ts` is the ratchet. This file is just the
+ * markup that spends those numbers.
  *
  * Twelve moves, chosen from the client's built-in set so nothing has to be
  * downloaded and every visitor has them. Labels are words rather than icons:
@@ -19,6 +26,7 @@ import ReactEcs, { UiEntity } from '@dcl/sdk/react-ecs'
 import { Color4 } from '@dcl/sdk/math'
 import { isMobile } from '@dcl/sdk/platform'
 import { PALETTE } from '../config'
+import { GRID, panelInset } from './picker-layout'
 
 /** Built-in emotes, so nothing depends on a wearable the visitor may not own. */
 export const TEACHABLE = [
@@ -36,15 +44,17 @@ export const TEACHABLE = [
   { id: 'tik', label: 'tik' }
 ]
 
-const TYPE = isMobile() ? { tile: 30, title: 34 } : { tile: 16, title: 19 }
+const TYPE = isMobile() ? { tile: 28, title: 32 } : { tile: 16, title: 19 }
+
+const pct = (fraction: number) => `${fraction * 100}%` as const
 
 function Tile(props: { label: string; onPick: () => void }) {
   return (
     <UiEntity
       uiTransform={{
-        width: '30%',
-        height: '20%',
-        margin: '1.5%',
+        width: pct(GRID.tileWidth),
+        height: pct(GRID.tileHeight),
+        margin: pct(GRID.tileMargin),
         justifyContent: 'center',
         alignItems: 'center'
       }}
@@ -60,42 +70,63 @@ function Tile(props: { label: string; onPick: () => void }) {
 }
 
 export function EmotePicker(props: { onPick: (emoteId: string) => void; onDismiss: () => void }) {
+  const inset = panelInset(isMobile())
+
   return (
     <UiEntity
       uiTransform={{
         positionType: 'absolute',
-        position: { top: 0, left: 0, right: 0, bottom: 0 },
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column'
+        position: { top: 0, left: 0, right: 0, bottom: 0 }
       }}
       // Tapping the scrim dismisses. No cancel button to hunt for, and no way
-      // to get stuck in a dialog on a small screen.
+      // to get stuck in a dialog on a small screen. The scrim stays full-bleed
+      // even though the panel does not: dismissing should work anywhere the
+      // thumb lands, including over the client's own controls.
       uiBackground={{ color: Color4.create(0.23, 0.17, 0.27, 0.55) }}
       onMouseDown={props.onDismiss}
     >
       <UiEntity
-        uiTransform={{ width: '86%', height: '12%', justifyContent: 'center', alignItems: 'center' }}
-        uiText={{
-          value: 'teach Mochi a move',
-          fontSize: TYPE.title,
-          color: Color4.White()
-        }}
-      />
-      <UiEntity
         uiTransform={{
-          width: '86%',
-          height: '62%',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
+          positionType: 'absolute',
+          position: {
+            left: pct(inset.left),
+            right: pct(inset.right),
+            top: pct(inset.top),
+            bottom: pct(inset.bottom)
+          },
+          flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center'
         }}
-        uiBackground={{ color: PALETTE.bodyLight }}
       >
-        {TEACHABLE.map((e) => (
-          <Tile label={e.label} onPick={() => props.onPick(e.id)} />
-        ))}
+        <UiEntity
+          uiTransform={{
+            width: '100%',
+            height: pct(GRID.titleHeight),
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+          uiText={{
+            value: 'teach Mochi a move',
+            fontSize: TYPE.title,
+            color: Color4.White()
+          }}
+        />
+        <UiEntity
+          uiTransform={{
+            width: '100%',
+            height: pct(GRID.gridHeight),
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+          uiBackground={{ color: PALETTE.bodyLight }}
+        >
+          {TEACHABLE.map((e) => (
+            <Tile label={e.label} onPick={() => props.onPick(e.id)} />
+          ))}
+        </UiEntity>
       </UiEntity>
     </UiEntity>
   )

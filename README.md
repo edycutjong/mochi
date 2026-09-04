@@ -292,7 +292,7 @@ messages — nothing is bumped by hand.
 | 🫧 **Live World** | **[wunderland.dcl.eth](https://decentraland.org/jump/?realm=wunderland.dcl.eth)** — open in the Decentraland mobile app |
 | 🌐 **Landing page** | **[mochi.edycu.dev](https://mochi.edycu.dev/)** — the creature on the page is sized by the real feed count |
 | 🎞️ **Pitch deck** | **[mochi.edycu.dev/deck](https://mochi.edycu.dev/deck/)** — 12 slides, works offline |
-| 🎥 **Demo video** | «PENDING:video-url» |
+| 🎥 **Demo video** | **[youtu.be/UD4k311JT2k](https://youtu.be/UD4k311JT2k)** — 2:27, captioned |
 | 🏆 **BUIDL** | [dorahacks.io/buidl/48053](https://dorahacks.io/buidl/48053) — DoraHacks [Friendzone Buildathon](https://dorahacks.io/hackathon/friendzone) |
 | 📋 **For judges** | [JUDGE.md](JUDGE.md) — every number, and how to check it in 30 seconds |
 | 🩺 **Server health** | [api.mochi.edycu.dev/health](https://api.mochi.edycu.dev/health) · [/state](https://api.mochi.edycu.dev/state) |

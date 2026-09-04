@@ -1,6 +1,6 @@
 import { Wordmark } from "@/components/wordmark";
 import { PendingWorldNote } from "@/components/enter-world";
-import { APP_VERSION, DECK_URL, JUDGE_URL, RELEASES_URL, REPO_URL, STATE_ENDPOINT, worldIsLive, WORLD_URL } from "@/lib/mochi";
+import { APP_VERSION, DECK_URL, JUDGE_URL, RELEASES_URL, REPO_URL, STATE_ENDPOINT, VIDEO_URL, worldIsLive, WORLD_URL } from "@/lib/mochi";
 
 /**
  * ELEMENT 11 — footer.
@@ -22,6 +22,7 @@ const COLUMNS: {
       { label: "Live state", href: "#live" },
       { label: "How it's built", href: "#build" },
       { label: "FAQ", href: "#faq" },
+      { label: "Demo video — 2:27", href: VIDEO_URL, external: true },
       { label: "Pitch deck — 12 slides", href: DECK_URL, external: true },
     ],
   },

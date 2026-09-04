@@ -47,6 +47,14 @@ export const JUDGE_URL = `${REPO_URL}/blob/main/JUDGE.md`;
  * not, so nobody arriving here could find it.
  */
 export const DECK_URL = "https://mochi.edycu.dev/deck/";
+
+/**
+ * The demo video, 2:27, captioned.
+ *
+ * Unlisted-safe: a YouTube link embeds either way, but this one is public so a
+ * judge's browser or a corporate network has one less reason to block it.
+ */
+export const VIDEO_URL = "https://youtu.be/UD4k311JT2k";
 export const STATE_ENDPOINT = "https://api.mochi.edycu.dev/state";
 
 /**

@@ -36,6 +36,9 @@ docs/assets/*
 !docs/assets/icon-animated.svg
 !docs/assets/readme-hero-animated.svg
 !docs/assets/world-qr.png
+!docs/assets/shot-feeding-counter.jpg
+!docs/assets/shot-chain-replay.jpg
+!docs/assets/shot-away-line.jpg
 
 # OS / editor noise
 .DS_Store

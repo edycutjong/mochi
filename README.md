@@ -70,6 +70,16 @@ So a visitor alone at 2am both **receives** evidence of other people and
 **leaves** state that every future visitor inherits. No co-presence, no host,
 no schedule.
 
+<p align="center">
+  <img src="docs/assets/shot-feeding-counter.jpg" alt="Mochi in the meadow with the message 'Mochi is fuller — 82 feedings and counting'" width="49%">
+  <img src="docs/assets/shot-chain-replay.jpg" alt="The dance chain replaying, captioned 'replaying the last 24 of 40 moves', with a ghost dancer credited to Blaze Raveneye" width="49%">
+</p>
+<p align="center">
+  <sub>Live production state on a Galaxy S24 Ultra. <b>Left:</b> the size claim, with the real
+  feed count. <b>Right:</b> the chain replaying — the credit on the ground
+  (<code>Blaze Raveneye</code>) is a real carer's name read from the database, not a label.</sub>
+</p>
+
 ## 📱 Designed and Optimised for Mobile
 
 Landscape, thumb-driven, **zero typing anywhere**. The Decentraland mobile
@@ -139,9 +149,21 @@ Everything else in the design is broadcast to a room. That line is addressed to
 a person. It is one indexed query, and it turns care from something announced
 into something directed.
 
-*Kito and Rue are names from the four-session local run recorded in
-[DEMO.md](DEMO.md), used here to show the shape of the sentence. They are not
-people in the live world — `/state` is the authority on who is.*
+Here it is firing in production, naming a real carer:
+
+<p align="center">
+  <img src="docs/assets/shot-away-line.jpg" alt="Entering the World, with the message 'abnerdune tended Mochi after you left'" width="82%">
+</p>
+<p align="center">
+  <sub><code>abnerdune</code> is a real Decentraland account that tended Mochi between two of my own
+  visits. The line is produced by <code>store.ts&nbsp;awayLine()</code> — the first act by a
+  <i>different</i> wallet with <code>at&nbsp;&gt;</code> your last one — and shows for seven seconds on connect.</sub>
+</p>
+
+*Kito and Rue, above, are names from the four-session local run recorded in
+[DEMO.md](DEMO.md), used to show the shape of the sentence before the screenshot
+was taken. They are not people in the live world — `/state` is the authority on
+who is.*
 
 Underneath, `chain_move.teacher_name` is `NOT NULL` at the schema level and
 there is no delete verb anywhere in the server. An anonymous chain would be a

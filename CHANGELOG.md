@@ -3,6 +3,26 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.15.0](https://github.com/edycutjong/mochi/compare/v1.14.3...v1.15.0) (2026-09-07)
+
+### Features
+
+* **docs:** publish the demo video and correct the deck's traction numbers ([a2a7613](https://github.com/edycutjong/mochi/commit/a2a7613bf5d4b36044a271996e342606957fbc8f))
+
+### Fixes
+
+* **a11y:** footer version link's visible text was not in its accessible name ([e57ad47](https://github.com/edycutjong/mochi/commit/e57ad470f80adb23f1400a08e65af270ac525f15))
+* **readiness:** skip what cannot run here instead of failing on it ([67254da](https://github.com/edycutjong/mochi/commit/67254dacf262d04cb7bbb9477b5fef57efa6c158))
+
+### Documentation
+
+* correct the test counts and measure who came back ([048a959](https://github.com/edycutjong/mochi/commit/048a9596c81fa72327a5f7dac16afeda7b68bd9a))
+* **readme:** show the mechanic instead of only asserting it ([b5f443f](https://github.com/edycutjong/mochi/commit/b5f443fa21acc1703e39ead92878495604d9944a))
+
+### Tests
+
+* **ui:** pin tap-target size, type size and contrast in the headless suite ([8ac1b61](https://github.com/edycutjong/mochi/commit/8ac1b610e1455512cdfb366e53c248327e384705))
+
 ## [1.14.3](https://github.com/edycutjong/mochi/compare/v1.14.2...v1.14.3) (2026-09-02)
 
 ### Fixes

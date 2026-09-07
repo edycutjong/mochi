@@ -150,8 +150,10 @@ jobs:
           # deploy refuses rather than publishing a wrong number.
           grep -q "v${APP_VERSION}<" landing/out/deck/index.html \
             || { echo "::error::deck is not stamped v${APP_VERSION}"; exit 1; }
-          grep -q "Release ${APP_VERSION}" landing/out/index.html \
-            || { echo "::error::landing is not stamped ${APP_VERSION}"; exit 1; }
+          # The chip's visible text, ">v1.2.3<" — not its aria-label, which
+          # changed once already and took this check down with it.
+          grep -q ">v${APP_VERSION}<" landing/out/index.html \
+            || { echo "::error::landing is not stamped v${APP_VERSION}"; exit 1; }
           echo "domain:  $(cat landing/out/CNAME)"
           echo "version: v${APP_VERSION} on both surfaces"
           echo "size:    $(du -sh landing/out | cut -f1)"

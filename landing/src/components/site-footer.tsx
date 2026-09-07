@@ -151,7 +151,7 @@ export function SiteFooter() {
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center rounded-full border border-[#7a5165]/25 px-2.5 py-0.5 font-mono text-[11px] text-[#776384] transition-colors hover:border-[#ff6fa5]/60 hover:text-[#ff6fa5] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff6fa5]"
-              aria-label={`Release ${APP_VERSION} — view the release notes on GitHub`}
+              aria-label={`v${APP_VERSION} — view the release notes on GitHub`}
             >
               v{APP_VERSION}
             </a>

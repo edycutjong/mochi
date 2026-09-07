@@ -49,6 +49,7 @@ import { Color4 } from '@dcl/sdk/math'
 import { isMobile } from '@dcl/sdk/platform'
 import { EmotePicker } from './emote-picker'
 import { VIRTUAL } from './picker-layout'
+import { TYPE_SCALE, UI_HEX } from './tokens'
 
 export type HudActions = {
   onTeach: (emoteId: string) => void
@@ -100,7 +101,7 @@ export function hudSystem(dt: number) {
  * documented, so this is deliberately a single obvious knob to turn while
  * looking at a real phone.
  */
-const TYPE = isMobile() ? { bubble: 30 } : { bubble: 17 }
+const TYPE = isMobile() ? TYPE_SCALE.mobile : TYPE_SCALE.desktop
 
 const hud = () => (
   <UiEntity uiTransform={{ width: '100%', height: '100%', flexDirection: 'column' }}>
@@ -117,9 +118,9 @@ const hud = () => (
         <Label
           value={bubble}
           fontSize={TYPE.bubble}
-          color={Color4.fromHexString('#4A3B52ff')}
+          color={Color4.fromHexString(`${UI_HEX.ink}ff`)}
           uiTransform={{ padding: 12 }}
-          uiBackground={{ color: Color4.fromHexString('#FFFFFFe0') }}
+          uiBackground={{ color: Color4.fromHexString(`${UI_HEX.bubbleFace}e0`) }}
         />
       )}
     </UiEntity>

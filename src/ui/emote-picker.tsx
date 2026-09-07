@@ -27,6 +27,7 @@ import { Color4 } from '@dcl/sdk/math'
 import { isMobile } from '@dcl/sdk/platform'
 import { PALETTE } from '../config'
 import { GRID, panelInset } from './picker-layout'
+import { TYPE_SCALE, UI_HEX } from './tokens'
 
 /** Built-in emotes, so nothing depends on a wearable the visitor may not own. */
 export const TEACHABLE = [
@@ -44,7 +45,7 @@ export const TEACHABLE = [
   { id: 'tik', label: 'tik' }
 ]
 
-const TYPE = isMobile() ? { tile: 28, title: 32 } : { tile: 16, title: 19 }
+const TYPE = isMobile() ? TYPE_SCALE.mobile : TYPE_SCALE.desktop
 
 const pct = (fraction: number) => `${fraction * 100}%` as const
 
@@ -58,12 +59,12 @@ function Tile(props: { label: string; onPick: () => void }) {
         justifyContent: 'center',
         alignItems: 'center'
       }}
-      uiBackground={{ color: Color4.fromHexString('#FFFFFFf2') }}
+      uiBackground={{ color: Color4.fromHexString(`${UI_HEX.tileFace}f2`) }}
       onMouseDown={props.onPick}
       uiText={{
         value: props.label,
         fontSize: TYPE.tile,
-        color: Color4.fromHexString('#4A3B52ff')
+        color: Color4.fromHexString(`${UI_HEX.ink}ff`)
       }}
     />
   )

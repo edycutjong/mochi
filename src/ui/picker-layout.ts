@@ -124,6 +124,20 @@ export function panelSize(inset: Inset): { width: number; height: number } {
 }
 
 /**
+ * One tile's box in virtual units, given the panel inset. Tiles are sized as
+ * fractions of the panel (width) and of the grid strip (height), so this is the
+ * arithmetic the renderer performs — reproduced here so a test can hold it to
+ * a minimum tap-target size.
+ */
+export function tileSize(inset: Inset): { width: number; height: number } {
+  const panel = panelSize(inset)
+  return {
+    width: GRID.tileWidth * panel.width,
+    height: GRID.tileHeight * (GRID.gridHeight * panel.height)
+  }
+}
+
+/**
  * Does the grid's content fit inside the grid container, on both axes?
  *
  * The margin is multiplied by the panel width in BOTH calculations. That is not

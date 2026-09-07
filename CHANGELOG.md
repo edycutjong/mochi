@@ -3,6 +3,12 @@
 Every release on this project is cut automatically from Conventional Commits
 by semantic-release, and only after the full CI pipeline has passed.
 
+## [1.15.1](https://github.com/edycutjong/mochi/compare/v1.15.0...v1.15.1) (2026-09-07)
+
+### Fixes
+
+* **ci:** the landing stamp check matched the old aria-label, not the chip ([1964d74](https://github.com/edycutjong/mochi/commit/1964d748011bf5792b897f8bb1c885790d914f30))
+
 ## [1.15.0](https://github.com/edycutjong/mochi/compare/v1.14.3...v1.15.0) (2026-09-07)
 
 ### Features

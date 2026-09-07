@@ -13,7 +13,9 @@
  * control, and a script that runs in CI is.
  *
  * Usage:  node --experimental-strip-types scripts/check_submission_readiness.ts
- * Exits 0 when clean, 1 when anything failed.
+ *         MOCHI_DB=/path/to/mochi.db node --experimental-strip-types scripts/check_submission_readiness.ts
+ * Exits 0 when clean, 1 when anything failed. A check that cannot run without
+ * the production database is reported as `skip`, never silently passed.
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs'
@@ -24,12 +26,22 @@ const ROOT = join(import.meta.dirname, '..')
 type Failure = { check: string; detail: string }
 const failures: Failure[] = []
 const passed: string[] = []
+const skipped: Failure[] = []
 
 function fail(check: string, detail: string) {
   failures.push({ check, detail })
 }
 function pass(check: string) {
   passed.push(check)
+}
+/**
+ * A check that could not run here is neither a pass nor a fail — reporting it
+ * as FAIL taught every CI run to show red, and a gate that is always red is
+ * one nobody reads. It is printed loudly and separately instead, and the
+ * README says how to run it for real.
+ */
+function skip(check: string, detail: string) {
+  skipped.push({ check, detail })
 }
 
 /** Files a judge actually reads or runs. Kitchen and deps are not our concern. */
@@ -81,13 +93,61 @@ function checkPlaceholders(files: string[]) {
   for (const file of files) {
     if (file === import.meta.filename) continue
     const text = readFileSync(file, 'utf8')
+    const scannable = isLandingSource(file) ? withoutFallbackMachinery(text) : text
     for (const p of patterns) {
-      if (p.test(text)) hits.push(`${relative(ROOT, file)} matches ${p}`)
+      if (p.test(scannable)) hits.push(`${relative(ROOT, file)} matches ${p}`)
     }
   }
 
   if (hits.length) fail('placeholders', hits.join('\n    '))
   else pass('no placeholder text in shipped files')
+}
+
+const isLandingSource = (file: string) => relative(ROOT, file).startsWith(join('landing', 'src'))
+
+/**
+ * The landing page renders `«PENDING:…»` on purpose when a fact is not yet
+ * known — the constants that carry those strings are the mechanism that makes
+ * an unresolved fact visible rather than a lie. So in landing source the
+ * scanner ignores (a) the line that defines a `*_PENDING` constant and (b)
+ * comment lines that talk about them, and `checkLandingResolved` below asserts
+ * the facts themselves are filled in. A `«PENDING:…»` anywhere else in the
+ * landing — say, typed straight into JSX — still fails.
+ */
+function withoutFallbackMachinery(text: string): string {
+  return text
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .split('\n')
+    .filter((line) => !/^\s*export const \w+_PENDING\s*=/.test(line))
+    .filter((line) => !/^\s*(\/\/|\*|\/\*)/.test(line))
+    .join('\n')
+}
+
+/**
+ * 1b. The landing's unresolved facts.
+ *
+ * `landing/src/lib/mochi.ts` declares each late-bound fact as
+ * `export const NAME: string | null = <value>`. `null` means the page shows a
+ * `«PENDING:…»` token for it. Before submission every one must hold a real
+ * non-empty string.
+ */
+function checkLandingResolved() {
+  const file = join(ROOT, 'landing', 'src', 'lib', 'mochi.ts')
+  if (!existsSync(file)) {
+    skip('landing facts', 'landing/src/lib/mochi.ts not present')
+    return
+  }
+  const text = readFileSync(file, 'utf8')
+  const facts = [...text.matchAll(/export const (\w+): string \| null =\s*([^;]+);/g)]
+  if (facts.length === 0) {
+    fail('landing facts', 'no `: string | null` facts found in landing/src/lib/mochi.ts — the pattern moved')
+    return
+  }
+  const unresolved = facts
+    .filter(([, , value]) => !/^"[^"]+"$/.test(value.trim()))
+    .map(([, name, value]) => `${name} = ${value.trim()}`)
+  if (unresolved.length) fail('landing facts', unresolved.join(', '))
+  else pass(`landing facts resolved: ${facts.map(([, name]) => name).join(', ')}`)
 }
 
 /**
@@ -138,7 +198,7 @@ function checkScaffolding() {
 function checkSeedRows() {
   const db = process.env.MOCHI_DB
   if (!db || !existsSync(db)) {
-    fail('seed rows', `set MOCHI_DB to the production database to check it (looked for ${db ?? 'unset'})`)
+    skip('seed rows', `needs the production database: MOCHI_DB=/path/to/mochi.db (looked for ${db ?? 'unset'})`)
     return
   }
   // Deliberately not opening the DB with a driver: this script must run with
@@ -235,6 +295,7 @@ function checkPrivateMaterial(files: string[]) {
 
 const files = sourceFiles()
 checkPlaceholders(files)
+checkLandingResolved()
 checkScaffolding()
 checkSeedRows()
 checkDemoHonesty()
@@ -243,7 +304,9 @@ checkSceneMetadata()
 checkPrivateMaterial(files)
 
 for (const p of passed) console.log(`  ok    ${p}`)
+for (const k of skipped) console.log(`  skip  ${k.check}: ${k.detail}`)
 for (const f of failures) console.error(`  FAIL  ${f.check}: ${f.detail}`)
 
-console.log(`\n${passed.length} passed, ${failures.length} failed`)
+const skippedNote = skipped.length ? `, ${skipped.length} skipped (not run here)` : ''
+console.log(`\n${passed.length} passed, ${failures.length} failed${skippedNote}`)
 process.exit(failures.length ? 1 : 0)

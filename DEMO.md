@@ -344,6 +344,47 @@ Menu → Settings → Graphics → Dynamic Graphics off → High, and the monito
 at the top right. The panel is a preview feature — it does not appear in the
 deployed World.
 
+## Who came back
+
+The one claim a walkthrough cannot show. Everything above proves a visitor can
+feed, teach and leave a trace; none of it proves anyone chose to return. The
+carer log records wallet and time for every action, so that is measurable, and
+this is the measurement rather than the hope.
+
+Read from a copy of the production database on 2026-09-07 (rows through
+2026-09-06 05:19 UTC), seed rows excluded — there are 0:
+
+```
+carer log 2026-08-16 → 2026-09-06, 12 active days, 0 seed rows
+
+19 distinct wallets · 5 acted on 2+ distinct UTC days
+returning: Edy, iOSWaifu, abnerdune, tensaix2j, ginoct
+```
+
+Take the builder out and it reads: **18 external wallets, 4 came back on a
+later day** — between 2 and 7 days after their first visit — with no
+notification, reminder or reward for doing so. 14 of the 18 visited once, and 12
+of those arrived on 2026-09-04, the day the demo video and the Discord posts
+went out. One of the four returners (`ginoct`) taught a move on both visits.
+
+Four of eighteen is the honest number. It is small, it is real, and it is the
+first retention figure this project has had that was measured rather than
+argued. The chain tells the same story from the other side: 63 moves, 28 of
+them by 12 people who are not the builder.
+
+Reproduce it — read-only, against your own copy:
+
+```bash
+fly ssh sftp get /data/mochi.db     -a mochi-friendzone   # then -wal and -shm:
+fly ssh sftp get /data/mochi.db-wal -a mochi-friendzone   # WAL mode — newest rows live here
+fly ssh sftp get /data/mochi.db-shm -a mochi-friendzone
+MOCHI_DB=./mochi.db npm --prefix server run retention
+```
+
+`server/scripts/returning-carers.ts` is the whole query. Anyone without Fly
+access can read it and see what "returning" means: the same wallet on two or
+more distinct UTC calendar days, which is stricter than two sessions.
+
 ## What is not finished
 
 Stated here rather than discovered:

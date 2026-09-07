@@ -49,7 +49,7 @@ Every number below is measured and reproducible. Full detail in
 
 | | | Regenerate with |
 |---|---|---|
-| Tests | **238** server across 13 files · **36** headless scene across 3 | `npm test` · `npm run test:scene` |
+| Tests | **238** server across 13 files · **48** headless scene across 5 | `npm test` · `npm run test:scene` |
 | Server coverage | **100%** — lines, branches, functions and statements | `npm run test:coverage` |
 | Exhaustive verification | **78,482 combinations** — no input produces a starving creature | `npm test` |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database | walkthrough in DEMO.md |
@@ -60,6 +60,7 @@ Every number below is measured and reproducible. Full detail in
 | Scene budget, 1 parcel | **32/200 entities · 14/20 materials · 0/10 textures** | `npm run budget:scene` |
 | Ring rebuilds per busy minute | **18 avatar entities, down from 120** | `npm run test:scene` |
 | Deployable payload | **6,888 KB** against the 25,000 KB gate CI enforces | `du -sk bin assets images main.crdt scene.json` |
+| Returning carers | **4 of 18** external wallets came back on a later UTC day, 2–7 days apart, unprompted. 12 active days, 0 seed rows | `MOCHI_DB=… npm --prefix server run retention` — query in DEMO.md |
 | Provider cost | **$0.00** — no external API, no model, nothing on-chain | — |
 | Runtime dependencies | **1** (`ws`) | `server/package.json` |
 | Scene performance | **88–90%**, Galaxy S24 Ultra, High profile | **needs a phone — see below** |
@@ -96,7 +97,7 @@ the deployed World.
 
 ```bash
 npm test               # 238 server tests, 100% coverage
-npm run test:scene     # 41 headless scene tests + the one-parcel budget audit
+npm run test:scene     # 48 headless scene tests + the one-parcel budget audit
 npm run bench          # the latency and throughput table, ~30 seconds
 npm run ci             # all of it, the way CI runs it
 ```

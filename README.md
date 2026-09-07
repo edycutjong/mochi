@@ -207,7 +207,7 @@ different entities, and why hunger is derived rather than ticked.
 
 | Metric | Value |
 |---|---|
-| Tests | **238** server across 13 files · **36** headless scene across 3 |
+| Tests | **238** server across 13 files · **48** headless scene across 5 |
 | Server coverage | **100%** lines · **100%** branches · **100%** functions |
 | Exhaustive verification | **78,482 combinations** |
 | Real run | 4 sessions, 6 intents, **1,845 ms**, 4,096-byte database |
@@ -261,7 +261,7 @@ people — in **[DEMO.md](DEMO.md)**.
 ```bash
 npm test               # 238 server tests, 13 files
 npm run test:coverage  # the same, plus the coverage table
-npm run test:scene     # 41 headless scene tests, 4 files
+npm run test:scene     # 48 headless scene tests, 5 files
 npm run budget:scene   # the one-parcel budget audit
 npm run bench          # the protocol benchmark — p50/p95/p99, ~30 seconds
 npm run lint           # type-aware ESLint

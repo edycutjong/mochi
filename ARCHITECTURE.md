@@ -169,12 +169,12 @@ which is the exact emptiness this project exists to answer.
 |---|---|---|
 | `src/index.ts` | 281 | wiring, the world-tap system for all four verbs, deferred ring rebuild |
 | `src/mochi/` | 1,505 | creature, aliveness, dancers, meadow, plaque, teach |
-| `src/ui/` | 303 | status line, emote picker, touch controls |
+| `src/ui/` | 567 | status line, emote picker, touch controls, SDK-free layout and tokens |
 | `src/net/client.ts` | 182 | connection, queue, reconnect |
 | `src/probe/` | 467 | day-one capability probe (see `docs/PROBE.md`) |
 | `server/src/` | 1,427 | protocol, rules, store, hunger, transport |
 | `server/test/` | 2,638 | 238 tests at 100% line/branch coverage, one exhaustive |
-| `test/` | 549 | 41 headless scene tests — the ring, the fidelity ladder, the picker geometry, the parcel budget |
+| `test/` | 731 | 48 headless scene tests — the ring, the fidelity ladder, the picker geometry, tap targets and contrast, the parcel budget |
 | `server/scripts/bench.ts` | 432 | the protocol benchmark behind the latency table |
 | `scripts/scene_budget.ts` | 205 | the one-parcel budget audit |
 
